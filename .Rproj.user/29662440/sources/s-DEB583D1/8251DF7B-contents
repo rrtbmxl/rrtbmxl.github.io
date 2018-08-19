@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>R on RPG</title>
-    <link>/categories/r/</link>
-    <description>Recent content in R on RPG</description>
+    <title>RPG</title>
+    <link>/</link>
+    <description>Recent content on RPG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 19 Aug 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -17,11 +17,23 @@
       <pubDate>Sun, 19 Aug 2018 00:00:00 +0000</pubDate>
       
       <guid>/2018/08/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</guid>
-      <description>第一部分第二部分第三部分第四部分第一部分内容 如下：
+      <description>
+第一部分
+第二部分
+第三部分
+第四部分
+
+
+第一部分
+内容 如下：
 然而并没有什么内容
-第二部分library(ggplot2)ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point()第三部分toc虽然可以生成，但是不能跳转，这是咋回事啊？
-第四部分如何指定主页每篇文章显示的文字数量啊？
-</description>
+
+第二部分
+library(ggplot2)
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point()
+
+
+</description>
     </item>
     
   </channel>

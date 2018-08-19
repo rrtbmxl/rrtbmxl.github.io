@@ -17,10 +17,11 @@
       <pubDate>Sun, 19 Aug 2018 00:00:00 +0000</pubDate>
       
       <guid>/2018/08/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</guid>
-      <description>第一部分第二部分第三部分第一部分内容 如下
-吃饭了吗
-第二部分library(ggplot2)ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point()第三部分暂无内容
-</description>
+      <description>第一部分第二部分第三部分第四部分第一部分内容 如下：
+然而并没有什么内容
+第二部分library(ggplot2)ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point()第三部分toc虽然可以生成，但是不能跳转，这是咋回事啊？
+第四部分如何指定主页每篇文章显示的文字数量啊？
+</description>
     </item>
     
   </channel>
