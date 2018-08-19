@@ -1,0 +1,31 @@
+---
+title: 测试文章
+author: 孟祥良
+date: '2018-08-19'
+slug: 测试文章
+categories:
+  - R
+tags:
+  - 测试
+output:
+  blogdown::html_page:
+    toc: true
+---
+
+## 第一部分
+
+**内容**  *如下*
+
+~~吃饭了吗~~
+
+## 第二部分
+
+```{r message = FALSE}
+library(ggplot2)
+
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point()
+```
+
+## 第三部分
+
+暂无内容
