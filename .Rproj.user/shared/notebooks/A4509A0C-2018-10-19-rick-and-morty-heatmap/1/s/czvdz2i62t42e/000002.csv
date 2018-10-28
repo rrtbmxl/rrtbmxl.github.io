@@ -1,0 +1,3 @@
+"0","ggplot(rm, aes(Season, Episode, fill = Rating)) + "
+"0","  geom_tile() + "
+"0","  geom_text(aes(label = Rating))"

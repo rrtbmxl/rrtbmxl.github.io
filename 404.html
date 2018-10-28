@@ -116,6 +116,28 @@
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="/2018/10/rick-and-morty-heatmap/">
+                <h3 class="media-heading">看图写代码：瑞克与莫蒂剧集评分热力图</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">大概是去年的这个时间，我在一个名叫Data Is Beautiful的reddit论坛上看到了一张Rick and Morty的分集评分热力图，就想用R把它重复出来。当时水平还不怎么样，只能画个大概出来，很多细节都不知道该如何呈现；前几个月，又重新尝试了下，大部分细节都知道该如何实现了，但还是差一点；这里再尝试一下，看看能不能完全重复出来，毕竟这张图应该就是用R画的。
+图是这样的：
+首先，还是先把需要用到的包载入：
+library(tidyverse)然后载入数据：
+rm &lt;- read_csv(&quot;rick &amp; morty.csv&quot;) %&gt;% mutate_at(vars(Episode, Season), as.factor)载入数据的时候，为方便后面的绘图，顺便把集数和季数两个变量改成了因子型。具体的数据是这样的：
+rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt;dbl&gt;## 1 1 1 8.1## 2 2 1 8.7## 3 3 1 8.4## 4 4 1 8.6## 5 5 1 8.9## 6 6 1 9 ## 7 7 1 8.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="/2018/10/%E6%97%A5%E8%AE%B0%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">
                 <h3 class="media-heading">日记文本分析：第一部分</h3>
               </a>
@@ -163,7 +185,7 @@ time &lt;- read_lines(&#39;dairy.txt&#39;) %&gt;% as.tibble() %&gt;% filter(str_
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         2 posts found
+         3 posts found
       </p>
     </div>
   </div>

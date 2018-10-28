@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>可视化 on RPG</title>
+    <link>/tags/%E5%8F%AF%E8%A7%86%E5%8C%96/</link>
+    <description>Recent content in 可视化 on RPG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 28 Oct 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/%E5%8F%AF%E8%A7%86%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>看图写代码：瑞克与莫蒂剧集评分热力图</title>
+      <link>/2018/10/rick-and-morty-heatmap/</link>
+      <pubDate>Sun, 28 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/10/rick-and-morty-heatmap/</guid>
+      <description>大概是去年的这个时间，我在一个名叫Data Is Beautiful的reddit论坛上看到了一张Rick and Morty的分集评分热力图，就想用R把它重复出来。当时水平还不怎么样，只能画个大概出来，很多细节都不知道该如何呈现；前几个月，又重新尝试了下，大部分细节都知道该如何实现了，但还是差一点；这里再尝试一下，看看能不能完全重复出来，毕竟这张图应该就是用R画的。
+图是这样的：
+首先，还是先把需要用到的包载入：
+library(tidyverse)然后载入数据：
+rm &amp;lt;- read_csv(&amp;quot;rick &amp;amp; morty.csv&amp;quot;) %&amp;gt;% mutate_at(vars(Episode, Season), as.factor)载入数据的时候，为方便后面的绘图，顺便把集数和季数两个变量改成了因子型。具体的数据是这样的：
+rm## # A tibble: 31 x 3## Episode Season Rating## &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;dbl&amp;gt;## 1 1 1 8.1## 2 2 1 8.7## 3 3 1 8.4## 4 4 1 8.6## 5 5 1 8.9## 6 6 1 9 ## 7 7 1 8.</description>
+    </item>
+    
+  </channel>
+</rss>

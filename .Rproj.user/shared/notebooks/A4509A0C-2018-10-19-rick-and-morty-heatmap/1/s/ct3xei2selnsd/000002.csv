@@ -1,0 +1,2 @@
+"0","rm <- read_csv(""rick & morty.csv"") %>% "
+"0","  mutate_at(vars(Episode, Season), as.factor)"

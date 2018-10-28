@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1534295402487.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1681493742",
+    "id" : "5E38F4DE",
+    "lastKnownWriteTime" : 1540701050,
+    "last_content_update" : 1540701050092,
+    "path" : "D:/R/rrtbmxl.github.io/config.toml",
+    "project_path" : "config.toml",
+    "properties" : {
+        "cursorPosition" : "192,4",
+        "scrollLine" : "184"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "toml"
+}

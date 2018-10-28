@@ -1,0 +1,7 @@
+"0","ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + "
+"0","  geom_tile() + "
+"0","  geom_text(aes(label = Rating), "
+"0","            color = ifelse(rm$Rating > 8.7, 'white', 'black')) +"
+"0","  labs(title = ""Rick & Morty Heatmap"", y = 'Episode', fill = 'Episode Rating') +"
+"0","    scale_fill_gradient2(low = '#ECF7B1', mid = '#3FB4C4', high = '#081D58',"
+"0","                        midpoint = 8.8, breaks = seq(10, 8, -.4))"
