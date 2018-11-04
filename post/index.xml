@@ -6,10 +6,23 @@
     <description>Recent content in Posts on RPG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 04 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>利用文本分析对比两版本天龙八部</title>
+      <link>/2018/11/text-analysis-for-tianlong/</link>
+      <pubDate>Sun, 04 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/11/text-analysis-for-tianlong/</guid>
+      <description>今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。
+首先还是载入相关的包，这次的包有点多：
+library(tidyverse)library(readxl)library(tidytext)library(jiebaR)library(ggthemes)library(widyr)library(igraph)library(ggraph)然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：
+tl_new &amp;lt;- read_lines(&amp;#39;tl_new.txt&amp;#39;)tl_old &amp;lt;- read_lines(&amp;#39;tl_old.txt&amp;#39;)tl_main &amp;lt;- read_lines(&amp;#39;tl_main.txt&amp;#39;) %&amp;gt;% .[-1]因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：
+tl_new_tran &amp;lt;- tl_new %&amp;gt;% str_replace_all(&amp;#39;(段公子)|(哥哥)|(誉儿)&amp;#39;, &amp;#39;段誉&amp;#39;) %&amp;gt;%str_replace_all(&amp;#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&amp;#39;, &amp;#39;萧峰&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(梦郎)|(小和尚)&amp;#39;, &amp;#39;虚竹&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(南海鳄神)|(岳老二)&amp;#39;, &amp;#39;岳老三&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;带头大哥&amp;#39;, &amp;#39;玄慈&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;延庆太子&amp;#39;, &amp;#39;段延庆&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;白长老&amp;#39;, &amp;#39;白世镜&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;全舵主&amp;#39;, &amp;#39;全冠清&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;甘宝宝&amp;#39;, &amp;#39;钟夫人&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;小康&amp;#39;, &amp;#39;马夫人&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;灵儿&amp;#39;, &amp;#39;钟灵&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(星宿老怪)|(星宿老仙)&amp;#39;, &amp;#39;丁春秋&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;庄聚贤&amp;#39;, &amp;#39;游坦之&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(慕容公子)|(表哥)&amp;#39;, &amp;#39;慕容复&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;国师&amp;#39;, &amp;#39;鸠摩智&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;表妹&amp;#39;, &amp;#39;王语嫣&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(婉妹)|(木姊姊)&amp;#39;, &amp;#39;木婉清&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(郡主)|(小师妹)&amp;#39;, &amp;#39;阿紫&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;段王爷&amp;#39;, &amp;#39;段正淳&amp;#39;)tl_old_tran &amp;lt;- tl_old %&amp;gt;% str_replace_all(&amp;#39;(段公子)|(哥哥)|(誉儿)&amp;#39;, &amp;#39;段誉&amp;#39;) %&amp;gt;%str_replace_all(&amp;#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&amp;#39;, &amp;#39;萧峰&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(梦郎)|(小和尚)&amp;#39;, &amp;#39;虚竹&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(南海鳄神)|(岳老二)&amp;#39;, &amp;#39;岳老三&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;带头大哥&amp;#39;, &amp;#39;玄慈&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;延庆太子&amp;#39;, &amp;#39;段延庆&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;白长老&amp;#39;, &amp;#39;白世镜&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;全舵主&amp;#39;, &amp;#39;全冠清&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;甘宝宝&amp;#39;, &amp;#39;钟夫人&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;小康&amp;#39;, &amp;#39;马夫人&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;灵儿&amp;#39;, &amp;#39;钟灵&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(星宿老怪)|(星宿老仙)&amp;#39;, &amp;#39;丁春秋&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;庄聚贤&amp;#39;, &amp;#39;游坦之&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(慕容公子)|(表哥)&amp;#39;, &amp;#39;慕容复&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;国师&amp;#39;, &amp;#39;鸠摩智&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;表妹&amp;#39;, &amp;#39;王语嫣&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(婉妹)|(木姊姊)&amp;#39;, &amp;#39;木婉清&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;(郡主)|(小师妹)&amp;#39;, &amp;#39;阿紫&amp;#39;) %&amp;gt;% str_replace_all(&amp;#39;段王爷&amp;#39;, &amp;#39;段正淳&amp;#39;)上面的替换工作并不全，比如，同样是段郞，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。</description>
+    </item>
     
     <item>
       <title>看图写代码：瑞克与莫蒂剧集评分热力图</title>

@@ -1,0 +1,937 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+  
+
+
+  
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
+    <title>利用文本分析对比两版本天龙八部</title>
+    <meta name="author" content="孟祥良">
+    <meta name="keywords" content="">
+
+    <link rel="icon" href="/favicon.png">
+    
+
+    
+    <meta name="description" content="今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。
+首先还是载入相关的包，这次的包有点多：
+library(tidyverse)library(readxl)library(tidytext)library(jiebaR)library(ggthemes)library(widyr)library(igraph)library(ggraph)然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：
+tl_new &lt;- read_lines(&#39;tl_new.txt&#39;)tl_old &lt;- read_lines(&#39;tl_old.txt&#39;)tl_main &lt;- read_lines(&#39;tl_main.txt&#39;) %&gt;% .[-1]因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：
+tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)tl_old_tran &lt;- tl_old %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)上面的替换工作并不全，比如，同样是段郞，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。">
+    <meta property="og:description" content="今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。
+首先还是载入相关的包，这次的包有点多：
+library(tidyverse)library(readxl)library(tidytext)library(jiebaR)library(ggthemes)library(widyr)library(igraph)library(ggraph)然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：
+tl_new &lt;- read_lines(&#39;tl_new.txt&#39;)tl_old &lt;- read_lines(&#39;tl_old.txt&#39;)tl_main &lt;- read_lines(&#39;tl_main.txt&#39;) %&gt;% .[-1]因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：
+tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)tl_old_tran &lt;- tl_old %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)上面的替换工作并不全，比如，同样是段郞，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="利用文本分析对比两版本天龙八部">
+    <meta property="og:url" content="/2018/11/text-analysis-for-tianlong/">
+    <meta property="og:site_name" content="RPG">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="RPG">
+    <meta name="twitter:description" content="今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。
+首先还是载入相关的包，这次的包有点多：
+library(tidyverse)library(readxl)library(tidytext)library(jiebaR)library(ggthemes)library(widyr)library(igraph)library(ggraph)然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：
+tl_new &lt;- read_lines(&#39;tl_new.txt&#39;)tl_old &lt;- read_lines(&#39;tl_old.txt&#39;)tl_main &lt;- read_lines(&#39;tl_main.txt&#39;) %&gt;% .[-1]因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：
+tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)tl_old_tran &lt;- tl_old %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)上面的替换工作并不全，比如，同样是段郞，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=640">
+    
+
+    
+    
+    
+
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="/css/style-jsjn0006wyhpyzivf6yceb31gvpjatbcs3qzjvlumobfnugccvobqwxnnaj8.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/">RPG</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about">
+          <img class="sidebar-profile-picture" src="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">孟祥良</h4>
+        
+          <h5 class="sidebar-profile-bio">R语言爱好者, 心理学专业硕士 &amp; FGO休闲玩家</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/rrtbmxl/rrtbmxl.github.io">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      
+      
+      <span class="sidebar-button-desc"></span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      
+      
+      <span class="sidebar-button-desc"></span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      利用文本分析对比两版本天龙八部
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2018-11-04T00:00:00Z">
+        
+  November 4, 2018
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。</p>
+<p>首先还是载入相关的包，这次的包有点多：</p>
+<pre class="r"><code>library(tidyverse)
+library(readxl)
+library(tidytext)
+library(jiebaR)
+library(ggthemes)
+library(widyr)
+library(igraph)
+library(ggraph)</code></pre>
+<p>然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：</p>
+<pre class="r"><code>tl_new &lt;- read_lines(&#39;tl_new.txt&#39;)
+tl_old &lt;- read_lines(&#39;tl_old.txt&#39;)
+tl_main &lt;- read_lines(&#39;tl_main.txt&#39;) %&gt;% .[-1]</code></pre>
+<p>因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：</p>
+<pre class="r"><code>tl_new_tran &lt;- tl_new %&gt;% 
+  str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%
+  str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% 
+  str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% 
+  str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% 
+  str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% 
+  str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% 
+  str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% 
+  str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% 
+  str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% 
+  str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% 
+  str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% 
+  str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% 
+  str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% 
+  str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% 
+  str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% 
+  str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% 
+  str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% 
+  str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% 
+  str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)
+  
+tl_old_tran &lt;- tl_old %&gt;% 
+  str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%
+  str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% 
+  str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% 
+  str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% 
+  str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% 
+  str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% 
+  str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% 
+  str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% 
+  str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% 
+  str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% 
+  str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% 
+  str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% 
+  str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% 
+  str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% 
+  str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% 
+  str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% 
+  str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% 
+  str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% 
+  str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)</code></pre>
+<p>上面的替换工作并不全，比如，同样是<strong>段郞</strong>，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。</p>
+<p>下面创建分词环境，并把主要人物的人名添加进了自定义词库，然后针对两个版本分别进行分词：</p>
+<pre class="r"><code>worker &lt;- worker(stop_word = &#39;stopwords_cn.txt&#39;, user = &#39;tl_main.txt&#39;)
+
+tl_word_new &lt;- worker[tl_new_tran]
+tl_word_old &lt;- worker[tl_old_tran]</code></pre>
+<p>再分别做一些简单的清洗工作：</p>
+<pre class="r"><code>tl_freq_new &lt;- tl_word_new %&gt;% 
+  table() %&gt;% 
+  as.tibble() %&gt;% 
+  select(word = 1, freq = 2) %&gt;%
+  filter(!str_detect(word, &#39;(\\d+)|([A-Za-z]+)|(\\s+)&#39;)) %&gt;% 
+  filter(str_length(word) &gt; 1) %&gt;% 
+  arrange(-freq) %&gt;% 
+  filter(freq &gt; 100)
+
+tl_freq_old &lt;- tl_word_old %&gt;% 
+  table() %&gt;% 
+  as.tibble() %&gt;% 
+  select(word = 1, freq = 2) %&gt;%
+  filter(!str_detect(word, &#39;(\\d+)|([A-Za-z]+)|(\\s+)&#39;)) %&gt;% 
+  filter(str_length(word) &gt; 1) %&gt;% 
+  arrange(-freq) %&gt;% 
+  filter(freq &gt; 100)</code></pre>
+<p>然后就可以开始画图并进行分析了。</p>
+<div class="section level2">
+<h2>主要人物出现频次对比</h2>
+<p>首先假设，一个人物越重要，他的名字在书中出现的次数就越多（我似乎应该反过来说），后续的分析都是建立在这一假设之上的，但还是要再整理一下数据。首先把主要人物的名字从所有的词汇中挑选出来，再根据两个版本不同的字数做一些调整，最后再把两个版本的数据合并起来：</p>
+<pre class="r"><code>tl_freq_main_new &lt;- tl_freq_new %&gt;% 
+  filter(word %in% tl_main) %&gt;% 
+  mutate(version = &#39;new&#39;)
+
+tl_freq_main_old &lt;- tl_freq_old %&gt;% 
+  filter(word %in% tl_main) %&gt;%
+  mutate(version = &#39;old&#39;, freq = round(freq*6.42/6.27))
+
+tl_freq_com &lt;- bind_rows(tl_freq_main_old, tl_freq_main_new) %&gt;% 
+  mutate(order = row_number(), 
+         version = fct_relevel(version, c(&#39;old&#39;, &#39;new&#39;)))</code></pre>
+<p>然后就可以绘图了：</p>
+<pre class="r"><code>tl_freq_com %&gt;% ggplot(aes(order, freq)) + 
+  geom_col(fill = &#39;#870204&#39;, width = .8) + 
+  geom_text(aes(label = freq), 
+            nudge_y = ifelse(str_length(tl_freq_com$freq) &gt; 3, -120, -80), 
+            size = 2, color = &#39;white&#39;) + 
+  coord_flip() + 
+  scale_x_reverse(breaks = tl_freq_com$order,
+                  labels = tl_freq_com$word,
+                  expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0)) + 
+  labs(x = &#39;人  物&#39;, y = &#39;频  次&#39;) + 
+  facet_wrap(~ version, scales = &#39;free_y&#39;,
+             labeller = as_labeller(c(&#39;old&#39; = &#39;旧  版&#39;, &#39;new&#39; = &#39;新  版&#39;))) + 
+  theme_tufte() + 
+  theme(strip.text = element_text(size = 12))</code></pre>
+<p><img src="/post/2018-11-04-text-analysis-for-tianlong_files/figure-html/unnamed-chunk-7-1.png" width="2100" /></p>
+<p>从这张图来看，两个版本可能没有太大的差异，三大男主角和三大女主角的地位没有变化，夹在他们中间的慕容复的位次也没有变化。不过，我一直以为王语嫣是女一号呢，没想到只排第三名。</p>
+<p>为了更清楚地对比两个版本主要人物的出场次数的差异，我将两个版本每个人物的出场频次做了差，并重新汇了图：</p>
+<pre class="r"><code>tl_freq_com %&gt;% select(-order) %&gt;% 
+  spread(version, freq) %&gt;% 
+  mutate(diff = new - old) %&gt;% 
+  ggplot(aes(fct_reorder(word, diff), diff)) + 
+  geom_col(width = .8, fill = &#39;#870204&#39;) + 
+  scale_y_continuous(breaks = seq(-400, 300, 50), expand = c(0, 0)) + 
+  labs(x = &#39;名  字&#39;, y = &#39;变  化&#39;) + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, vjust = .6, size = 10))</code></pre>
+<p><img src="/post/2018-11-04-text-analysis-for-tianlong_files/figure-html/unnamed-chunk-8-1.png" width="2100" /></p>
+<p>忘了说下，这里的差值是用新版本的频次减去了旧版本的频次。从这张图来看就很明显了，新版本中，游坦之、阿紫和慕容复的出现有所下降，而萧峰、段誉和阿朱的出场频次有了很大幅度的增加，这主要因为新版本加了很多阿朱和萧峰的内容。虽然阿紫和阿朱两姐妹出场的频次此消彼长，但阿紫女一号的地位并没有被撼动。</p>
+<p>下面分章节来对比各主角的出场情况。</p>
+</div>
+<div class="section level2">
+<h2>主角在不同章节出现频次对比</h2>
+<p>首先还是要整理一下数据，并把两个版本的数据合并起来，这里我将出场频次前七的角色视为主角，这七人分别是段誉、萧峰、虚竹、慕容复、阿紫、阿朱和王语嫣：</p>
+<pre class="r"><code>tl_chapter_new &lt;- tl_word_new %&gt;% 
+  as.tibble() %&gt;% 
+  mutate(chapter = cumsum(str_detect(value, &#39;^\\d{1,2}$&#39;)))
+
+tl_chapter_old &lt;- tl_word_old %&gt;% 
+  as.tibble() %&gt;% 
+  mutate(chapter = cumsum(str_detect(value, &#39;^\\d{1,2}$&#39;)))
+
+tl_chapter_lead_new &lt;- tl_chapter_new %&gt;% 
+  count(chapter, value) %&gt;% 
+  filter(value %in% tl_freq_main_new$word[1:7]) %&gt;% 
+  mutate(version = &#39;new&#39;)
+
+tl_chapter_lead_old &lt;- tl_chapter_old %&gt;% 
+  count(chapter, value) %&gt;% 
+  filter(value %in% tl_freq_main_old$word[1:7]) %&gt;% 
+  mutate(version = &#39;old&#39;)
+
+tl_chapter_lead_com &lt;- bind_rows(tl_chapter_lead_new, tl_chapter_lead_old) %&gt;% 
+  filter(chapter != 0)</code></pre>
+<p>然后进行绘图：</p>
+<pre class="r"><code>tl_chapter_lead_com %&gt;% ggplot(aes(factor(chapter), n)) + 
+  geom_line(aes(group = value, color = value), size = 1.2) + 
+  facet_wrap(~ version, nrow = 2, 
+             labeller = as_labeller(c(&#39;old&#39; = &#39;旧  版&#39;, &#39;new&#39; = &#39;新  版&#39;))) + 
+  scale_color_brewer(palette = &#39;Set1&#39;) + 
+  labs(x = &#39;章  节&#39;, y = &#39;频  次&#39;, color = &#39;人  物&#39;) + 
+  theme_minimal() + 
+  theme(strip.text = element_text(size = 12), 
+        legend.position = &#39;bottom&#39;,
+        axis.text.x = element_text(size = 8, angle = 45)) + 
+  guides(color = guide_legend(nrow = 1))</code></pre>
+<p><img src="/post/2018-11-04-text-analysis-for-tianlong_files/figure-html/unnamed-chunk-10-1.png" width="2100" /></p>
+<p>图有点乱，但我也没想到更好的呈现方式。七位主角在两个版本各章节的出场趋势大体上相同，只有某些章节存在差异：新版的第22章，阿朱和萧峰有了更多的出场，应该是加了更多描写他俩感情的内容，而新版的第26章，阿紫和萧峰的出场都有所减少，不知道删掉了什么内容；另外，对比下阿朱阿紫两姐妹，虽然阿紫总出场频次高于姐姐，但她共计出场了30多章，而阿朱只出场了10多章，所以要算下频次章节比的话，阿朱才是女一号。其他几位主角也多少有些变化，但先略过不提。下面进行最重要的情感分析。</p>
+</div>
+<div class="section level2">
+<h2>情感分析</h2>
+<p>首先还是要整理、合并数据：</p>
+<pre class="r"><code>sentiment &lt;- read_xlsx(&#39;情感词汇本体.xlsx&#39;) %&gt;% 
+  select(word = 1, sentiment = 7) %&gt;% 
+  filter(sentiment == 1 | sentiment == 2) %&gt;% 
+  mutate(sentiment = ifelse(sentiment &gt; 1, -1, 1))
+
+tl_sentiment_new &lt;- tl_chapter_new %&gt;% 
+  left_join(sentiment, by = c(&#39;value&#39; = &#39;word&#39;)) %&gt;% 
+  filter(!chapter %in% c(0, 51), !is.na(sentiment)) %&gt;% 
+  group_by(chapter) %&gt;% 
+  summarise(sentiment = sum(sentiment)) %&gt;% 
+  mutate(version = &#39;new&#39;)
+
+tl_sentiment_old &lt;- tl_chapter_old %&gt;% 
+  left_join(sentiment, by = c(&#39;value&#39; = &#39;word&#39;)) %&gt;% 
+  filter(!chapter %in% c(0, 51), !is.na(sentiment)) %&gt;% 
+  group_by(chapter) %&gt;% 
+  summarise(sentiment = sum(sentiment)) %&gt;% 
+  mutate(version = &#39;old&#39;)
+
+tl_sentiment_com &lt;- bind_rows(tl_sentiment_new, tl_sentiment_old)</code></pre>
+<p>然后绘图，这次应该比较容易看出差异：</p>
+<pre class="r"><code>tl_sentiment_com %&gt;% ggplot(aes(factor(chapter), sentiment)) + 
+  geom_line(aes(group = version, color = version), size = 1.2) + 
+  labs(x = &#39;章  节&#39;, y = &#39;分  数&#39;, color = &#39;版本&#39;) + 
+  scale_y_continuous(breaks = seq(-100, 300, 50)) + 
+  scale_color_brewer(palette = &#39;Set1&#39;, labels = c(&#39;新版&#39;, &#39;旧版&#39;)) + 
+  theme_minimal() + 
+  theme(legend.position = &#39;top&#39;,
+        axis.text.x = element_text(size = 8, angle = 45))</code></pre>
+<p><img src="/post/2018-11-04-text-analysis-for-tianlong_files/figure-html/unnamed-chunk-12-1.png" width="2100" /></p>
+<p>第一个差异出现在21章和22章，新版的情感更积极一些，这应该更能加深随后的阿朱之死所带来的悲痛；第二个差异出现在39章，好像是灵鹫宫大战之后，旧版中这一章是整部小说情感最积极之处，但在新版中却有所弱化；第三个差异是第42章，少林寺大战，我不知道这部分两个版本有什么具体的差异（实际上我并没有看过新版），但新版这里更积极一点；最后一个差异出现在最后一章，虽然新版中并没有改变萧峰最后的命运，但这一章却成了新版中情感最积极的一章。</p>
+<p>分析就到此结束了，最后在画个主要人物的关系网吧。</p>
+</div>
+<div class="section level2">
+<h2>主要人物关系网</h2>
+<p>这个关系网在两个版本之间可能不会存在什么差异，所以就只用新版画了。首先还是处理下数据：</p>
+<pre class="r"><code>tl_relation_new &lt;- tibble(hero1 = rep(tl_main, each = length(tl_main)), 
+                          hero2 = rep(tl_main, length(tl_main))) %&gt;% 
+  filter(hero1 != hero2)
+
+tl_chapter_main_new &lt;- tl_chapter_new %&gt;%
+  filter(value %in% tl_main) %&gt;% 
+  distinct()
+
+tl_network_new &lt;- tibble()
+for (i in 1:50) {
+  temp &lt;- tibble(hero1 = rep(filter(tl_chapter_main_new, chapter == i)$value, 
+                             each = nrow(filter(tl_chapter_main_new, chapter == i))),
+                 hero2 = rep(filter(tl_chapter_main_new, chapter == i)$value, 
+                             nrow(filter(tl_chapter_main_new, chapter == i)))) %&gt;% 
+    filter(hero1 != hero2)
+  
+  tl_network_new &lt;- bind_rows(tl_network_new, temp)
+}
+
+tl_network_main_new &lt;- count(tl_network_new, hero1, hero2) %&gt;% 
+  arrange(-n)</code></pre>
+<p>然后作图：</p>
+<pre class="r"><code>tl_network_main_new %&gt;% 
+  filter(n &gt; 7) %&gt;% 
+  graph_from_data_frame() %&gt;% 
+  ggraph(layout = &quot;fr&quot;) + 
+  geom_edge_link(aes(edge_alpha = n, edge_width = n), edge_colour = &quot;grey&quot;) +
+  geom_node_point(color = &quot;steelblue&quot;, size = 8) +
+  geom_node_text(aes(label = name), vjust = 2.2, size = 3) + 
+  theme_void() + 
+  theme(legend.position = &#39;&#39;)</code></pre>
+<p><img src="/post/2018-11-04-text-analysis-for-tianlong_files/figure-html/unnamed-chunk-14-1.png" width="2100" /></p>
+<p>因为人物关系实在复杂，这里略去了一些不太重要的关系。这篇文章也就到此结束了。虽然很想写得更细一点，但时间实在有限，待以后有时间再慢慢填充内容吧。</p>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 7 x64 (build 7601) Service Pack 1
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=Chinese (Simplified)_People&#39;s Republic of China.936 
+## [2] LC_CTYPE=Chinese (Simplified)_People&#39;s Republic of China.936   
+## [3] LC_MONETARY=Chinese (Simplified)_People&#39;s Republic of China.936
+## [4] LC_NUMERIC=C                                                   
+## [5] LC_TIME=Chinese (Simplified)_People&#39;s Republic of China.936    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] bindrcpp_0.2.2  ggraph_1.0.2    igraph_1.2.2    widyr_0.1.1    
+##  [5] ggthemes_4.0.1  jiebaR_0.9.99   jiebaRD_0.1     tidytext_0.2.0 
+##  [9] readxl_1.1.0    forcats_0.3.0   stringr_1.3.1   dplyr_0.7.7    
+## [13] purrr_0.2.5     readr_1.1.1     tidyr_0.8.1     tibble_1.4.2   
+## [17] ggplot2_3.1.0   tidyverse_1.2.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] ggrepel_0.8.0      Rcpp_0.12.19       lubridate_1.7.4   
+##  [4] lattice_0.20-35    assertthat_0.2.0   rprojroot_1.3-2   
+##  [7] digest_0.6.18      ggforce_0.1.3      R6_2.3.0          
+## [10] cellranger_1.1.0   plyr_1.8.4         backports_1.1.2   
+## [13] evaluate_0.12      httr_1.3.1         blogdown_0.9      
+## [16] pillar_1.3.0       rlang_0.3.0.1      lazyeval_0.2.1    
+## [19] rstudioapi_0.8     Matrix_1.2-14      rmarkdown_1.10    
+## [22] labeling_0.3       munsell_0.5.0      broom_0.5.0       
+## [25] compiler_3.5.1     janeaustenr_0.1.5  modelr_0.1.2      
+## [28] xfun_0.4           pkgconfig_2.0.2    htmltools_0.3.6   
+## [31] tidyselect_0.2.5   gridExtra_2.3      bookdown_0.7      
+## [34] viridisLite_0.3.0  crayon_1.3.4       withr_2.1.2       
+## [37] MASS_7.3-50        SnowballC_0.5.1    grid_3.5.1        
+## [40] nlme_3.1-137       jsonlite_1.5       gtable_0.2.0      
+## [43] magrittr_1.5       units_0.6-1        scales_1.0.0      
+## [46] tokenizers_0.2.1   cli_1.0.1          stringi_1.2.4     
+## [49] farver_1.0         viridis_0.5.1      xml2_1.2.0        
+## [52] RColorBrewer_1.1-2 tools_3.5.1        glue_1.3.0        
+## [55] tweenr_1.0.0       hms_0.4.2          yaml_2.2.0        
+## [58] colorspace_1.3-2   rvest_0.3.2        knitr_1.20        
+## [61] bindr_0.1.1        haven_1.1.2</code></pre>
+</div>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/">文本分析</a>
+
+                  </div>
+                
+              
+            
+            
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/10/rick-and-morty-heatmap/" data-tooltip="看图写代码：瑞克与莫蒂剧集评分热力图">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2018/11/text-analysis-for-tianlong/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2018/11/text-analysis-for-tianlong/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2018/11/text-analysis-for-tianlong/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 孟祥良. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/10/rick-and-morty-heatmap/" data-tooltip="看图写代码：瑞克与莫蒂剧集评分热力图">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2018/11/text-analysis-for-tianlong/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2018/11/text-analysis-for-tianlong/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2018/11/text-analysis-for-tianlong/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2018%2F11%2Ftext-analysis-for-tianlong%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2018%2F11%2Ftext-analysis-for-tianlong%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2018%2F11%2Ftext-analysis-for-tianlong%2F">
+          <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">孟祥良</h4>
+    
+      <div id="about-card-bio">R语言爱好者, 心理学专业硕士 &amp; FGO休闲玩家</div>
+    
+    
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Search" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">no post found</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/11/text-analysis-for-tianlong/">
+                <h3 class="media-heading">利用文本分析对比两版本天龙八部</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Nov 11, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。
+首先还是载入相关的包，这次的包有点多：
+library(tidyverse)library(readxl)library(tidytext)library(jiebaR)library(ggthemes)library(widyr)library(igraph)library(ggraph)然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：
+tl_new &lt;- read_lines(&#39;tl_new.txt&#39;)tl_old &lt;- read_lines(&#39;tl_old.txt&#39;)tl_main &lt;- read_lines(&#39;tl_main.txt&#39;) %&gt;% .[-1]因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：
+tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)tl_old_tran &lt;- tl_old %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)上面的替换工作并不全，比如，同样是段郞，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/10/rick-and-morty-heatmap/">
+                <h3 class="media-heading">看图写代码：瑞克与莫蒂剧集评分热力图</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">大概是去年的这个时间，我在一个名叫Data Is Beautiful的reddit论坛上看到了一张Rick and Morty的分集评分热力图，就想用R把它重复出来。当时水平还不怎么样，只能画个大概出来，很多细节都不知道该如何呈现；前几个月，又重新尝试了下，大部分细节都知道该如何实现了，但还是差一点；这里再尝试一下，看看能不能完全重复出来，毕竟这张图应该就是用R画的。
+图是这样的：
+首先，还是先把需要用到的包载入：
+library(tidyverse)然后载入数据：
+rm &lt;- read_csv(&quot;rick &amp; morty.csv&quot;) %&gt;% mutate_at(vars(Episode, Season), as.factor)载入数据的时候，为方便后面的绘图，顺便把集数和季数两个变量改成了因子型。具体的数据是这样的：
+rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt;dbl&gt;## 1 1 1 8.1## 2 2 1 8.7## 3 3 1 8.4## 4 4 1 8.6## 5 5 1 8.9## 6 6 1 9 ## 7 7 1 8.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/10/%E6%97%A5%E8%AE%B0%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">
+                <h3 class="media-heading">日记文本分析：第一部分</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">据说希腊的德尔菲神庙上刻着几条箴言，其中一条告诫我们要“认识你自己”。这条箴言刻起来容易，做起来却很难，甚至可能是人生最困难的事情之一。要想认识自己，大概有四种方法，一是客观内容的客观描述，如测量人的身高、体重等各种身体特征，这些特征在一定的时间内不会有太大幅度的变化，用来测量这些特征的工具也具有极高的信度和效度，因此不论从要了解的内容和用于了解该内容的方式，都是很客观的；二是客观内容的主观描述，如使用问卷量表测量人的各种能力，人的能力应该也是比较恒定的，但用于测量这些特征的工具，无论是编制过程还是施用过程，都避免不了与人为因素有关的干扰，即便硬要说它是客观的，也是“主观”的客观。三是主观内容的主观描述，如各种投射测验，对于这些测验，我没有实际接触过，但从书本上来看，难免不让我认为这种测验从内容到方式都不是那么客观；最后一种就显而易见了，即对主观内容的客观描述，如对推特的文本分析，我要进行的日记文本分析，也是这一范围之内的。日记本身是主观的产物，但这里我要对这些主观的内容进行客观的数据分析，进而从这一角度来加深对自己的了解，不过这个方法的局限性也很大，毕竟不是每个人都有几十万字的日记文本可以用来分析。另外再加一句，上面这段话，也可以说是对客观内容的主观描述。
+这篇文章分为三部分，首先是对我每天记日记的时间进行一个简单的分析，然后对文本进行分词，针对词频进行分析，最后是一个初步的情感分析。下面先载入需要用到的包。
+导入需要的包library(tidyverse)library(readxl)library(jiebaR)library(ggthemes)一般情况下，我的第一行代码都是library(tidyverse)，这次主要用到了其中dplyr、tidyr、stringr以及ggplot2四个包；readxl包用来读入.xlsx格式的文件；jiebarR用来分词；ggthemes用来添加我最喜欢的tufte主题。
+时间分析首先要把日记中与时间有关的内容提取出来，我记录时间的格式很固定，都是20XX年X月X日 周X XX：XX的形式，通过以下代码，可以把这部分内容提取出来：
+time &lt;- read_lines(&#39;dairy.txt&#39;) %&gt;% as.tibble() %&gt;% filter(str_detect(value, &#39;.*年.*月.*日.*周&#39;)) %&gt;% mutate(num = row_number()) %&gt;% select(2, time = 1)处理后是这个样子的：
+numtime12012年1月13日 周五 21：4022012年1月14日 周六 21：4132012年1月15日 周日 21：5342012年1月16日 周一 21：5852012年1月17日 周二 21：4562012年1月18日 周三 21：5172012年1月19日 周四 22：0182012年1月20日 周五 21：4392012年1月21日 周六 21：35102012年1月22日 周日 21：53所有的时间都放在一起是没法分析的，接下来我就把各部分时间分离开，并转化成了整数型，这一步代码如下：</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/08/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/">
+                <h3 class="media-heading">测试文章</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">第一部分第二部分第三部分第四部分第一部分内容 如下：
+然而并没有什么内容
+第二部分library(ggplot2)ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point()第三部分toc虽然可以生成，但是不能跳转，这是咋回事啊？
+第四部分如何指定主页每篇文章显示的文字数量啊？
+</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="no post found"
+         data-message-one="1 post found"
+         data-message-other="{n} posts found">
+         4 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="/js/script-qi9wbxp2ya2j6p7wx1i6tgavftewndznf4v0hy2gvivk1rxgc3lm7njqb6bz.min.js"></script>
+
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = '\/2018\/11\/text-analysis-for-tianlong\/';
+          
+            this.page.identifier = '\/2018\/11\/text-analysis-for-tianlong\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+    
+  </body>
+</html>
+

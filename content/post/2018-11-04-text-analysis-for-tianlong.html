@@ -1,0 +1,297 @@
+---
+title: 利用文本分析对比两版本天龙八部
+author: ''
+date: '2018-11-04'
+slug: text-analysis-for-tianlong
+categories:
+  - R
+tags:
+  - 文本分析
+---
+
+
+
+<p>今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。</p>
+<p>首先还是载入相关的包，这次的包有点多：</p>
+<pre class="r"><code>library(tidyverse)
+library(readxl)
+library(tidytext)
+library(jiebaR)
+library(ggthemes)
+library(widyr)
+library(igraph)
+library(ggraph)</code></pre>
+<p>然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：</p>
+<pre class="r"><code>tl_new &lt;- read_lines(&#39;tl_new.txt&#39;)
+tl_old &lt;- read_lines(&#39;tl_old.txt&#39;)
+tl_main &lt;- read_lines(&#39;tl_main.txt&#39;) %&gt;% .[-1]</code></pre>
+<p>因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：</p>
+<pre class="r"><code>tl_new_tran &lt;- tl_new %&gt;% 
+  str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%
+  str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% 
+  str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% 
+  str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% 
+  str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% 
+  str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% 
+  str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% 
+  str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% 
+  str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% 
+  str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% 
+  str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% 
+  str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% 
+  str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% 
+  str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% 
+  str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% 
+  str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% 
+  str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% 
+  str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% 
+  str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)
+  
+tl_old_tran &lt;- tl_old %&gt;% 
+  str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%
+  str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% 
+  str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% 
+  str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% 
+  str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% 
+  str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% 
+  str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% 
+  str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% 
+  str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% 
+  str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% 
+  str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% 
+  str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% 
+  str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% 
+  str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% 
+  str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% 
+  str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% 
+  str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% 
+  str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% 
+  str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)</code></pre>
+<p>上面的替换工作并不全，比如，同样是<strong>段郞</strong>，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。</p>
+<p>下面创建分词环境，并把主要人物的人名添加进了自定义词库，然后针对两个版本分别进行分词：</p>
+<pre class="r"><code>worker &lt;- worker(stop_word = &#39;stopwords_cn.txt&#39;, user = &#39;tl_main.txt&#39;)
+
+tl_word_new &lt;- worker[tl_new_tran]
+tl_word_old &lt;- worker[tl_old_tran]</code></pre>
+<p>再分别做一些简单的清洗工作：</p>
+<pre class="r"><code>tl_freq_new &lt;- tl_word_new %&gt;% 
+  table() %&gt;% 
+  as.tibble() %&gt;% 
+  select(word = 1, freq = 2) %&gt;%
+  filter(!str_detect(word, &#39;(\\d+)|([A-Za-z]+)|(\\s+)&#39;)) %&gt;% 
+  filter(str_length(word) &gt; 1) %&gt;% 
+  arrange(-freq) %&gt;% 
+  filter(freq &gt; 100)
+
+tl_freq_old &lt;- tl_word_old %&gt;% 
+  table() %&gt;% 
+  as.tibble() %&gt;% 
+  select(word = 1, freq = 2) %&gt;%
+  filter(!str_detect(word, &#39;(\\d+)|([A-Za-z]+)|(\\s+)&#39;)) %&gt;% 
+  filter(str_length(word) &gt; 1) %&gt;% 
+  arrange(-freq) %&gt;% 
+  filter(freq &gt; 100)</code></pre>
+<p>然后就可以开始画图并进行分析了。</p>
+<div class="section level2">
+<h2>主要人物出现频次对比</h2>
+<p>首先假设，一个人物越重要，他的名字在书中出现的次数就越多（我似乎应该反过来说），后续的分析都是建立在这一假设之上的，但还是要再整理一下数据。首先把主要人物的名字从所有的词汇中挑选出来，再根据两个版本不同的字数做一些调整，最后再把两个版本的数据合并起来：</p>
+<pre class="r"><code>tl_freq_main_new &lt;- tl_freq_new %&gt;% 
+  filter(word %in% tl_main) %&gt;% 
+  mutate(version = &#39;new&#39;)
+
+tl_freq_main_old &lt;- tl_freq_old %&gt;% 
+  filter(word %in% tl_main) %&gt;%
+  mutate(version = &#39;old&#39;, freq = round(freq*6.42/6.27))
+
+tl_freq_com &lt;- bind_rows(tl_freq_main_old, tl_freq_main_new) %&gt;% 
+  mutate(order = row_number(), 
+         version = fct_relevel(version, c(&#39;old&#39;, &#39;new&#39;)))</code></pre>
+<p>然后就可以绘图了：</p>
+<pre class="r"><code>tl_freq_com %&gt;% ggplot(aes(order, freq)) + 
+  geom_col(fill = &#39;#870204&#39;, width = .8) + 
+  geom_text(aes(label = freq), 
+            nudge_y = ifelse(str_length(tl_freq_com$freq) &gt; 3, -120, -80), 
+            size = 2, color = &#39;white&#39;) + 
+  coord_flip() + 
+  scale_x_reverse(breaks = tl_freq_com$order,
+                  labels = tl_freq_com$word,
+                  expand = c(0, 0)) + 
+  scale_y_continuous(expand = c(0, 0)) + 
+  labs(x = &#39;人  物&#39;, y = &#39;频  次&#39;) + 
+  facet_wrap(~ version, scales = &#39;free_y&#39;,
+             labeller = as_labeller(c(&#39;old&#39; = &#39;旧  版&#39;, &#39;new&#39; = &#39;新  版&#39;))) + 
+  theme_tufte() + 
+  theme(strip.text = element_text(size = 12))</code></pre>
+<p><img src="/post/2018-11-04-text-analysis-for-tianlong_files/figure-html/unnamed-chunk-7-1.png" width="2100" /></p>
+<p>从这张图来看，两个版本可能没有太大的差异，三大男主角和三大女主角的地位没有变化，夹在他们中间的慕容复的位次也没有变化。不过，我一直以为王语嫣是女一号呢，没想到只排第三名。</p>
+<p>为了更清楚地对比两个版本主要人物的出场次数的差异，我将两个版本每个人物的出场频次做了差，并重新汇了图：</p>
+<pre class="r"><code>tl_freq_com %&gt;% select(-order) %&gt;% 
+  spread(version, freq) %&gt;% 
+  mutate(diff = new - old) %&gt;% 
+  ggplot(aes(fct_reorder(word, diff), diff)) + 
+  geom_col(width = .8, fill = &#39;#870204&#39;) + 
+  scale_y_continuous(breaks = seq(-400, 300, 50), expand = c(0, 0)) + 
+  labs(x = &#39;名  字&#39;, y = &#39;变  化&#39;) + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, vjust = .6, size = 10))</code></pre>
+<p><img src="/post/2018-11-04-text-analysis-for-tianlong_files/figure-html/unnamed-chunk-8-1.png" width="2100" /></p>
+<p>忘了说下，这里的差值是用新版本的频次减去了旧版本的频次。从这张图来看就很明显了，新版本中，游坦之、阿紫和慕容复的出现有所下降，而萧峰、段誉和阿朱的出场频次有了很大幅度的增加，这主要因为新版本加了很多阿朱和萧峰的内容。虽然阿紫和阿朱两姐妹出场的频次此消彼长，但阿紫女一号的地位并没有被撼动。</p>
+<p>下面分章节来对比各主角的出场情况。</p>
+</div>
+<div class="section level2">
+<h2>主角在不同章节出现频次对比</h2>
+<p>首先还是要整理一下数据，并把两个版本的数据合并起来，这里我将出场频次前七的角色视为主角，这七人分别是段誉、萧峰、虚竹、慕容复、阿紫、阿朱和王语嫣：</p>
+<pre class="r"><code>tl_chapter_new &lt;- tl_word_new %&gt;% 
+  as.tibble() %&gt;% 
+  mutate(chapter = cumsum(str_detect(value, &#39;^\\d{1,2}$&#39;)))
+
+tl_chapter_old &lt;- tl_word_old %&gt;% 
+  as.tibble() %&gt;% 
+  mutate(chapter = cumsum(str_detect(value, &#39;^\\d{1,2}$&#39;)))
+
+tl_chapter_lead_new &lt;- tl_chapter_new %&gt;% 
+  count(chapter, value) %&gt;% 
+  filter(value %in% tl_freq_main_new$word[1:7]) %&gt;% 
+  mutate(version = &#39;new&#39;)
+
+tl_chapter_lead_old &lt;- tl_chapter_old %&gt;% 
+  count(chapter, value) %&gt;% 
+  filter(value %in% tl_freq_main_old$word[1:7]) %&gt;% 
+  mutate(version = &#39;old&#39;)
+
+tl_chapter_lead_com &lt;- bind_rows(tl_chapter_lead_new, tl_chapter_lead_old) %&gt;% 
+  filter(chapter != 0)</code></pre>
+<p>然后进行绘图：</p>
+<pre class="r"><code>tl_chapter_lead_com %&gt;% ggplot(aes(factor(chapter), n)) + 
+  geom_line(aes(group = value, color = value), size = 1.2) + 
+  facet_wrap(~ version, nrow = 2, 
+             labeller = as_labeller(c(&#39;old&#39; = &#39;旧  版&#39;, &#39;new&#39; = &#39;新  版&#39;))) + 
+  scale_color_brewer(palette = &#39;Set1&#39;) + 
+  labs(x = &#39;章  节&#39;, y = &#39;频  次&#39;, color = &#39;人  物&#39;) + 
+  theme_minimal() + 
+  theme(strip.text = element_text(size = 12), 
+        legend.position = &#39;bottom&#39;,
+        axis.text.x = element_text(size = 8, angle = 45)) + 
+  guides(color = guide_legend(nrow = 1))</code></pre>
+<p><img src="/post/2018-11-04-text-analysis-for-tianlong_files/figure-html/unnamed-chunk-10-1.png" width="2100" /></p>
+<p>图有点乱，但我也没想到更好的呈现方式。七位主角在两个版本各章节的出场趋势大体上相同，只有某些章节存在差异：新版的第22章，阿朱和萧峰有了更多的出场，应该是加了更多描写他俩感情的内容，而新版的第26章，阿紫和萧峰的出场都有所减少，不知道删掉了什么内容；另外，对比下阿朱阿紫两姐妹，虽然阿紫总出场频次高于姐姐，但她共计出场了30多章，而阿朱只出场了10多章，所以要算下频次章节比的话，阿朱才是女一号。其他几位主角也多少有些变化，但先略过不提。下面进行最重要的情感分析。</p>
+</div>
+<div class="section level2">
+<h2>情感分析</h2>
+<p>首先还是要整理、合并数据：</p>
+<pre class="r"><code>sentiment &lt;- read_xlsx(&#39;情感词汇本体.xlsx&#39;) %&gt;% 
+  select(word = 1, sentiment = 7) %&gt;% 
+  filter(sentiment == 1 | sentiment == 2) %&gt;% 
+  mutate(sentiment = ifelse(sentiment &gt; 1, -1, 1))
+
+tl_sentiment_new &lt;- tl_chapter_new %&gt;% 
+  left_join(sentiment, by = c(&#39;value&#39; = &#39;word&#39;)) %&gt;% 
+  filter(!chapter %in% c(0, 51), !is.na(sentiment)) %&gt;% 
+  group_by(chapter) %&gt;% 
+  summarise(sentiment = sum(sentiment)) %&gt;% 
+  mutate(version = &#39;new&#39;)
+
+tl_sentiment_old &lt;- tl_chapter_old %&gt;% 
+  left_join(sentiment, by = c(&#39;value&#39; = &#39;word&#39;)) %&gt;% 
+  filter(!chapter %in% c(0, 51), !is.na(sentiment)) %&gt;% 
+  group_by(chapter) %&gt;% 
+  summarise(sentiment = sum(sentiment)) %&gt;% 
+  mutate(version = &#39;old&#39;)
+
+tl_sentiment_com &lt;- bind_rows(tl_sentiment_new, tl_sentiment_old)</code></pre>
+<p>然后绘图，这次应该比较容易看出差异：</p>
+<pre class="r"><code>tl_sentiment_com %&gt;% ggplot(aes(factor(chapter), sentiment)) + 
+  geom_line(aes(group = version, color = version), size = 1.2) + 
+  labs(x = &#39;章  节&#39;, y = &#39;分  数&#39;, color = &#39;版本&#39;) + 
+  scale_y_continuous(breaks = seq(-100, 300, 50)) + 
+  scale_color_brewer(palette = &#39;Set1&#39;, labels = c(&#39;新版&#39;, &#39;旧版&#39;)) + 
+  theme_minimal() + 
+  theme(legend.position = &#39;top&#39;,
+        axis.text.x = element_text(size = 8, angle = 45))</code></pre>
+<p><img src="/post/2018-11-04-text-analysis-for-tianlong_files/figure-html/unnamed-chunk-12-1.png" width="2100" /></p>
+<p>第一个差异出现在21章和22章，新版的情感更积极一些，这应该更能加深随后的阿朱之死所带来的悲痛；第二个差异出现在39章，好像是灵鹫宫大战之后，旧版中这一章是整部小说情感最积极之处，但在新版中却有所弱化；第三个差异是第42章，少林寺大战，我不知道这部分两个版本有什么具体的差异（实际上我并没有看过新版），但新版这里更积极一点；最后一个差异出现在最后一章，虽然新版中并没有改变萧峰最后的命运，但这一章却成了新版中情感最积极的一章。</p>
+<p>分析就到此结束了，最后在画个主要人物的关系网吧。</p>
+</div>
+<div class="section level2">
+<h2>主要人物关系网</h2>
+<p>这个关系网在两个版本之间可能不会存在什么差异，所以就只用新版画了。首先还是处理下数据：</p>
+<pre class="r"><code>tl_relation_new &lt;- tibble(hero1 = rep(tl_main, each = length(tl_main)), 
+                          hero2 = rep(tl_main, length(tl_main))) %&gt;% 
+  filter(hero1 != hero2)
+
+tl_chapter_main_new &lt;- tl_chapter_new %&gt;%
+  filter(value %in% tl_main) %&gt;% 
+  distinct()
+
+tl_network_new &lt;- tibble()
+for (i in 1:50) {
+  temp &lt;- tibble(hero1 = rep(filter(tl_chapter_main_new, chapter == i)$value, 
+                             each = nrow(filter(tl_chapter_main_new, chapter == i))),
+                 hero2 = rep(filter(tl_chapter_main_new, chapter == i)$value, 
+                             nrow(filter(tl_chapter_main_new, chapter == i)))) %&gt;% 
+    filter(hero1 != hero2)
+  
+  tl_network_new &lt;- bind_rows(tl_network_new, temp)
+}
+
+tl_network_main_new &lt;- count(tl_network_new, hero1, hero2) %&gt;% 
+  arrange(-n)</code></pre>
+<p>然后作图：</p>
+<pre class="r"><code>tl_network_main_new %&gt;% 
+  filter(n &gt; 7) %&gt;% 
+  graph_from_data_frame() %&gt;% 
+  ggraph(layout = &quot;fr&quot;) + 
+  geom_edge_link(aes(edge_alpha = n, edge_width = n), edge_colour = &quot;grey&quot;) +
+  geom_node_point(color = &quot;steelblue&quot;, size = 8) +
+  geom_node_text(aes(label = name), vjust = 2.2, size = 3) + 
+  theme_void() + 
+  theme(legend.position = &#39;&#39;)</code></pre>
+<p><img src="/post/2018-11-04-text-analysis-for-tianlong_files/figure-html/unnamed-chunk-14-1.png" width="2100" /></p>
+<p>因为人物关系实在复杂，这里略去了一些不太重要的关系。这篇文章也就到此结束了。虽然很想写得更细一点，但时间实在有限，待以后有时间再慢慢填充内容吧。</p>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 7 x64 (build 7601) Service Pack 1
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=Chinese (Simplified)_People&#39;s Republic of China.936 
+## [2] LC_CTYPE=Chinese (Simplified)_People&#39;s Republic of China.936   
+## [3] LC_MONETARY=Chinese (Simplified)_People&#39;s Republic of China.936
+## [4] LC_NUMERIC=C                                                   
+## [5] LC_TIME=Chinese (Simplified)_People&#39;s Republic of China.936    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] bindrcpp_0.2.2  ggraph_1.0.2    igraph_1.2.2    widyr_0.1.1    
+##  [5] ggthemes_4.0.1  jiebaR_0.9.99   jiebaRD_0.1     tidytext_0.2.0 
+##  [9] readxl_1.1.0    forcats_0.3.0   stringr_1.3.1   dplyr_0.7.7    
+## [13] purrr_0.2.5     readr_1.1.1     tidyr_0.8.1     tibble_1.4.2   
+## [17] ggplot2_3.1.0   tidyverse_1.2.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] ggrepel_0.8.0      Rcpp_0.12.19       lubridate_1.7.4   
+##  [4] lattice_0.20-35    assertthat_0.2.0   rprojroot_1.3-2   
+##  [7] digest_0.6.18      ggforce_0.1.3      R6_2.3.0          
+## [10] cellranger_1.1.0   plyr_1.8.4         backports_1.1.2   
+## [13] evaluate_0.12      httr_1.3.1         blogdown_0.9      
+## [16] pillar_1.3.0       rlang_0.3.0.1      lazyeval_0.2.1    
+## [19] rstudioapi_0.8     Matrix_1.2-14      rmarkdown_1.10    
+## [22] labeling_0.3       munsell_0.5.0      broom_0.5.0       
+## [25] compiler_3.5.1     janeaustenr_0.1.5  modelr_0.1.2      
+## [28] xfun_0.4           pkgconfig_2.0.2    htmltools_0.3.6   
+## [31] tidyselect_0.2.5   gridExtra_2.3      bookdown_0.7      
+## [34] viridisLite_0.3.0  crayon_1.3.4       withr_2.1.2       
+## [37] MASS_7.3-50        SnowballC_0.5.1    grid_3.5.1        
+## [40] nlme_3.1-137       jsonlite_1.5       gtable_0.2.0      
+## [43] magrittr_1.5       units_0.6-1        scales_1.0.0      
+## [46] tokenizers_0.2.1   cli_1.0.1          stringi_1.2.4     
+## [49] farver_1.0         viridis_0.5.1      xml2_1.2.0        
+## [52] RColorBrewer_1.1-2 tools_3.5.1        glue_1.3.0        
+## [55] tweenr_1.0.0       hms_0.4.2          yaml_2.2.0        
+## [58] colorspace_1.3-2   rvest_0.3.2        knitr_1.20        
+## [61] bindr_0.1.1        haven_1.1.2</code></pre>
+</div>
