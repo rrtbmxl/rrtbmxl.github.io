@@ -1,0 +1,380 @@
+---
+title: 关于动画的刻板印象
+author: ''
+date: '2018-02-14'
+slug: stereotype-on-anime
+categories:
+  - R
+tags:
+  - 可视化
+  - 心理学
+---
+
+
+
+<p>旧博客里的一篇文章，感觉还有点价值，就搬了过来。</p>
+<p>前段时间带孩子去看了<a href="https://movie.douban.com/subject/27605297/">《金龟子》</a>动画大电影，感觉很无趣。我原以为其身为童年回忆，来到屏幕，面对长幼两辈，必有看点，没想到竟演出如此幼稚之戏！看了几分钟之后，我就开始玩手机了。坐我前面的也是一对父子，动画放了一半的时候，孩子问了他爸爸一句话，让我印象很深刻。他问：“爸爸，你怎么不看啊？”孩子显然是很喜欢这部动画的，希望他爸爸也跟他一起看，但这动画实在无法勾起我们的兴趣。电影结束回到家后，我产生了一个疑问，难道这部动画真的没办法制作成老少咸宜的吗？是出于什么原因，导致这部本来可以通过卖情怀让成年人也产生兴趣的动画最终只是一部低龄向动画？我想，原因不外乎在我们国家对于动画一直存在一个根深蒂固的刻板印象，即，动画是给小孩子看的。</p>
+<p>小时候就经常听到大人们说，“你看谁谁谁，真是没出息，这么大了还看动画片。”我关于“动画是给小孩子看的”这一刻板印象应该就是那个时候形成的。不过，虽然有这么个刻板印象，我还是从小看到了大（别说，也确实没什么出息），因为在看的过程中，我并没有体验到“动画是给小孩子看的”这一点，不过大了之后，我从来不看国产动画就是了（除了陪孩子看《喜羊羊》《熊出没》之类的动画，不过说起来，好像连我家孩子也很少看这两部动画了），即便现在国产动画天天“崛起”，我也一丁点不想看。究其原因，大概是因为我关于动画的刻板印象在之前的基础之上发生了变化，变成了“国产动画是给小孩子看的”。</p>
+<p>中学时一直在在追漫画《神兵玄奇》，后来听说要改编成动画了，挺激动的，谁知道改编成了<a href="https://movie.douban.com/subject/22735528/">《神兵小将》</a>。这部时不时会有少儿不宜场景的成人向漫画到底经过了怎样的反向魔改才成为低龄向动画的？还是之前那个疑问，这部动画难道就不能通过适当的删改，制作成全年龄的吗？带着这种疑问，我试图去<a href="http://www.cnki.net/">知网</a>上寻找答案，我在检索处输入了“动画”一词，第一个匹配的关键词是“幼儿”，第二个是“身心发展”，看起来这一刻板印象确实是挺普遍的，连搞学术的人都这么认为了。我最终没能在知网上找到答案，所以我决定自己来对这一问题进行一下探究。</p>
+<p>首先，我要确定两件事情：</p>
+<ul>
+<li><p>关于动画是不是存在这样的刻板印象？</p></li>
+<li><p>如果存在的话，这一刻板印象是仅限于我们国家，还是全都这样？</p></li>
+</ul>
+<p>要进行验证的话，首先要有相关的数据。虽然我平常关于动画的信息会参考<a href="http://www.imdb.com/">IMDB</a>和<a href="https://myanimelist.net/">MAL</a>，但要完成这一任务，显然还是<a href="https://www.douban.com/">豆瓣</a>更合适。我试图在豆瓣网站上爬取我所需要的信息，但折腾了一上午才发现，我所掌握的那一点点爬虫技术根本就无法爬取我所需要的数据，于是我就在网上找了一份现成的（早知道就不折腾了）。这份数据是2016年的，还算比较新，内容也完全符合我的需要。其次，要找到具有代表性的作品。关于哪些动画是代表性的，每个人肯定都有不同的看法，可能不会有特定的原型，所以这里我先用豆瓣上的评价人数为指标来评定动画的代表性，评价人数越多，就说明其越具有代表性。另外，要拿国产动画和国外动画进行对比，但实际上所谓的国外动画，主要就是美国和日本的动画（三个国家的动画数量占了全部动画数量的81.4%），所以后面只挑了这三个地区的数据。</p>
+<p>先载入要用到的包：</p>
+<pre class="r"><code>library(tidyverse)
+library(knitr)
+library(scales)</code></pre>
+<p>按照惯例，先载入了<code>tidyverse</code>包；然后为了数据能展示得更好看一点，以及数据的正常显示，也载入了<code>knitr</code>包；另外，后面在画图的时候，还要用到<code>scales</code>包，这里也一并载入。</p>
+<p>然后来看一下这份数据：</p>
+<pre class="r"><code>douban &lt;- read_csv(&#39;douban.csv&#39;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   评分 = col_double(),
+##   名字 = col_character(),
+##   投票人数 = col_integer(),
+##   类型 = col_character(),
+##   产地 = col_character(),
+##   上映时间 = col_character(),
+##   时长 = col_character(),
+##   年代 = col_character(),
+##   是否连续剧 = col_integer(),
+##   集数 = col_character(),
+##   看过 = col_integer(),
+##   待看 = col_character()
+## )</code></pre>
+<pre class="r"><code>head(douban, 10) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">评分</th>
+<th align="left">名字</th>
+<th align="center">投票人数</th>
+<th align="left">类型</th>
+<th align="left">产地</th>
+<th align="left">上映时间</th>
+<th align="left">时长</th>
+<th align="left">年代</th>
+<th align="center">是否连续剧</th>
+<th align="left">集数</th>
+<th align="center">看过</th>
+<th align="left">待看</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">7.7</td>
+<td align="left">0.109027778</td>
+<td align="center">3901</td>
+<td align="left">剧情</td>
+<td align="left">澳大利亚</td>
+<td align="left">2006-08-17</td>
+<td align="left">Japan: 99 分钟</td>
+<td align="left">2006</td>
+<td align="center">0</td>
+<td align="left">NONE</td>
+<td align="center">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="center">7.9</td>
+<td align="left">0.1875</td>
+<td align="center">512</td>
+<td align="left">剧情</td>
+<td align="left">新加坡</td>
+<td align="left">2005-12-17</td>
+<td align="left">Japan: 93 分钟</td>
+<td align="left">2005</td>
+<td align="center">0</td>
+<td align="left">NONE</td>
+<td align="center">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="center">9.6</td>
+<td align="left">肖申克的救赎 The Shawshank Redemption</td>
+<td align="center">692795</td>
+<td align="left">剧情 / 犯罪</td>
+<td align="left">美国</td>
+<td align="left">1994-09-10(多伦多电影节) / 1994-10-14(美国)</td>
+<td align="left">142 分钟</td>
+<td align="left">1994</td>
+<td align="center">0</td>
+<td align="left">NONE</td>
+<td align="center">532</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="center">6.8</td>
+<td align="left">0.965972222</td>
+<td align="center">38</td>
+<td align="left">短片</td>
+<td align="left">中国大陆</td>
+<td align="left">NONE</td>
+<td align="left">9分钟</td>
+<td align="left">2011</td>
+<td align="center">0</td>
+<td align="left">NONE</td>
+<td align="center">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="center">7.1</td>
+<td align="left">0.97</td>
+<td align="center">44</td>
+<td align="left">短片</td>
+<td align="left">Netherlands</td>
+<td align="left">NONE</td>
+<td align="left">9分钟</td>
+<td align="left">2013</td>
+<td align="center">0</td>
+<td align="left">NONE</td>
+<td align="center">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="center">6.1</td>
+<td align="left">12.21</td>
+<td align="center">179</td>
+<td align="left">剧情 / 爱情</td>
+<td align="left">中国大陆</td>
+<td align="left">2012-12-08(中国大陆)</td>
+<td align="left">21分钟</td>
+<td align="left">2012</td>
+<td align="center">0</td>
+<td align="left">NONE</td>
+<td align="center">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="center">9.5</td>
+<td align="left">控方证人 Witness for the Prosecution</td>
+<td align="center">42995</td>
+<td align="left">剧情 / 悬疑 / 犯罪</td>
+<td align="left">美国</td>
+<td align="left">1957-12-17(美国)</td>
+<td align="left">116分钟</td>
+<td align="left">1957</td>
+<td align="center">0</td>
+<td align="left">NONE</td>
+<td align="center">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="center">5.8</td>
+<td align="left">37</td>
+<td align="center">360</td>
+<td align="left">剧情 / 家庭</td>
+<td align="left">中国大陆 / 香港</td>
+<td align="left">2012-06-01(中国大陆)</td>
+<td align="left">97分钟</td>
+<td align="left">2012</td>
+<td align="center">0</td>
+<td align="left">NONE</td>
+<td align="center">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="center">7.4</td>
+<td align="left">49</td>
+<td align="center">1333</td>
+<td align="left">剧情</td>
+<td align="left">日本</td>
+<td align="left">NONE</td>
+<td align="left">23分钟</td>
+<td align="left">2013</td>
+<td align="center">1</td>
+<td align="left">11</td>
+<td align="center">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="center">9.5</td>
+<td align="left">美丽人生 La vita è bella</td>
+<td align="center">327855</td>
+<td align="left">剧情 / 喜剧 / 爱情</td>
+<td align="left">意大利</td>
+<td align="left">1997-12-20(意大利)</td>
+<td align="left">116分钟</td>
+<td align="left">1997</td>
+<td align="center">0</td>
+<td align="left">NONE</td>
+<td align="center">511</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<p>这里首先使用<code>read_csv</code>函数将数据导入。不知道为什么，这样载入后数据直接显示是不正常的，但是通过<code>kable</code>函数显示就没问题了；同样也不知道为什么（应该是因为片名中存在逗号），使用<code>read.csv</code>会报错，所以最终就用了这样的方式。可以看到，这份数据有12个变量，其中“评分”，“名字”，“投票人数”，“类型”，“产地”，“年代”几个变量是我所需要的。另外，这份数据一共包含了7万多部影视的信息。下面先简单的把这份数据清理一下：</p>
+<pre class="r"><code>anime &lt;- douban %&gt;% select(name = 2, number = 3, rating = 1, 
+                           type = 4, region = 5, year = 8) %&gt;% 
+  filter(str_detect(type, &#39;动画&#39;)) %&gt;%
+  select(-type) %&gt;% 
+  mutate(region = str_trim(region, &#39;left&#39;), 
+         region = str_replace(region, &#39;\\s.*&#39;, &#39;&#39;),
+         region = str_replace(region, &#39;中国.*|香港|台湾|中國台灣&#39;, &#39;中国&#39;),
+         region = str_replace(region, &#39;Japan&#39;, &#39;日本&#39;),
+         region = str_replace(region, &#39;USA|usa|美國&#39;, &#39;美国&#39;), 
+         name = str_replace(name, &#39;\\s.*&#39;, &#39;&#39;)) %&gt;% 
+  filter(region %in% c(&#39;中国&#39;, &#39;日本&#39;, &#39;美国&#39;)) %&gt;% 
+  arrange(-number)</code></pre>
+<p>首先，我使用<code>select</code>函数把我需要的变量挑了出来，并重新命了名，然后通过<code>filter</code>和<code>str_detect</code>的组合挑选出类型中包含<strong>动画</strong>的行，因为此时所有的类型都是动画了，所以<strong>type</strong>这一变量就没用了，可以去掉。然后在<code>mutate</code>函数中我对<strong>region</strong>和<strong>name</strong>进行了处理：首先是<strong>region</strong>，这是最麻烦的一列变量，因为有些动画是多个地区合作的，对于这种情况，我决定只保留第一个地区；地区之间都是通过“ / ”连接的，这个倒好处理，不过后来发现第一个地区前面都还有一个空格，所以就先用<code>str_trim</code>函数把这个空格去掉，然后再用<code>str_replace</code>函数把第一个地区之外的地区全都去掉。后面还有一个问题，就是对于同一个地区，有不同的标识，比如<strong>USA</strong>，<strong>usa</strong>以及<strong>美國</strong>都是指<strong>美国</strong>，所以查看了变量的具体内容之后，又对这一问题进行了一些处理。片名中有一部分是包括两个名字的，比如中文名加日文名或中文名加英文名，好在这两者只通过一个空格隔开，再用一个<code>str_replace</code>函数就可以解决了。其实还有很多片名是有问题的，但是问题是各种各样的，很难统一解决，我也就放着不管了。然后，通过<code>filter</code>函数选择了中日美三国的数据。最后，按着评价人数降序排列了一下。现在的数据是这个样子的：</p>
+<pre class="r"><code>head(anime, 10) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">number</th>
+<th align="right">rating</th>
+<th align="left">region</th>
+<th align="left">year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">千与千寻</td>
+<td align="right">525505</td>
+<td align="right">9.2</td>
+<td align="left">日本</td>
+<td align="left">2001</td>
+</tr>
+<tr class="even">
+<td align="left">飞屋环游记</td>
+<td align="right">423327</td>
+<td align="right">8.9</td>
+<td align="left">美国</td>
+<td align="left">2009</td>
+</tr>
+<tr class="odd">
+<td align="left">机器人总动员</td>
+<td align="right">421734</td>
+<td align="right">9.3</td>
+<td align="left">美国</td>
+<td align="left">2008</td>
+</tr>
+<tr class="even">
+<td align="left">龙猫</td>
+<td align="right">344318</td>
+<td align="right">9.1</td>
+<td align="left">日本</td>
+<td align="left">1988</td>
+</tr>
+<tr class="odd">
+<td align="left">疯狂原始人</td>
+<td align="right">311462</td>
+<td align="right">8.8</td>
+<td align="left">美国</td>
+<td align="left">2013</td>
+</tr>
+<tr class="even">
+<td align="left">西游记之大圣归来</td>
+<td align="right">311050</td>
+<td align="right">8.3</td>
+<td align="left">中国</td>
+<td align="left">2015</td>
+</tr>
+<tr class="odd">
+<td align="left">神偷奶爸</td>
+<td align="right">305753</td>
+<td align="right">8.5</td>
+<td align="left">美国</td>
+<td align="left">2010</td>
+</tr>
+<tr class="even">
+<td align="left">疯狂动物城</td>
+<td align="right">284652</td>
+<td align="right">9.3</td>
+<td align="left">美国</td>
+<td align="left">2016</td>
+</tr>
+<tr class="odd">
+<td align="left">超能陆战队</td>
+<td align="right">282909</td>
+<td align="right">8.6</td>
+<td align="left">美国</td>
+<td align="left">2014</td>
+</tr>
+<tr class="even">
+<td align="left">哈尔的移动城堡</td>
+<td align="right">279362</td>
+<td align="right">8.8</td>
+<td align="left">日本</td>
+<td align="left">2004</td>
+</tr>
+</tbody>
+</table>
+<p>只显示了评价人数最多的10部动画，可以看到，动画这个行业基本上是吉卜力、皮克斯以及迪士尼的天下。然后我以地区分类，进行了简单的统计。</p>
+<pre class="r"><code>anime %&gt;% filter(number &gt; 100) %&gt;% 
+  group_by(region) %&gt;% 
+  summarise(N = n(), mean_rating = mean(rating, na.rm = TRUE), 
+            mean_number = mean(number, na.rm = TRUE)) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">region</th>
+<th align="right">N</th>
+<th align="right">mean_rating</th>
+<th align="right">mean_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">美国</td>
+<td align="right">1302</td>
+<td align="right">7.984485</td>
+<td align="right">9583.803</td>
+</tr>
+<tr class="even">
+<td align="left">日本</td>
+<td align="right">3153</td>
+<td align="right">7.672693</td>
+<td align="right">4570.155</td>
+</tr>
+<tr class="odd">
+<td align="left">中国</td>
+<td align="right">709</td>
+<td align="right">7.050635</td>
+<td align="right">4855.121</td>
+</tr>
+</tbody>
+</table>
+<p>这里只选择了评价人数大于100的动画。对比一下就可以发现，日本动画在数量上是碾压性的，但质量方面还是美国更胜一筹。对于国产动画，各方面都还有所欠缺，国产动画的崛起还有很长的路要走。</p>
+<p>然后分区域来看一下，先看下美国的情况，代码及图如下：</p>
+<pre class="r"><code>plot_usa &lt;- anime %&gt;% filter(region == &#39;美国&#39;) %&gt;% 
+  top_n(20, number) %&gt;% 
+  ggplot(aes(reorder(name,number), number)) + 
+  geom_col(fill = &#39;#870204&#39;, width = .8) + 
+  coord_flip() + 
+  geom_text(aes(label = rating), hjust = &#39;right&#39;, color = &#39;white&#39;) + 
+  scale_y_continuous(labels = comma) + 
+  labs(x = &#39;片名&#39;, y = &#39;评价人数&#39;)</code></pre>
+<pre class="r"><code>plot_usa</code></pre>
+<p><img src="/post/2018-02-14-stereotype-on-anime_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>这里我选择了评价人数最多的20部美国动画，并把评分也标了上去。这20部动画我看过10部，除了《狮子王》之外，应该全是在成年以后看的（可能也是因为这些动画都比较新）。就我的了解，这些动画大部分都是既适合小孩子看，也适合成年人看，并不是专门为了给小孩子看而制作的，所以我觉得，美国应该不存在“动画是给小孩子看的”这一刻板印象。</p>
+<p>然后看看日本的情况：</p>
+<pre class="r"><code>plot_jpn &lt;- anime %&gt;% filter(region == &#39;日本&#39;) %&gt;% 
+  top_n(20, number) %&gt;% 
+  ggplot(aes(reorder(name,number), number)) + 
+  geom_col(fill = &#39;#870204&#39;, width = .8) + 
+  coord_flip() + 
+  geom_text(aes(label = rating), hjust = &#39;right&#39;, color = &#39;white&#39;) + 
+  scale_y_continuous(labels = comma) + 
+  labs(x = &#39;片名&#39;, y = &#39;评价人数&#39;)</code></pre>
+<pre class="r"><code>plot_jpn</code></pre>
+<p><img src="/post/2018-02-14-stereotype-on-anime_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>这20部动画我也是只看过10部，这10部主要是宫崎骏的动画。虽然他的动画都是以一些少年少女为主角，但面向的年龄段应该也是比较宽的（而且可能不太适合太小的孩子看）。总的来说，这20部里面，除了《哆啦A梦》，可能都不是专门制作给小孩子看的，所以我觉得日本也不存在这种刻板印象。</p>
+<p>最后来看看国产动画：</p>
+<pre class="r"><code>plot_chn &lt;- anime %&gt;% filter(region == &#39;中国&#39;) %&gt;% 
+  top_n(20, number) %&gt;% 
+  ggplot(aes(reorder(name,number), number)) + 
+  geom_col(fill = &#39;#870204&#39;, width = .8) + 
+  coord_flip() + 
+  geom_text(aes(label = rating), hjust = &#39;right&#39;, color = &#39;white&#39;) + 
+  scale_y_continuous(labels = comma) + 
+  labs(x = &#39;片名&#39;, y = &#39;评价人数&#39;)</code></pre>
+<pre class="r"><code>plot_chn</code></pre>
+<p><img src="/post/2018-02-14-stereotype-on-anime_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>这20部动画大部分都看过，即便没看过，也肯定听说过。首先，我可以肯定，《十万个冷笑话》之下的那些动画全都是低龄向的，上面的麦兜系列也是，然后《十万个冷笑话》跟《李献计历险记》应该是成人向的，其他的应该是全年龄的。可以说，我国的经典动画一半以上都是低龄向的，所以我觉得，我们国家可能确实存在一种“动画是给小孩子看的”刻板印象。不过，这上边的动画很多都是比较旧的，也许新的动画中，这种现象已经减少了，所以还需要根据年代来看看这种趋势的变化。另外，我很意外，《喜羊羊》系列和《熊出没》系列竟然没有进前20，这一方面可能是因为这些动画都分了很多部，评分不集中，另一方面可能是因为这些动画的很多观众还没有长到会上豆瓣给动画打分的年纪。</p>
+<p>假如我们国家且仅有我们国家存在这样的一种刻板印象，那它是怎么造成的呢？是因为文化差异，还是因为从有刻板印象到消除刻板印象需要一个过程而我们国家恰好处于那个尚未消除这一刻板印象的阶段？这个问题不是我能回答的，但这个问题对我们国家动画产业的发展却影响甚大。因为我们有这样一个观念，所以制作方不会吃饱了撑的去制作全年龄向的动画，而这一结果又反过来继续加深了这一观念。因为动画的观众主要是小孩子，他们对动画的质量没有太高的要求，动画制作者也没必要精心打磨自己的作品，水平也就始终停滞不前或说跟不上其他国家的脚步。所以国产动画要崛起，可能得首先从打破这一刻板印象开始，把更多挑剔的成年人纳入到动画的观众中来。</p>
+<p>以上只是我个人根据不一定合适的信息而产生的主观想法，存在很多缺陷。比如，上豆瓣的人年纪应该都不小了，这份数据里缺少低龄群体的评分；另外，进入前20的大部分都是动画电影，很少有TV版，所以其实也不是很有代表性；最后，我的想法不能代表大众的想法，我认为是低龄向的动画也许在大众眼里不是那样的。这也让我产生了一个想法，即有没有可能通过问卷调查来针对这一问题进行更科学、更系统的研究（如果没人研究过的话）？比如，用更合理的标准根据不同的年代选出具有代表性的动画，然后找人来针对不同的动画进行适合年龄段的评分，然后计算出不同年代不同区域的代表性动画所适合的年龄范围，从而来针对这一刻板印象进行更合理的验证？</p>
+<p>我觉得这个问题挺有意思的，但现在先到此为止吧，该准备过年啦！</p>
