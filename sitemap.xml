@@ -18,6 +18,11 @@
   </url>
   
   <url>
+    <loc>/2018/03/tackle-english-exam-with-text-mining/</loc>
+    <lastmod>2018-03-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/2018/02/stereotype-on-anime/</loc>
     <lastmod>2018-02-14T00:00:00+00:00</lastmod>
   </url>
@@ -70,6 +75,12 @@
   <url>
     <loc>/tags/%E6%95%99%E7%A8%8B/</loc>
     <lastmod>2018-10-28T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/%E6%95%99%E8%82%B2/</loc>
+    <lastmod>2018-03-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

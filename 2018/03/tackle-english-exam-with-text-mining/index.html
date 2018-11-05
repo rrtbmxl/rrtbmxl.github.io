@@ -1,0 +1,1068 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+  
+
+
+  
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
+    <title>使用R语言文本挖掘技术应对英语考试的粗浅想法及其他</title>
+    <meta name="author" content="孟祥良">
+    <meta name="keywords" content="">
+
+    <link rel="icon" href="/favicon.png">
+    
+
+    
+    <meta name="description" content="学习与考试学习是由经验引起的相对持久的变化，而考试，一方面是对习得的知识与技能的掌握情况的测试，另一方面也是对能否进入下一阶段学习或工作的考核。虽然学习能力受个人的智力水平以及学习方法的影响，但一般而言，学习是没有捷径的；但考试却不一样，在应付考试的时候，确实存在一些捷径可走。且以我个人的经历举三个例子。
+高中的时候，我的立体几何学得不是很好，对于如何解立体几何大题完全摸不着门路。然而有一天，我在一本辅导书中看到一种用空间向量解立体几何大题的方法，而且相当简单易学，做了几道类似的题，我就掌握了这个方法。随后在整个高中阶段，我就靠着这一捷径，在并不具备足够的立体几何知识的前提下做到了立体几何大题从来不丢分。
+我本科是自考的英语专业，其中有一门课，叫《英美文学选读》。这门课应该是所有20多门课中最有价值的一门，同时也是最难的一门。教材中介绍了英国与美国的70多位著名的作家以及他们的代表作。我第一次没能考过，因为内容实在是太多了，不好把握重点。后来，我找了几份历年的真题，看过之后才发现，原来70多位作者当中，只有30多位会在考试中考到，这一下就把任务量缩减了一半。虽然难度还是挺大的，但第二次终于顺便通过了。我又一次找到了考试的捷径，同时也第一次意识到真题对于考试的重要性。
+拿到本科毕业证之后，我就开始着手考研。专业课所涉及的内容不可谓不多，如果想全面的复习，时间肯定不够，只能有所侧重的进行复习。有了先前的经验，我开始反复地研究真题。哪些知识点会以选择题的形式考察，哪些知识点会以大题的形式考察，哪些部分的内容考试从来不涉及，可以忽略，哪些部分的内容频繁考到，必须重点记忆？经过反复地分析，我根据真题总结出了一份比较精简的笔记，并在考试中拿到了一个还算满意的分数。如果仅仅按大纲来复习的话，肯定会浪费很多时间。
+从我个人经历来看，考试确实是有捷径可循，而这个捷径往往跟历年的真题有关。但是对于大部分考试来说，可用于分析的样本量太低，而且找不到客观的指标，只能通过自己的主观判断，因此在知识点的选取上难免会有一些偏差。但有一门考试却不存在这两个问题，既有足够大的样本量可供分析，又能产生客观的指标。很明显，这门考试就是大家“喜闻乐见”英语考试。
+上大学之前，语数外三科同等重要；而上大学之后，大多数专业应该都不用学语文了，文科的一般也不用学数学了，只有英语，坚挺地为几乎所有专业所必学，并在很多学校作为毕业的条件之一。从这一点也可以看出来英语的重要性。学好英语不是一件轻松的事情，需要长时间的积累。虽然我恐怕不会再参加任何类型的英语考试了，但是未了将来的更好发展，我基本上保持着每天10K的英文阅读量。不过，应付英语考试就是另外一回事了，完全有可能出现我在备考《英美文学选读》时的情况。此外，我还想强调一点，我们这一辈子为了应付考试浪费了太多的生命了，也许功利地应付考试，反而倒是一种非功利的学习行为。
+要准备英语考试，大部分人的第一反应应该都是要背单词！各个级别的英语考试都有那么几千到上万的单词需要背诵，绝大多数考生都或多或少地受到过背单词的折磨。背了忘，忘了再背，背了再忘，反反复复，没有休止。一方面，对单词的记忆会随着时间的流逝而消退，另一方面，几千个单词之间往往也会产生各种干扰，导致遗忘。如果需要背诵的单词量大大减少的话，情况就会好得多了。那现在的问题就是，各级别英语考试大纲中的那些单词，真的都需要背下来吗？
+社会学中有个著名的80/20定律，即这个世界80%的财富都集中在20%的人手里。对于英语试卷这一定律可能也适用，即80%的文本都是由那20%最常见的单词组成。如果真是这样的话，那只需要原先五分之一的时间（也许更少，因为这时的干扰也更少），就足以应付英语考试了。市面上其实早就有了通过词频来排列单词供人背诵的参考书，但是这些书的销量似乎并不是很好，这大概是因为这些书只是笼统的把全部文本都拿来进行统计，不够细致，也没有针对性。如果能针对不同类型的试题，甚至针对这些试题的不同部分，统计出来词频，肯定会有更好的指导作用。
+针对高考英语阅读题的文本分析为了进行验证与分析，我从网上找到了最近9年的天津高考英语试题文档。我把其中的阅读部分复制了出来，按年份保存在了txt文档中，然后利用tidyverse和tidytext包，制作了两份csv格式句子库文档，其中一份是以全部阅读文本为基础生成的，另一份则只针对阅读题的题干而生成。现在先载入需要的包，并把这两份数据导入：
+library(tidyverse)library(tidytext)library(pipeR)library(magrittr)library(knitr)reading &lt;- read.csv(&#39;reading.csv&#39;, stringsAsFactors = FALSE)question &lt;- read.csv(&#39;question.csv&#39;, stringsAsFactors = FALSE)因为readr包中的函数对中文的支持不是很好，所以我这里使用了R自带的函数。先看一下这两份数据：
+reading %&gt;% head() %&gt;% kable()yearregionpassagesentencesentence_low2007天津AThe city of Rome has passed a new law to prevent cruelty to animals.the city of rome has passed a new law to prevent cruelty to animals.">
+    <meta property="og:description" content="学习与考试学习是由经验引起的相对持久的变化，而考试，一方面是对习得的知识与技能的掌握情况的测试，另一方面也是对能否进入下一阶段学习或工作的考核。虽然学习能力受个人的智力水平以及学习方法的影响，但一般而言，学习是没有捷径的；但考试却不一样，在应付考试的时候，确实存在一些捷径可走。且以我个人的经历举三个例子。
+高中的时候，我的立体几何学得不是很好，对于如何解立体几何大题完全摸不着门路。然而有一天，我在一本辅导书中看到一种用空间向量解立体几何大题的方法，而且相当简单易学，做了几道类似的题，我就掌握了这个方法。随后在整个高中阶段，我就靠着这一捷径，在并不具备足够的立体几何知识的前提下做到了立体几何大题从来不丢分。
+我本科是自考的英语专业，其中有一门课，叫《英美文学选读》。这门课应该是所有20多门课中最有价值的一门，同时也是最难的一门。教材中介绍了英国与美国的70多位著名的作家以及他们的代表作。我第一次没能考过，因为内容实在是太多了，不好把握重点。后来，我找了几份历年的真题，看过之后才发现，原来70多位作者当中，只有30多位会在考试中考到，这一下就把任务量缩减了一半。虽然难度还是挺大的，但第二次终于顺便通过了。我又一次找到了考试的捷径，同时也第一次意识到真题对于考试的重要性。
+拿到本科毕业证之后，我就开始着手考研。专业课所涉及的内容不可谓不多，如果想全面的复习，时间肯定不够，只能有所侧重的进行复习。有了先前的经验，我开始反复地研究真题。哪些知识点会以选择题的形式考察，哪些知识点会以大题的形式考察，哪些部分的内容考试从来不涉及，可以忽略，哪些部分的内容频繁考到，必须重点记忆？经过反复地分析，我根据真题总结出了一份比较精简的笔记，并在考试中拿到了一个还算满意的分数。如果仅仅按大纲来复习的话，肯定会浪费很多时间。
+从我个人经历来看，考试确实是有捷径可循，而这个捷径往往跟历年的真题有关。但是对于大部分考试来说，可用于分析的样本量太低，而且找不到客观的指标，只能通过自己的主观判断，因此在知识点的选取上难免会有一些偏差。但有一门考试却不存在这两个问题，既有足够大的样本量可供分析，又能产生客观的指标。很明显，这门考试就是大家“喜闻乐见”英语考试。
+上大学之前，语数外三科同等重要；而上大学之后，大多数专业应该都不用学语文了，文科的一般也不用学数学了，只有英语，坚挺地为几乎所有专业所必学，并在很多学校作为毕业的条件之一。从这一点也可以看出来英语的重要性。学好英语不是一件轻松的事情，需要长时间的积累。虽然我恐怕不会再参加任何类型的英语考试了，但是未了将来的更好发展，我基本上保持着每天10K的英文阅读量。不过，应付英语考试就是另外一回事了，完全有可能出现我在备考《英美文学选读》时的情况。此外，我还想强调一点，我们这一辈子为了应付考试浪费了太多的生命了，也许功利地应付考试，反而倒是一种非功利的学习行为。
+要准备英语考试，大部分人的第一反应应该都是要背单词！各个级别的英语考试都有那么几千到上万的单词需要背诵，绝大多数考生都或多或少地受到过背单词的折磨。背了忘，忘了再背，背了再忘，反反复复，没有休止。一方面，对单词的记忆会随着时间的流逝而消退，另一方面，几千个单词之间往往也会产生各种干扰，导致遗忘。如果需要背诵的单词量大大减少的话，情况就会好得多了。那现在的问题就是，各级别英语考试大纲中的那些单词，真的都需要背下来吗？
+社会学中有个著名的80/20定律，即这个世界80%的财富都集中在20%的人手里。对于英语试卷这一定律可能也适用，即80%的文本都是由那20%最常见的单词组成。如果真是这样的话，那只需要原先五分之一的时间（也许更少，因为这时的干扰也更少），就足以应付英语考试了。市面上其实早就有了通过词频来排列单词供人背诵的参考书，但是这些书的销量似乎并不是很好，这大概是因为这些书只是笼统的把全部文本都拿来进行统计，不够细致，也没有针对性。如果能针对不同类型的试题，甚至针对这些试题的不同部分，统计出来词频，肯定会有更好的指导作用。
+针对高考英语阅读题的文本分析为了进行验证与分析，我从网上找到了最近9年的天津高考英语试题文档。我把其中的阅读部分复制了出来，按年份保存在了txt文档中，然后利用tidyverse和tidytext包，制作了两份csv格式句子库文档，其中一份是以全部阅读文本为基础生成的，另一份则只针对阅读题的题干而生成。现在先载入需要的包，并把这两份数据导入：
+library(tidyverse)library(tidytext)library(pipeR)library(magrittr)library(knitr)reading &lt;- read.csv(&#39;reading.csv&#39;, stringsAsFactors = FALSE)question &lt;- read.csv(&#39;question.csv&#39;, stringsAsFactors = FALSE)因为readr包中的函数对中文的支持不是很好，所以我这里使用了R自带的函数。先看一下这两份数据：
+reading %&gt;% head() %&gt;% kable()yearregionpassagesentencesentence_low2007天津AThe city of Rome has passed a new law to prevent cruelty to animals.the city of rome has passed a new law to prevent cruelty to animals.">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="使用R语言文本挖掘技术应对英语考试的粗浅想法及其他">
+    <meta property="og:url" content="/2018/03/tackle-english-exam-with-text-mining/">
+    <meta property="og:site_name" content="RPG">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="RPG">
+    <meta name="twitter:description" content="学习与考试学习是由经验引起的相对持久的变化，而考试，一方面是对习得的知识与技能的掌握情况的测试，另一方面也是对能否进入下一阶段学习或工作的考核。虽然学习能力受个人的智力水平以及学习方法的影响，但一般而言，学习是没有捷径的；但考试却不一样，在应付考试的时候，确实存在一些捷径可走。且以我个人的经历举三个例子。
+高中的时候，我的立体几何学得不是很好，对于如何解立体几何大题完全摸不着门路。然而有一天，我在一本辅导书中看到一种用空间向量解立体几何大题的方法，而且相当简单易学，做了几道类似的题，我就掌握了这个方法。随后在整个高中阶段，我就靠着这一捷径，在并不具备足够的立体几何知识的前提下做到了立体几何大题从来不丢分。
+我本科是自考的英语专业，其中有一门课，叫《英美文学选读》。这门课应该是所有20多门课中最有价值的一门，同时也是最难的一门。教材中介绍了英国与美国的70多位著名的作家以及他们的代表作。我第一次没能考过，因为内容实在是太多了，不好把握重点。后来，我找了几份历年的真题，看过之后才发现，原来70多位作者当中，只有30多位会在考试中考到，这一下就把任务量缩减了一半。虽然难度还是挺大的，但第二次终于顺便通过了。我又一次找到了考试的捷径，同时也第一次意识到真题对于考试的重要性。
+拿到本科毕业证之后，我就开始着手考研。专业课所涉及的内容不可谓不多，如果想全面的复习，时间肯定不够，只能有所侧重的进行复习。有了先前的经验，我开始反复地研究真题。哪些知识点会以选择题的形式考察，哪些知识点会以大题的形式考察，哪些部分的内容考试从来不涉及，可以忽略，哪些部分的内容频繁考到，必须重点记忆？经过反复地分析，我根据真题总结出了一份比较精简的笔记，并在考试中拿到了一个还算满意的分数。如果仅仅按大纲来复习的话，肯定会浪费很多时间。
+从我个人经历来看，考试确实是有捷径可循，而这个捷径往往跟历年的真题有关。但是对于大部分考试来说，可用于分析的样本量太低，而且找不到客观的指标，只能通过自己的主观判断，因此在知识点的选取上难免会有一些偏差。但有一门考试却不存在这两个问题，既有足够大的样本量可供分析，又能产生客观的指标。很明显，这门考试就是大家“喜闻乐见”英语考试。
+上大学之前，语数外三科同等重要；而上大学之后，大多数专业应该都不用学语文了，文科的一般也不用学数学了，只有英语，坚挺地为几乎所有专业所必学，并在很多学校作为毕业的条件之一。从这一点也可以看出来英语的重要性。学好英语不是一件轻松的事情，需要长时间的积累。虽然我恐怕不会再参加任何类型的英语考试了，但是未了将来的更好发展，我基本上保持着每天10K的英文阅读量。不过，应付英语考试就是另外一回事了，完全有可能出现我在备考《英美文学选读》时的情况。此外，我还想强调一点，我们这一辈子为了应付考试浪费了太多的生命了，也许功利地应付考试，反而倒是一种非功利的学习行为。
+要准备英语考试，大部分人的第一反应应该都是要背单词！各个级别的英语考试都有那么几千到上万的单词需要背诵，绝大多数考生都或多或少地受到过背单词的折磨。背了忘，忘了再背，背了再忘，反反复复，没有休止。一方面，对单词的记忆会随着时间的流逝而消退，另一方面，几千个单词之间往往也会产生各种干扰，导致遗忘。如果需要背诵的单词量大大减少的话，情况就会好得多了。那现在的问题就是，各级别英语考试大纲中的那些单词，真的都需要背下来吗？
+社会学中有个著名的80/20定律，即这个世界80%的财富都集中在20%的人手里。对于英语试卷这一定律可能也适用，即80%的文本都是由那20%最常见的单词组成。如果真是这样的话，那只需要原先五分之一的时间（也许更少，因为这时的干扰也更少），就足以应付英语考试了。市面上其实早就有了通过词频来排列单词供人背诵的参考书，但是这些书的销量似乎并不是很好，这大概是因为这些书只是笼统的把全部文本都拿来进行统计，不够细致，也没有针对性。如果能针对不同类型的试题，甚至针对这些试题的不同部分，统计出来词频，肯定会有更好的指导作用。
+针对高考英语阅读题的文本分析为了进行验证与分析，我从网上找到了最近9年的天津高考英语试题文档。我把其中的阅读部分复制了出来，按年份保存在了txt文档中，然后利用tidyverse和tidytext包，制作了两份csv格式句子库文档，其中一份是以全部阅读文本为基础生成的，另一份则只针对阅读题的题干而生成。现在先载入需要的包，并把这两份数据导入：
+library(tidyverse)library(tidytext)library(pipeR)library(magrittr)library(knitr)reading &lt;- read.csv(&#39;reading.csv&#39;, stringsAsFactors = FALSE)question &lt;- read.csv(&#39;question.csv&#39;, stringsAsFactors = FALSE)因为readr包中的函数对中文的支持不是很好，所以我这里使用了R自带的函数。先看一下这两份数据：
+reading %&gt;% head() %&gt;% kable()yearregionpassagesentencesentence_low2007天津AThe city of Rome has passed a new law to prevent cruelty to animals.the city of rome has passed a new law to prevent cruelty to animals.">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=640">
+    
+
+    
+    
+    
+
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="/css/style-jsjn0006wyhpyzivf6yceb31gvpjatbcs3qzjvlumobfnugccvobqwxnnaj8.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/">RPG</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about">
+          <img class="sidebar-profile-picture" src="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">孟祥良</h4>
+        
+          <h5 class="sidebar-profile-bio">R语言爱好者, 心理学专业硕士 &amp; FGO休闲玩家</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/rrtbmxl/rrtbmxl.github.io">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      
+      
+      <span class="sidebar-button-desc"></span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      
+      
+      <span class="sidebar-button-desc"></span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      使用R语言文本挖掘技术应对英语考试的粗浅想法及其他
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2018-03-15T00:00:00Z">
+        
+  March 15, 2018
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <div class="section level2">
+<h2>学习与考试</h2>
+<p>学习是由经验引起的相对持久的变化，而考试，一方面是对习得的知识与技能的掌握情况的测试，另一方面也是对能否进入下一阶段学习或工作的考核。虽然学习能力受个人的智力水平以及学习方法的影响，但一般而言，学习是没有捷径的；但考试却不一样，在应付考试的时候，确实存在一些捷径可走。且以我个人的经历举三个例子。</p>
+<p>高中的时候，我的立体几何学得不是很好，对于如何解立体几何大题完全摸不着门路。然而有一天，我在一本辅导书中看到一种用空间向量解立体几何大题的方法，而且相当简单易学，做了几道类似的题，我就掌握了这个方法。随后在整个高中阶段，我就靠着这一捷径，在并不具备足够的立体几何知识的前提下做到了立体几何大题从来不丢分。</p>
+<p>我本科是自考的英语专业，其中有一门课，叫《英美文学选读》。这门课应该是所有20多门课中最有价值的一门，同时也是最难的一门。教材中介绍了英国与美国的70多位著名的作家以及他们的代表作。我第一次没能考过，因为内容实在是太多了，不好把握重点。后来，我找了几份历年的真题，看过之后才发现，原来70多位作者当中，只有30多位会在考试中考到，这一下就把任务量缩减了一半。虽然难度还是挺大的，但第二次终于顺便通过了。我又一次找到了考试的捷径，同时也第一次意识到真题对于考试的重要性。</p>
+<p>拿到本科毕业证之后，我就开始着手考研。专业课所涉及的内容不可谓不多，如果想全面的复习，时间肯定不够，只能有所侧重的进行复习。有了先前的经验，我开始反复地研究真题。哪些知识点会以选择题的形式考察，哪些知识点会以大题的形式考察，哪些部分的内容考试从来不涉及，可以忽略，哪些部分的内容频繁考到，必须重点记忆？经过反复地分析，我根据真题总结出了一份比较精简的笔记，并在考试中拿到了一个还算满意的分数。如果仅仅按大纲来复习的话，肯定会浪费很多时间。</p>
+<p>从我个人经历来看，考试确实是有捷径可循，而这个捷径往往跟历年的真题有关。但是对于大部分考试来说，可用于分析的样本量太低，而且找不到客观的指标，只能通过自己的主观判断，因此在知识点的选取上难免会有一些偏差。但有一门考试却不存在这两个问题，既有足够大的样本量可供分析，又能产生客观的指标。很明显，这门考试就是大家“喜闻乐见”英语考试。</p>
+<p>上大学之前，语数外三科同等重要；而上大学之后，大多数专业应该都不用学语文了，文科的一般也不用学数学了，只有英语，坚挺地为几乎所有专业所必学，并在很多学校作为毕业的条件之一。从这一点也可以看出来英语的重要性。学好英语不是一件轻松的事情，需要长时间的积累。虽然我恐怕不会再参加任何类型的英语考试了，但是未了将来的更好发展，我基本上保持着每天10K的英文阅读量。不过，应付英语考试就是另外一回事了，完全有可能出现我在备考《英美文学选读》时的情况。此外，我还想强调一点，<strong>我们这一辈子为了应付考试浪费了太多的生命了，也许功利地应付考试，反而倒是一种非功利的学习行为。</strong></p>
+<p>要准备英语考试，大部分人的第一反应应该都是要<font size = 6> 背单词！</font>各个级别的英语考试都有那么几千到上万的单词需要背诵，绝大多数考生都或多或少地受到过背单词的折磨。背了忘，忘了再背，背了再忘，反反复复，没有休止。一方面，对单词的记忆会随着时间的流逝而消退，另一方面，几千个单词之间往往也会产生各种干扰，导致遗忘。如果需要背诵的单词量大大减少的话，情况就会好得多了。那现在的问题就是，各级别英语考试大纲中的那些单词，真的都需要背下来吗？</p>
+<p>社会学中有个著名的80/20定律，即这个世界80%的财富都集中在20%的人手里。对于英语试卷这一定律可能也适用，即80%的文本都是由那20%最常见的单词组成。如果真是这样的话，那只需要原先五分之一的时间（也许更少，因为这时的干扰也更少），就足以应付英语考试了。市面上其实早就有了通过词频来排列单词供人背诵的参考书，但是这些书的销量似乎并不是很好，这大概是因为这些书只是笼统的把全部文本都拿来进行统计，不够细致，也没有针对性。如果能针对不同类型的试题，甚至针对这些试题的不同部分，统计出来词频，肯定会有更好的指导作用。</p>
+</div>
+<div class="section level2">
+<h2>针对高考英语阅读题的文本分析</h2>
+<p>为了进行验证与分析，我从网上找到了最近9年的天津高考英语试题文档。我把其中的阅读部分复制了出来，按年份保存在了txt文档中，然后利用<code>tidyverse</code>和<code>tidytext</code>包，制作了两份csv格式句子库文档，其中一份是以全部阅读文本为基础生成的，另一份则只针对阅读题的题干而生成。现在先载入需要的包，并把这两份数据导入：</p>
+<pre class="r"><code>library(tidyverse)
+library(tidytext)
+library(pipeR)
+library(magrittr)
+library(knitr)
+
+reading &lt;- read.csv(&#39;reading.csv&#39;, stringsAsFactors = FALSE)
+question &lt;- read.csv(&#39;question.csv&#39;, stringsAsFactors = FALSE)</code></pre>
+<p>因为<code>readr</code>包中的函数对中文的支持不是很好，所以我这里使用了<code>R</code>自带的函数。先看一下这两份数据：</p>
+<pre class="r"><code>reading %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">year</th>
+<th align="left">region</th>
+<th align="left">passage</th>
+<th align="left">sentence</th>
+<th align="left">sentence_low</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">A</td>
+<td align="left">The city of Rome has passed a new law to prevent cruelty to animals.</td>
+<td align="left">the city of rome has passed a new law to prevent cruelty to animals.</td>
+</tr>
+<tr class="even">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">A</td>
+<td align="left">All goldfish bowls are no longer allowed and dog owners must walk their dogs.</td>
+<td align="left">all goldfish bowls are no longer allowed and dog owners must walk their dogs.</td>
+</tr>
+<tr class="odd">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">A</td>
+<td align="left">This comes after a national law was passed to give prison sentences to people who desert cats or dogs.</td>
+<td align="left">this comes after a national law was passed to give prison sentences to people who desert cats or dogs.</td>
+</tr>
+<tr class="even">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">A</td>
+<td align="left">“The civilization of a city can be measured by this,” said Monica Carina, the councilor (议员) behind the new law.</td>
+<td align="left">“the civilization of a city can be measured by this,” said monica carina, the councilor (议员) behind the new law.</td>
+</tr>
+<tr class="odd">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">A</td>
+<td align="left">“It’s good to do whatever we can for our animals who in exchange for a little love fill our existence with their attention,” she told a Rome newspaper.</td>
+<td align="left">“it’s good to do whatever we can for our animals who in exchange for a little love fill our existence with their attention,” she told a rome newspaper.</td>
+</tr>
+<tr class="even">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">A</td>
+<td align="left">The newspaper reported that round bowls don’t give enough oxygen for fish and may make them go blind.</td>
+<td align="left">the newspaper reported that round bowls don’t give enough oxygen for fish and may make them go blind.</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>question %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">year</th>
+<th align="left">region</th>
+<th align="left">passage</th>
+<th align="right">number</th>
+<th align="left">sentence</th>
+<th align="left">sentence_low</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">A</td>
+<td align="right">36</td>
+<td align="left">The new law passed in Rome will ______.</td>
+<td align="left">the new law passed in rome will ______.</td>
+</tr>
+<tr class="even">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">A</td>
+<td align="right">37</td>
+<td align="left">People in Rome believe that the civilization of a city can be judged by its ______.</td>
+<td align="left">people in rome believe that the civilization of a city can be judged by its ______.</td>
+</tr>
+<tr class="odd">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">A</td>
+<td align="right">38</td>
+<td align="left">The underlined word “compassion” in Paragraph 6 is the closest in meaning to ______.</td>
+<td align="left">the underlined word “compassion” in paragraph 6 is the closest in meaning to ______.</td>
+</tr>
+<tr class="even">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">A</td>
+<td align="right">39</td>
+<td align="left">People may break the law in Turin if they ______.</td>
+<td align="left">people may break the law in turin if they ______.</td>
+</tr>
+<tr class="odd">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">B</td>
+<td align="right">40</td>
+<td align="left">Charles Blackman’s paintings come from ______.</td>
+<td align="left">charles blackman’s paintings come from ______.</td>
+</tr>
+<tr class="even">
+<td align="right">2007</td>
+<td align="left">天津</td>
+<td align="left">B</td>
+<td align="right">41</td>
+<td align="left">Which two activities can you participate in on the same day?</td>
+<td align="left">which two activities can you participate in on the same day?</td>
+</tr>
+</tbody>
+</table>
+<p>可以看到，全部阅读文本（<code>reading</code>）的句子库包含年份、地区、篇号、原始句子以及完全小写的句子（两种句子有不同的用处）五列变量，而阅读题干文本（<code>question</code>）的句子库还多了题号一列。</p>
+<p>首先，我要利用<code>reading</code>这份数据来验证一下，是不是最常见的20%的单词组成了80%的文本。为了进行这个验证，我要先把词频统计出来，这部分统计的代码如下：</p>
+<pre class="r"><code>word_freq &lt;- reading %&gt;% unnest_tokens(word, sentence) %&gt;% 
+  mutate(word = str_replace_all(word, &quot;(_)|(\\d)|(’s)|([abcd]{1}\\.)&quot;, &quot;&quot;)) %&gt;%  
+  count(word) %&gt;%
+  filter(nchar(word) &gt; 2) %&gt;% 
+  arrange(-n) %&gt;% 
+  mutate(num = 1:nrow(.))</code></pre>
+<p>看一下：</p>
+<pre class="r"><code>str(word_freq)</code></pre>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    3760 obs. of  3 variables:
+##  $ word: chr  &quot;the&quot; &quot;and&quot; &quot;for&quot; &quot;that&quot; ...
+##  $ n   : int  1260 488 213 200 152 151 149 138 125 125 ...
+##  $ num : int  1 2 3 4 5 6 7 8 9 10 ...</code></pre>
+<p>可以看到，一共有3760个单词（实际上还有一些非英语单词字符未清理，但这个数不会差太多），乘以0.2也就是大概752个，下面分别计算前20%的单词组成了多少文本以及共有多少文本：</p>
+<pre class="r"><code>word_freq %&gt;% filter(num &lt; 660) %$% sum(n)</code></pre>
+<pre><code>## [1] 12282</code></pre>
+<pre class="r"><code>sum(word_freq$n)</code></pre>
+<pre><code>## [1] 17820</code></pre>
+<p>分别是12282和17820，除一下，可以发现，大概是70%左右，虽然没有达到80%，但也没差太多。我看了一下词频表的具体情况，发现排名660的单词频次为4，为了覆盖更多的文本，我决定多加入一些词，把频次为3的单词也包括进来，这些词共组成了14668字的文本，差不多已经达到了80%，不过这时的单词量有点多，已经达到了1324个，还需要进一步的筛除。</p>
+<p>去年刚接触文本分析的时候，用天津2016年高考英语试题画了个词汇云，有点意外的是，<strong>fatigue</strong>这个单词出现的频率极高，但这个词应该不是高中阶段需要掌握的，它可能仅仅出现在这一年的某一篇文章中，对此，我验证了一下：</p>
+<pre class="r"><code>filter(reading, str_detect(sentence_low, &#39;fatigue&#39;)) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">year</th>
+<th align="left">region</th>
+<th align="left">passage</th>
+<th align="left">sentence</th>
+<th align="left">sentence_low</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">We experience this tiredness in two ways: as start-up fatigue (疲惫) and performance fatigue.</td>
+<td align="left">we experience this tiredness in two ways: as start-up fatigue (疲惫) and performance fatigue.</td>
+</tr>
+<tr class="even">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">Such start-up fatigue is very real, even if not actually physical, not something in our muscles and bones.</td>
+<td align="left">such start-up fatigue is very real, even if not actually physical, not something in our muscles and bones.</td>
+</tr>
+<tr class="odd">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">Performance fatigue is more difficult to handle.</td>
+<td align="left">performance fatigue is more difficult to handle.</td>
+</tr>
+<tr class="even">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">My fatigue became almost unbearable.</td>
+<td align="left">my fatigue became almost unbearable.</td>
+</tr>
+<tr class="odd">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">Though I worked as hard as before, I felt no fatigue.</td>
+<td align="left">though i worked as hard as before, i felt no fatigue.</td>
+</tr>
+<tr class="even">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">51 People with start-up fatigue are most likely to ______.</td>
+<td align="left">51 people with start-up fatigue are most likely to ______.</td>
+</tr>
+<tr class="odd">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">52 What does the author recommend doing to prevent start-up fatigue?</td>
+<td align="left">52 what does the author recommend doing to prevent start-up fatigue?</td>
+</tr>
+<tr class="even">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">53 On what occasion does a person probably suffer from performance fatigue?</td>
+<td align="left">53 on what occasion does a person probably suffer from performance fatigue?</td>
+</tr>
+<tr class="odd">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">B.How to Handle Performance Fatigue</td>
+<td align="left">b.how to handle performance fatigue</td>
+</tr>
+<tr class="even">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">C.Getting over Fatigue: A Way to Success</td>
+<td align="left">c.getting over fatigue: a way to success</td>
+</tr>
+<tr class="odd">
+<td align="right">2016</td>
+<td align="left">天津</td>
+<td align="left">D</td>
+<td align="left">D.Fatigue: An Early Sign of Health Problems</td>
+<td align="left">d.fatigue: an early sign of health problems</td>
+</tr>
+</tbody>
+</table>
+<p>果然，这个单词只出现在了2016年的D篇之中，而且是以带有释义的形式出现的，这样的单词，即便出现的频率很高，也没有背诵的必要。针对这一点，我决定只把在至少在3篇文章中都出现过1次的单词筛选出来，并对代码进行了相应的修改：</p>
+<pre class="r"><code>word_freq &lt;- reading %&gt;% unnest_tokens(word, sentence) %&gt;% 
+  mutate(word = str_replace_all(word, &quot;(_)|(\\d)|(’s)|([abcd]{1}\\.)&quot;, &quot;&quot;)) %&gt;%
+  unite(&#39;year_passage&#39;, c(year, passage)) %&gt;% 
+  group_by(word) %&gt;% 
+  summarise(n = n(), m = length(unique(year_passage))) %&gt;% 
+  filter(nchar(word) &gt; 2) %&gt;% 
+  arrange(-n) %&gt;% 
+  filter(m &gt; 2)</code></pre>
+<p>看一下现在的情况：</p>
+<pre class="r"><code>str(word_freq)</code></pre>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    921 obs. of  3 variables:
+##  $ word: chr  &quot;the&quot; &quot;and&quot; &quot;for&quot; &quot;that&quot; ...
+##  $ n   : int  1260 488 213 200 152 151 149 138 125 125 ...
+##  $ m   : int  46 46 46 46 41 42 28 42 44 41 ...</code></pre>
+<pre class="r"><code>word_freq %&gt;% head(10) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">word</th>
+<th align="right">n</th>
+<th align="right">m</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">the</td>
+<td align="right">1260</td>
+<td align="right">46</td>
+</tr>
+<tr class="even">
+<td align="left">and</td>
+<td align="right">488</td>
+<td align="right">46</td>
+</tr>
+<tr class="odd">
+<td align="left">for</td>
+<td align="right">213</td>
+<td align="right">46</td>
+</tr>
+<tr class="even">
+<td align="left">that</td>
+<td align="right">200</td>
+<td align="right">46</td>
+</tr>
+<tr class="odd">
+<td align="left">are</td>
+<td align="right">152</td>
+<td align="right">41</td>
+</tr>
+<tr class="even">
+<td align="left">with</td>
+<td align="right">151</td>
+<td align="right">42</td>
+</tr>
+<tr class="odd">
+<td align="left">you</td>
+<td align="right">149</td>
+<td align="right">28</td>
+</tr>
+<tr class="even">
+<td align="left">what</td>
+<td align="right">138</td>
+<td align="right">42</td>
+</tr>
+<tr class="odd">
+<td align="left">can</td>
+<td align="right">125</td>
+<td align="right">44</td>
+</tr>
+<tr class="even">
+<td align="left">from</td>
+<td align="right">125</td>
+<td align="right">41</td>
+</tr>
+</tbody>
+</table>
+<p>此时只剩下730个单词了。由于我一共收集了9套试卷，而每套试卷中有4段阅读，所以一共是36篇文章。可以看到，<strong>the</strong>和<strong>for</strong>这两个单词在所有的文章中都出现了，<strong>and</strong>和<strong>that</strong>等单词也几乎在每一篇文章中都出现了，但是这类单词过于简单，根本就不需要再背了，因此还需要根据经验，总结一个停用词表，以便将这类词汇排除在外。不过，我目前还没有整理这份停用词表，因为文本本身还不够干净，存在一些错误，校对后还要重新整理停用词表，所以我就暂时没弄。如果根据停用词表进行了筛除的话，那最后剩下的词汇应该只有三四百个了，这三四百个单词就是天津高考英语阅读的核心词汇了。</p>
+<p>另外，像之前查找<strong>fatigue</strong>单词的出现情况一样，可以利用建好的句子库和<code>filter</code>等函数非常方便地提取包含某单词的句子，甚至直接以辅导书上例句格式的形式输出，现以包含<strong>psychology</strong>一词的句子为例，代码如下：</p>
+<pre class="r"><code>filter(reading, str_detect(sentence, &#39;psychology&#39;)) %$% 
+  str_c(sentence[2], &#39;(&#39;, region[2], &#39;, &#39;, year[2], passage[2], &#39;)&#39;)</code></pre>
+<pre><code>## [1] &quot;Virginia Berninger, professor of educational psychology at the University of Washington, says it&#39;s important to continue teaching handwriting and help children acquire the skill of writing by hand.(天津, 2012C)&quot;</code></pre>
+<p>那些辅导教材的编写者应该都有这样一个句子库，否则编写教材将会变成一个非常耗时的工作。我可以慢慢地以其他文本（如新概念之类）为依托建立新的句子库，方便以后编写教案（如果有必要的话）。另外，虽然话是这么说，但我是真的讨厌用手写字…</p>
+<p>以上是根据全部阅读文本所作的分析，另外，我还单独把阅读题的题干提取出来，进行了类似的分析。根据我个人的学习经历和辅导他人的经历，发现很多时候，之所以做不对一道阅读题，是因为连题干都读不懂，因此很有必要对那些经常在题干中出现的词进行重点掌握。另外，也可以通过这种方式了解道各种类型的问题的分布情况。</p>
+</div>
+<div class="section level2">
+<h2>局限与展望</h2>
+<p>虽然名为文本挖掘，实际上根本就未涉及到太深入的内容。但话说回来，像情感分析、主题模型之类的分析在这里也用不上。不过，n-gram技术倒是值得尝试。我还没见过哪本单词书把常用词组的频次排出来呢，我可以试着把它们找出来。</p>
+<p>另外的问题是文本量太少，而且还需要进一步的校对。虽然我下载的那些文档的文件名上都标明了是“精校版”，但实际上都还存在很多错误，我还要自己校正一下。然后文本量的问题，因为我现在只找了天津的高考试题，所以比较少，如果把其他省份的试题也都加进来的话，文本量应该能有十几万，这样得出的结果会更可靠一些。然而，这也带来了新的问题，即不同地区的试卷能否互作参考？北京卷能用来指导天津的考试吗？不同地区的试卷似乎还要做个相关来验证下这个问题。</p>
+<p>还有一个不知道该如何解决的问题，即名词的复数与动词的时态问题。book和books会被解析为两个单词，这势必会影响单词的真正频次，不过，就目前的观察来看，影响也没那么大。将来可以考虑建立若干词库来解决这一问题。</p>
+<p>我这里只针对阅读题型进行了分析，其他题型也可以进行类似的分析。比如完形，可以考虑将其分为原始文本和空白填充后的文本，对于前者查看单词的频次，而对于后者，则查看词汇之间的关系，来寻找那些最重要的词组。在完形与阅读里所涉及的单词都是消极词汇，只需要认识和理解即可，而要能写出优秀的作文，还需要掌握一部分能熟练使用的积极词汇。对优秀范文的文本分析将可以定位出重要的积极词汇，并查看这些词汇是如何被使用的，从而对写作作出指导。前段时间看了篇文章，说道有人利用机器学习方法对《冰与火之歌》的文本进行了训练，然后写出续作……看来只要有足够的文本，完全也可以利用机器学习帮自己写出作文模板。我认为任务驱动的学习是最好的学习，我可以尝试着去实现一下这个想法，并通过这个过程学习机器学习的相关技术。</p>
+<p>虽然我选用的是高考的试题，但显然这也可以应用到其他级别的考试，只要有相应的试题文本就可以了。但是，不同级别的考试（以及不同的题型）需要有不同的停用词库，高考中非常重要的一个词汇可能仅仅是考研词汇中的一个停用词。另外，我还在想，这个技术是不是也可以用于文献阅读？收集个一百来篇领域内的英文文献进行分析，挑出消极词汇和积极词汇，重要的消极词汇牢记在心，重要的积极词汇掌握用法，肯定对阅读文献和写作论文有很大的帮助。</p>
+</div>
+<div class="section level2">
+<h2>牢骚</h2>
+<p>既然提到了写论文，下面将进入牢骚时间。硕士三年之间，我一共投了两次文章，一次SCI，一次SSCI；一次直接被拒，一次大修。后面这次时间赶的不是很好，刚接到通知，孩子就病了，等孩子好了，眼看就过年了，期间各种干扰，实在无法静下心来改文章；更关键的是，我虽然想考博士，但根本就没人要，既然读不了博，发不发文章也就没啥意义了，于是就这么不了了之了（最近开始学python了，对于不能研究<strong>pychology</strong>，甚感遗憾）。两年的心血，就这么付诸东流了啊，真是不甘心，不过，从另一个角度来看，也算是一种解脱。</p>
+<p>出于对声优水濑祈的喜爱，前段时间补了个动画，叫《少女终末旅行》。动画讲述了两位少女在战后的无人区中旅行的见闻。虽说是无人区，但她们还是遇到了两个人，一个是男性地图绘制者，一个是女性飞机制造者。后者给我的触动很大。她独自一人制造着飞机，为了造好飞机之后，能飞向有人居住的地方。遇到两位女主人公的时候，飞机已接近完成，三人齐心合力，完成了最后的工作。然而，在真正飞行的时候，她的飞机没有飞出多远，就坠毁了。降落伞下的她缓缓落下，脸上带着满足的笑容。见到这一情景的女主人公之一大为不解，但随后，她就给出了自己的推测：</p>
+<div class="figure">
+<img src="/img/少女终末旅行06_1.bmp" />
+
+</div>
+<p>–</p>
+<div class="figure">
+<img src="/img/少女终末旅行06_2.bmp" />
+
+</div>
+<p>–</p>
+<p>笑容.jpg</p>
+</div>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/%E6%95%99%E8%82%B2/">教育</a>
+
+                  </div>
+                
+              
+            
+            
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/10/%E6%97%A5%E8%AE%B0%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" data-tooltip="日记文本分析：第一部分">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/02/stereotype-on-anime/" data-tooltip="关于动画的刻板印象">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2018/03/tackle-english-exam-with-text-mining/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2018/03/tackle-english-exam-with-text-mining/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2018/03/tackle-english-exam-with-text-mining/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 孟祥良. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/10/%E6%97%A5%E8%AE%B0%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" data-tooltip="日记文本分析：第一部分">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/02/stereotype-on-anime/" data-tooltip="关于动画的刻板印象">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2018/03/tackle-english-exam-with-text-mining/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2018/03/tackle-english-exam-with-text-mining/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2018/03/tackle-english-exam-with-text-mining/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2018%2F03%2Ftackle-english-exam-with-text-mining%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2018%2F03%2Ftackle-english-exam-with-text-mining%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2018%2F03%2Ftackle-english-exam-with-text-mining%2F">
+          <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">孟祥良</h4>
+    
+      <div id="about-card-bio">R语言爱好者, 心理学专业硕士 &amp; FGO休闲玩家</div>
+    
+    
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Search" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">no post found</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/11/text-analysis-for-tianlong/">
+                <h3 class="media-heading">利用文本分析对比两版本天龙八部</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Nov 11, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。
+首先还是载入相关的包，这次的包有点多：
+library(tidyverse)library(readxl)library(tidytext)library(jiebaR)library(ggthemes)library(widyr)library(igraph)library(ggraph)然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：
+tl_new &lt;- read_lines(&#39;tl_new.txt&#39;)tl_old &lt;- read_lines(&#39;tl_old.txt&#39;)tl_main &lt;- read_lines(&#39;tl_main.txt&#39;) %&gt;% .[-1]因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：
+tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)tl_old_tran &lt;- tl_old %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)上面的替换工作并不全，比如，同样是段郞，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/10/rick-and-morty-heatmap/">
+                <h3 class="media-heading">看图写代码：瑞克与莫蒂剧集评分热力图</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">大概是去年的这个时间，我在一个名叫Data Is Beautiful的reddit论坛上看到了一张Rick and Morty的分集评分热力图，就想用R把它重复出来。当时水平还不怎么样，只能画个大概出来，很多细节都不知道该如何呈现；前几个月，又重新尝试了下，大部分细节都知道该如何实现了，但还是差一点；这里再尝试一下，看看能不能完全重复出来，毕竟这张图应该就是用R画的。
+图是这样的：
+首先，还是先把需要用到的包载入：
+library(tidyverse)然后载入数据：
+rm &lt;- read_csv(&quot;rick &amp; morty.csv&quot;) %&gt;% mutate_at(vars(Episode, Season), as.factor)载入数据的时候，为方便后面的绘图，顺便把集数和季数两个变量改成了因子型。具体的数据是这样的：
+rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt;dbl&gt;## 1 1 1 8.1## 2 2 1 8.7## 3 3 1 8.4## 4 4 1 8.6## 5 5 1 8.9## 6 6 1 9 ## 7 7 1 8.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/10/%E6%97%A5%E8%AE%B0%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">
+                <h3 class="media-heading">日记文本分析：第一部分</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">据说希腊的德尔菲神庙上刻着几条箴言，其中一条告诫我们要“认识你自己”。这条箴言刻起来容易，做起来却很难，甚至可能是人生最困难的事情之一。要想认识自己，大概有四种方法，一是客观内容的客观描述，如测量人的身高、体重等各种身体特征，这些特征在一定的时间内不会有太大幅度的变化，用来测量这些特征的工具也具有极高的信度和效度，因此不论从要了解的内容和用于了解该内容的方式，都是很客观的；二是客观内容的主观描述，如使用问卷量表测量人的各种能力，人的能力应该也是比较恒定的，但用于测量这些特征的工具，无论是编制过程还是施用过程，都避免不了与人为因素有关的干扰，即便硬要说它是客观的，也是“主观”的客观。三是主观内容的主观描述，如各种投射测验，对于这些测验，我没有实际接触过，但从书本上来看，难免不让我认为这种测验从内容到方式都不是那么客观；最后一种就显而易见了，即对主观内容的客观描述，如对推特的文本分析，我要进行的日记文本分析，也是这一范围之内的。日记本身是主观的产物，但这里我要对这些主观的内容进行客观的数据分析，进而从这一角度来加深对自己的了解，不过这个方法的局限性也很大，毕竟不是每个人都有几十万字的日记文本可以用来分析。另外再加一句，上面这段话，也可以说是对客观内容的主观描述。
+这篇文章分为三部分，首先是对我每天记日记的时间进行一个简单的分析，然后对文本进行分词，针对词频进行分析，最后是一个初步的情感分析。下面先载入需要用到的包。
+导入需要的包library(tidyverse)library(readxl)library(jiebaR)library(ggthemes)一般情况下，我的第一行代码都是library(tidyverse)，这次主要用到了其中dplyr、tidyr、stringr以及ggplot2四个包；readxl包用来读入.xlsx格式的文件；jiebarR用来分词；ggthemes用来添加我最喜欢的tufte主题。
+时间分析首先要把日记中与时间有关的内容提取出来，我记录时间的格式很固定，都是20XX年X月X日 周X XX：XX的形式，通过以下代码，可以把这部分内容提取出来：
+time &lt;- read_lines(&#39;dairy.txt&#39;) %&gt;% as.tibble() %&gt;% filter(str_detect(value, &#39;.*年.*月.*日.*周&#39;)) %&gt;% mutate(num = row_number()) %&gt;% select(2, time = 1)处理后是这个样子的：
+numtime12012年1月13日 周五 21：4022012年1月14日 周六 21：4132012年1月15日 周日 21：5342012年1月16日 周一 21：5852012年1月17日 周二 21：4562012年1月18日 周三 21：5172012年1月19日 周四 22：0182012年1月20日 周五 21：4392012年1月21日 周六 21：35102012年1月22日 周日 21：53所有的时间都放在一起是没法分析的，接下来我就把各部分时间分离开，并转化成了整数型，这一步代码如下：</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/03/tackle-english-exam-with-text-mining/">
+                <h3 class="media-heading">使用R语言文本挖掘技术应对英语考试的粗浅想法及其他</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">学习与考试学习是由经验引起的相对持久的变化，而考试，一方面是对习得的知识与技能的掌握情况的测试，另一方面也是对能否进入下一阶段学习或工作的考核。虽然学习能力受个人的智力水平以及学习方法的影响，但一般而言，学习是没有捷径的；但考试却不一样，在应付考试的时候，确实存在一些捷径可走。且以我个人的经历举三个例子。
+高中的时候，我的立体几何学得不是很好，对于如何解立体几何大题完全摸不着门路。然而有一天，我在一本辅导书中看到一种用空间向量解立体几何大题的方法，而且相当简单易学，做了几道类似的题，我就掌握了这个方法。随后在整个高中阶段，我就靠着这一捷径，在并不具备足够的立体几何知识的前提下做到了立体几何大题从来不丢分。
+我本科是自考的英语专业，其中有一门课，叫《英美文学选读》。这门课应该是所有20多门课中最有价值的一门，同时也是最难的一门。教材中介绍了英国与美国的70多位著名的作家以及他们的代表作。我第一次没能考过，因为内容实在是太多了，不好把握重点。后来，我找了几份历年的真题，看过之后才发现，原来70多位作者当中，只有30多位会在考试中考到，这一下就把任务量缩减了一半。虽然难度还是挺大的，但第二次终于顺便通过了。我又一次找到了考试的捷径，同时也第一次意识到真题对于考试的重要性。
+拿到本科毕业证之后，我就开始着手考研。专业课所涉及的内容不可谓不多，如果想全面的复习，时间肯定不够，只能有所侧重的进行复习。有了先前的经验，我开始反复地研究真题。哪些知识点会以选择题的形式考察，哪些知识点会以大题的形式考察，哪些部分的内容考试从来不涉及，可以忽略，哪些部分的内容频繁考到，必须重点记忆？经过反复地分析，我根据真题总结出了一份比较精简的笔记，并在考试中拿到了一个还算满意的分数。如果仅仅按大纲来复习的话，肯定会浪费很多时间。
+从我个人经历来看，考试确实是有捷径可循，而这个捷径往往跟历年的真题有关。但是对于大部分考试来说，可用于分析的样本量太低，而且找不到客观的指标，只能通过自己的主观判断，因此在知识点的选取上难免会有一些偏差。但有一门考试却不存在这两个问题，既有足够大的样本量可供分析，又能产生客观的指标。很明显，这门考试就是大家“喜闻乐见”英语考试。
+上大学之前，语数外三科同等重要；而上大学之后，大多数专业应该都不用学语文了，文科的一般也不用学数学了，只有英语，坚挺地为几乎所有专业所必学，并在很多学校作为毕业的条件之一。从这一点也可以看出来英语的重要性。学好英语不是一件轻松的事情，需要长时间的积累。虽然我恐怕不会再参加任何类型的英语考试了，但是未了将来的更好发展，我基本上保持着每天10K的英文阅读量。不过，应付英语考试就是另外一回事了，完全有可能出现我在备考《英美文学选读》时的情况。此外，我还想强调一点，我们这一辈子为了应付考试浪费了太多的生命了，也许功利地应付考试，反而倒是一种非功利的学习行为。
+要准备英语考试，大部分人的第一反应应该都是要背单词！各个级别的英语考试都有那么几千到上万的单词需要背诵，绝大多数考生都或多或少地受到过背单词的折磨。背了忘，忘了再背，背了再忘，反反复复，没有休止。一方面，对单词的记忆会随着时间的流逝而消退，另一方面，几千个单词之间往往也会产生各种干扰，导致遗忘。如果需要背诵的单词量大大减少的话，情况就会好得多了。那现在的问题就是，各级别英语考试大纲中的那些单词，真的都需要背下来吗？
+社会学中有个著名的80/20定律，即这个世界80%的财富都集中在20%的人手里。对于英语试卷这一定律可能也适用，即80%的文本都是由那20%最常见的单词组成。如果真是这样的话，那只需要原先五分之一的时间（也许更少，因为这时的干扰也更少），就足以应付英语考试了。市面上其实早就有了通过词频来排列单词供人背诵的参考书，但是这些书的销量似乎并不是很好，这大概是因为这些书只是笼统的把全部文本都拿来进行统计，不够细致，也没有针对性。如果能针对不同类型的试题，甚至针对这些试题的不同部分，统计出来词频，肯定会有更好的指导作用。
+针对高考英语阅读题的文本分析为了进行验证与分析，我从网上找到了最近9年的天津高考英语试题文档。我把其中的阅读部分复制了出来，按年份保存在了txt文档中，然后利用tidyverse和tidytext包，制作了两份csv格式句子库文档，其中一份是以全部阅读文本为基础生成的，另一份则只针对阅读题的题干而生成。现在先载入需要的包，并把这两份数据导入：
+library(tidyverse)library(tidytext)library(pipeR)library(magrittr)library(knitr)reading &lt;- read.csv(&#39;reading.csv&#39;, stringsAsFactors = FALSE)question &lt;- read.csv(&#39;question.csv&#39;, stringsAsFactors = FALSE)因为readr包中的函数对中文的支持不是很好，所以我这里使用了R自带的函数。先看一下这两份数据：
+reading %&gt;% head() %&gt;% kable()yearregionpassagesentencesentence_low2007天津AThe city of Rome has passed a new law to prevent cruelty to animals.the city of rome has passed a new law to prevent cruelty to animals.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/02/stereotype-on-anime/">
+                <h3 class="media-heading">关于动画的刻板印象</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Feb 2, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">旧博客里的一篇文章，感觉还有点价值，就搬了过来。
+前段时间带孩子去看了《金龟子》动画大电影，感觉很无趣。我原以为其身为童年回忆，来到屏幕，面对长幼两辈，必有看点，没想到竟演出如此幼稚之戏！看了几分钟之后，我就开始玩手机了。坐我前面的也是一对父子，动画放了一半的时候，孩子问了他爸爸一句话，让我印象很深刻。他问：“爸爸，你怎么不看啊？”孩子显然是很喜欢这部动画的，希望他爸爸也跟他一起看，但这动画实在无法勾起我们的兴趣。电影结束回到家后，我产生了一个疑问，难道这部动画真的没办法制作成老少咸宜的吗？是出于什么原因，导致这部本来可以通过卖情怀让成年人也产生兴趣的动画最终只是一部低龄向动画？我想，原因不外乎在我们国家对于动画一直存在一个根深蒂固的刻板印象，即，动画是给小孩子看的。
+小时候就经常听到大人们说，“你看谁谁谁，真是没出息，这么大了还看动画片。”我关于“动画是给小孩子看的”这一刻板印象应该就是那个时候形成的。不过，虽然有这么个刻板印象，我还是从小看到了大（别说，也确实没什么出息），因为在看的过程中，我并没有体验到“动画是给小孩子看的”这一点，不过大了之后，我从来不看国产动画就是了（除了陪孩子看《喜羊羊》《熊出没》之类的动画，不过说起来，好像连我家孩子也很少看这两部动画了），即便现在国产动画天天“崛起”，我也一丁点不想看。究其原因，大概是因为我关于动画的刻板印象在之前的基础之上发生了变化，变成了“国产动画是给小孩子看的”。
+中学时一直在在追漫画《神兵玄奇》，后来听说要改编成动画了，挺激动的，谁知道改编成了《神兵小将》。这部时不时会有少儿不宜场景的成人向漫画到底经过了怎样的反向魔改才成为低龄向动画的？还是之前那个疑问，这部动画难道就不能通过适当的删改，制作成全年龄的吗？带着这种疑问，我试图去知网上寻找答案，我在检索处输入了“动画”一词，第一个匹配的关键词是“幼儿”，第二个是“身心发展”，看起来这一刻板印象确实是挺普遍的，连搞学术的人都这么认为了。我最终没能在知网上找到答案，所以我决定自己来对这一问题进行一下探究。
+首先，我要确定两件事情：
+关于动画是不是存在这样的刻板印象？
+如果存在的话，这一刻板印象是仅限于我们国家，还是全都这样？
+要进行验证的话，首先要有相关的数据。虽然我平常关于动画的信息会参考IMDB和MAL，但要完成这一任务，显然还是豆瓣更合适。我试图在豆瓣网站上爬取我所需要的信息，但折腾了一上午才发现，我所掌握的那一点点爬虫技术根本就无法爬取我所需要的数据，于是我就在网上找了一份现成的（早知道就不折腾了）。这份数据是2016年的，还算比较新，内容也完全符合我的需要。其次，要找到具有代表性的作品。关于哪些动画是代表性的，每个人肯定都有不同的看法，可能不会有特定的原型，所以这里我先用豆瓣上的评价人数为指标来评定动画的代表性，评价人数越多，就说明其越具有代表性。另外，要拿国产动画和国外动画进行对比，但实际上所谓的国外动画，主要就是美国和日本的动画（三个国家的动画数量占了全部动画数量的81.4%），所以后面只挑了这三个地区的数据。
+先载入要用到的包：
+library(tidyverse)library(knitr)library(scales)按照惯例，先载入了tidyverse包；然后为了数据能展示得更好看一点，以及数据的正常显示，也载入了knitr包；另外，后面在画图的时候，还要用到scales包，这里也一并载入。
+然后来看一下这份数据：
+douban &lt;- read_csv(&#39;douban.csv&#39;)## Parsed with column specification:## cols(## 评分 = col_double(),## 名字 = col_character(),## 投票人数 = col_integer(),## 类型 = col_character(),## 产地 = col_character(),## 上映时间 = col_character(),## 时长 = col_character(),## 年代 = col_character(),## 是否连续剧 = col_integer(),## 集数 = col_character(),## 看过 = col_integer(),## 待看 = col_character()## )head(douban, 10) %&gt;% kable()评分名字投票人数类型产地上映时间时长年代是否连续剧集数看过待看7.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="no post found"
+         data-message-one="1 post found"
+         data-message-other="{n} posts found">
+         5 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="/js/script-qi9wbxp2ya2j6p7wx1i6tgavftewndznf4v0hy2gvivk1rxgc3lm7njqb6bz.min.js"></script>
+
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = '\/2018\/03\/tackle-english-exam-with-text-mining\/';
+          
+            this.page.identifier = '\/2018\/03\/tackle-english-exam-with-text-mining\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+    
+  </body>
+</html>
+
