@@ -1,0 +1,189 @@
+---
+title: R语言学习资源总结
+author: ''
+date: '2018-11-10'
+categories:
+  - R
+tags:
+  - 教程
+slug: r-source-collection
+output:
+  blogdown::html_page:
+    toc: yes
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#article">Article</a><ul>
+<li><a href="#advantage">Advantage</a></li>
+<li><a href="#concept">Concept</a></li>
+<li><a href="#history">History</a></li>
+<li><a href="#learning">Learning</a></li>
+</ul></li>
+<li><a href="#communication">Communication</a><ul>
+<li><a href="#blogdown">Blogdown</a></li>
+<li><a href="#word">Word</a></li>
+</ul></li>
+<li><a href="#tutorial">Tutorial</a><ul>
+<li><a href="#onlinebook">Onlinebook</a></li>
+<li><a href="#website">Website</a></li>
+<li><a href="#tidyverse">Tidyverse</a></li>
+</ul></li>
+<li><a href="#visualization">Visualization</a><ul>
+<li><a href="#adjustment">Adjustment</a></li>
+<li><a href="#basic">Basic</a></li>
+<li><a href="#color">Color</a></li>
+<li><a href="#extension">Extension</a></li>
+<li><a href="#line-chart">Line chart</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。</p>
+<p>还要吐槽一下，不论是<code>tidyverse</code>还是<code>Rmarkdown</code>，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。</p>
+<div id="article" class="section level1">
+<h1>Article</h1>
+<p>这里罗列了一些关于R语言的文章，主要包括R的优势、R的一些概念、R的历史以及如何学习R。</p>
+<div id="advantage" class="section level3">
+<h3>Advantage</h3>
+<ul>
+<li><p><a href="https://shirinsplayground.netlify.com/2017/09/ode_to_r/">Why I use R for Data Science - An Ode to R</a>（181110）介绍了R语言的一些优点，作者是从R开始接触编程语言的，观点可能有失偏颇；我也差不多是从R开始接触编程语言的，所以是不是真的偏颇了，我也看不出来。</p></li>
+<li><p><a href="https://www.business-science.io/business/2017/12/27/six-reasons-to-use-R-for-business.html">6 REASONS TO LEARN R FOR BUSINESS</a>（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。</p></li>
+</ul>
+</div>
+<div id="concept" class="section level3">
+<h3>Concept</h3>
+<ul>
+<li><p><a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/window-functions.html">Window functions</a>（181110）介绍了什么是<strong>window function</strong>，感觉我目前还没有把这个概念完全吃透，但后面有一些<code>dplyr</code>包的使用技巧，值得一看。</p></li>
+<li><p><a href="https://simplystatistics.org/2016/02/17/non-tidy-data/">Non-tidy data</a>（181110）有<strong>tidy data</strong>就是相应的<strong>non-tidy data</strong>，不过文章具体写的啥，我已经忘啦。</p></li>
+<li><p><a href="https://colinfay.me/explain-environments-eli5/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Explain R environments like I’m five</a>（181110）介绍什么是R语言的环境，真的非常简单易懂。</p></li>
+</ul>
+</div>
+<div id="history" class="section level3">
+<h3>History</h3>
+<ul>
+<li><p><a href="https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1740-9713.2018.01169.x">R generation</a>（181110）详细介绍了R语言的历史。前段时间才看过，不知道为什么现在只剩一个摘要了，暂时先留着这个链接。</p></li>
+<li><p><a href="https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/">stringsAsFactors: An unauthorized biography</a>（181110）据说<code>stringsAsFactors</code>参数问题，是R语言历史上争论最激烈的问题。</p></li>
+<li><p><a href="https://colinfay.me/r-assignment/">Why do we use arrow as an assignment operator?</a>（181110）为什么用箭头作赋值符，了解一下？</p></li>
+</ul>
+</div>
+<div id="learning" class="section level3">
+<h3>Learning</h3>
+<ul>
+<li><a href="http://varianceexplained.org/r/teach_ggplot2_to_beginners/">Don’t teach built-in plotting to beginners (teach ggplot2)</a>；<a href="http://varianceexplained.org/r/teach-tidyverse/#fnref:widyr">Teach the tidyverse to beginners</a>；<a href="http://varianceexplained.org/r/teach-hard-way/">Don’t teach students the hard way first</a>（181110）我接触R语言也有三年多了，但真正决定要认真学习它，还只是从去年夏天开始，其原因主要就是看了<a href="http://varianceexplained.org/">David Robinson</a>的这几篇文章。我个人认为，会用R和会用<code>tidyverse</code>，其实是两个完全不同的概念，如果没有<code>tidyverse</code>的话，我可能是不会想学R的。恰好有一个比较极端的例子来对比R的<code>base</code>包和<code>tidyverse</code>包的区别，放在这里。</li>
+</ul>
+<p>研究生最后一个学期曾帮助<del>mj同学</del>修改代码，<del>mj同学</del>是一个非常聪明的同学（这一点可以通过我编写的matlab实验程序证明，无论在反应速度还是在工作记忆能力方面，<del>mj同学</del>都是参与过我实验的300多人当中的佼佼者）。当时她写了下面的代码：</p>
+<pre class="r"><code>mean.matrix = tapply(datafile$depvar0, list(datafile$pp, datafile$condition), mean, na.rm = T)
+sd.matrix = tapply(datafile$depvar0, list(datafile$pp, datafile$condition), sd, na.rm = T)
+for(i in 1: nrow(datafile)){
+  datafile$zscore[i] = (datafile$depvar0[i] - mean.matrix[datafile$pp[i],datafile$condition[i]]) / sd.matrix[datafile$pp[i],datafile$condition[i]] 
+  }
+datafile &lt;- datafile[abs(datafile$zscore) &lt; 3,]
+datafile &lt;- na.omit(datafile)
+datafile[order(-datafile$zscore),]</code></pre>
+<p>这部分代码把我看傻了，看了好久也没看懂，在搞明白她到底要干什么之后（按某两个变量删超过3个标准差的数据），我改成了下面的代码（当然，只是管道中的一部分）：</p>
+<pre class="r"><code>  group_by(pp, condition) %&gt;% 
+  filter(near(depvar0, mean(depvar0), sd(depvar0) * 3)) %&gt;% 
+  ungroup()</code></pre>
+<p>所以，学R的话，直接学<code>tidyverse</code>就好了。</p>
+<ul>
+<li><p><a href="https://edwinth.github.io/blog-new-things/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Blog about something you just learned</a>（181110）我之所以也想写博客的原因所在。</p></li>
+<li><p><a href="https://www.analyticsvidhya.com/learning-paths-data-science-business-analytics-business-intelligence-big-data/learning-path-r-data-science/">LeaRning Path on R – Step by Step Guide to Learn Data Science on R</a>（181110）系统总结了学习R的路径。</p></li>
+<li><p><a href="http://r4stats.com/articles/why-r-is-hard-to-learn/">Why R is Hard to Learn</a>（181110）总结了一些R学习者的抱怨，内容我忘了，但看小标题，这文章是不是说反话呢？</p></li>
+<li><p><a href="http://r4stats.com/2017/03/23/the-tidyverse-curse/#comments">The Tidyverse Curse</a>（181110）上面那篇文章的后续，拿<code>dplyr</code>包对比了一下<code>tidyverse</code>和<code>base</code>的差异。同样，内容我忘了，所以不知道作者到底支持哪边了（不过既然我收藏了，应该还是支持<code>tidyverse</code>吧）。</p></li>
+<li><p><a href="https://www.business-science.io/learning-r/2018/03/03/how_to_learn_R_pt1.html">HOW TO LEARN R, PART 1: LEARN FROM A MASTER DATA SCIENTIST’S CODE</a>（181110）通过分析<strong>David Robinson</strong>博客中的代码，来探索该如何学习R。话说我最近正想把他的博客全都看一遍呢。</p></li>
+<li><p><a href="https://r-posts.com/advice-to-young-and-old-programmers-a-conversation-with-hadley-wickham/">Advice to Young (and Old) Programmers: A Conversation with Hadley Wickham</a>（181110）与大神<strong>Hadley Wickham</strong>的对话，内容不记得了，但肯定值得一读。</p></li>
+</ul>
+</div>
+</div>
+<div id="communication" class="section level1">
+<h1>Communication</h1>
+<p>这一部分暂时只包括Blogdown和Word两部分，近期我想研究下<code>Shiny</code>，等研究得差不多了再加上。</p>
+<div id="blogdown" class="section level3">
+<h3>Blogdown</h3>
+<ul>
+<li><a href="https://talesofr.wordpress.com/2017/08/18/starting-a-rmarkdown-blog-with-bookdown-hugo-github/">Starting a Rmarkdown Blog with Blogdown + Hugo + Github</a>（181110）看了好几篇介绍用<code>blogdown</code>搭建博客的文章，只有这一篇文章介绍的方法让我成功了。</li>
+</ul>
+</div>
+<div id="word" class="section level3">
+<h3>Word</h3>
+<ul>
+<li><a href="https://rmarkdown.rstudio.com/articles_docx.html">Happy collaboration with Rmd to docx</a>（181110）因为工作中要写的报告基本上都是word文档，而写报告其实主要是在已有框架的基础上修改大量的短语和数字，很让人烦躁，于是就研究了下如何生成（至少半）自动化的word文档。</li>
+</ul>
+</div>
+</div>
+<div id="tutorial" class="section level1">
+<h1>Tutorial</h1>
+<p>这一部分主要包括Onlinebook、<code>Tidyverse</code>以及与学习R相关的Website三部分。</p>
+<div id="onlinebook" class="section level3">
+<h3>Onlinebook</h3>
+<ul>
+<li><p><a href="https://r4ds.had.co.nz/">R for Data Science</a>（181107）这本书应该是目前关于R语言数据分析的最好的一本书了，看过两遍，除了太偏向计算机专业和统计学专业的内容，都还好，虽然不建议从这本入门，但真正想学好R，肯定不能错过这本书。</p></li>
+<li><p><a href="https://style.tidyverse.org/">The tidyverse style guide</a>（181107）跟上面的书配套的书，介绍了<code>tidyverse</code>的代码风格，是在<a href="https://google.github.io/styleguide/Rguide.xml">Google’s R Style Guide</a>的基础之上逐渐演变出来了，可以使代码看起来更美观，更有可读性。</p></li>
+<li><p><a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The Definitive Guide</a>（181107）系统介绍<code>Rmarkdown</code>的书，主要是作为参考书，有选择性的阅读某些章节即可（然而我还是完整看了一遍）</p></li>
+<li><p><a href="http://www.gastonsanchez.com/r4strings/">Handling Strings with R</a>（181108） 介绍字符串处理的书，内容不多，也比较简单。</p></li>
+<li><p><a href="https://www.tidytextmining.com/">Text Mining with R</a>（181108）介绍了几种文本分析的技术以及几个案例，我个人比较喜欢的一本书，喜欢文本挖掘的可以看看。</p></li>
+<li><p><a href="https://bookdown.org/yihui/blogdown/">blogdown: Creating Websites with R Markdown</a>（181108）介绍如何用<code>blogdown</code>包搭建博客的书，然而我并没有通过这本书真正学会怎么搭博客，只是了解到了自己的知识有多么匮乏。</p></li>
+<li><p><a href="https://moderndive.com/index.html">An Introduction to Statistical and Data Sciences via R</a>（181108）介绍了一些统计和<code>tidyverse</code>包的基本知识，非常简单，适合入门，但目前这本书还没有完成。</p></li>
+<li><p><a href="https://rkabacoff.github.io/datavis/">Data Visualization with R</a>（181108）介绍了很多种图形的绘制方法，非常实用，如果早看到这本书，很多地方都不用我自己去研究了，强烈推荐。</p></li>
+<li><p><a href="http://socviz.co/">Data Visualization: A practical introduction</a>（181108） 挺久以前看的了，当时还没有完成，而且以前似乎不是叫现在这个名字。感觉没有上面那本书好，但有一章介绍了一些绘图的理论，值得一看。</p></li>
+</ul>
+</div>
+<div id="website" class="section level3">
+<h3>Website</h3>
+<ul>
+<li><p><a href="https://www.statmethods.net/index.html">Quick-R</a>（181108）《R语言实战》作者的教程网站，很早以前看过的，内容应该比较基础。</p></li>
+<li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a>（181108）看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
+<li><p><a href="http://stat545.com/topics.html">stat545</a>（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
+</ul>
+</div>
+<div id="tidyverse" class="section level3">
+<h3>Tidyverse</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/tidyverse-tutorial-r">Getting Started with the Tidyverse: Tutorial</a>（181108）简单介绍了一下<code>tidyverse</code>包中的几个主要函数，没啥难度，部分内容需要翻墙才能看到。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/pipe-r-tutorial#notuse">Pipes in R Tutorial For Beginners</a>（181108）介绍了几种常见的管道函数（其实一种就够了），像我一样喜欢把代码都串起来的应该好好学学这个。</p></li>
+<li><p><a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Data Wrangling Part 1: Basic to Advanced Ways to Select Columns</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-2/">Data Wrangling Part 2: Transforming your columns into the right shape</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-3/">Data Wrangling Part 3: Basic and more advanced ways to filter rows</a>；<a href="https://suzan.rbind.io/2018/04/dplyr-tutorial-4/">Data Wrangling Part 4: Summarizing and slicing your data</a>（181108）系统介绍<code>dplyr</code>包的系列文章，非常值得一看。</p></li>
+</ul>
+</div>
+</div>
+<div id="visualization" class="section level1">
+<h1>Visualization</h1>
+<p>虽然这一部分叫可视化，但目前还仅包含与<code>ggplot2</code>相关的内容。</p>
+<div id="adjustment" class="section level3">
+<h3>Adjustment</h3>
+<ul>
+<li><p><a href="https://drsimonj.svbtle.com/ordering-categories-within-ggplot2-facets">Ordering categories within ggplot2 facets</a>（181110）解决了分面后的柱形图的排序问题。</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/customizing-time-and-date-scales-in-ggplot2/">Customizing time and date scales in ggplot2</a>（181110）涉及到时间和日期的标度调整，其实也可以迁移到其他类型。</p></li>
+</ul>
+</div>
+<div id="basic" class="section level3">
+<h3>Basic</h3>
+<ul>
+<li><p><a href="https://academy.vertabelo.com/blog/introduction-to-ggplot2/">Introduction to ggplot2</a>（181110）<code>ggplot2</code>的简单介绍，用了<strong>Game of Thrones</strong>的数据。</p></li>
+<li><p><a href="http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/">Beautiful plotting in R: A ggplot2 cheatsheet</a>（181110）非常不错的一个<code>ggplot2</code>基础教程，如果有不知道该如何实现的地方，可以来这篇文章查一查。</p></li>
+<li><p><a href="http://zevross.com/blog/2014/11/20/under-the-hood-of-ggplot2-graphics-in-r/">Under the hood of ggplot2 graphics in R</a>（181110）上面那篇文章的作者的另一篇文章，没怎能看懂，先放着吧。</p></li>
+</ul>
+</div>
+<div id="color" class="section level3">
+<h3>Color</h3>
+<ul>
+<li><p><a href="https://rtask.thinkr.fr/blog/ggplot2-welcome-viridis/">Welcome viridis !</a>（181110）<code>ggplot2</code>更新到3.0.0时把viridis系列的Palette加了进去，这篇文章详细介绍了一下。</p></li>
+<li><p><a href="https://drsimonj.svbtle.com/creating-corporate-colour-palettes-for-ggplot2">Creating corporate colour palettes for ggplot2</a>（181110）自建palette。</p></li>
+</ul>
+</div>
+<div id="extension" class="section level3">
+<h3>Extension</h3>
+<ul>
+<li><p><a href="https://guangchuangyu.github.io/2018/04/setting-ggplot2-background-with-ggbackground/">setting ggplot2 background with ggbackground</a>（181110）给<code>ggplot2</code>作的图加个背景。不过我用这个技术来干其他事情了。</p></li>
+<li><p><a href="http://www.win-vector.com/blog/2018/10/faceted-graphs-with-cdata-and-ggplot2/">Faceted Graphs with cdata and ggplot2</a>（181110）介绍了<code>cdata</code>包与<code>ggplot2</code>分面的结合。</p></li>
+</ul>
+</div>
+<div id="line-chart" class="section level3">
+<h3>Line chart</h3>
+<ul>
+<li><p><a href="https://dominikkoch.github.io/Bump-Chart/">Bump Chart</a>（181110）介绍了如何画<strong>Bump Chart</strong>，我不知道中文名叫什么，但这肯定是一种折线图。</p></li>
+<li><p><a href="https://drsimonj.svbtle.com/label-line-ends-in-time-series-with-ggplot2">Label line ends in time series with ggplot2</a>（181110）给折线图的终点处贴标签，不用他的方法也可以实现。</p></li>
+</ul>
+</div>
+</div>

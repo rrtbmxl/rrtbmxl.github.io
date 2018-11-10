@@ -1,2 +1,0 @@
-"0","library(ggplot2)"
-"0","ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point()"
