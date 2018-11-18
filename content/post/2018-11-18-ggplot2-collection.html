@@ -1,0 +1,336 @@
+---
+title: ggplot2及其扩展包绘图总结
+author: ''
+date: '2018-11-18'
+categories:
+  - R
+tags:
+  - 教程
+  - 可视化
+slug: ggplot2-collection
+output:
+  blogdown::html_page:
+    toc: yes
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/chart.js/./dist/Chart.min.js"></script>
+<script src="/rmarkdown-libs/chartJSRadar-binding/chartJSRadar.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#bar-plot">Bar Plot</a></li>
+<li><a href="#box-plot">Box Plot</a></li>
+<li><a href="#heatmap">Heatmap</a></li>
+<li><a href="#histgram">Histgram</a></li>
+<li><a href="#line-chart">Line Chart</a></li>
+<li><a href="#map">Map</a></li>
+<li><a href="#pie-chart">Pie Chart</a></li>
+<li><a href="#radar-chart">Radar Chart</a></li>
+<li><a href="#scatter-plot">Scatter Plot</a></li>
+<li><a href="#treemap">Treemap</a></li>
+</ul>
+</div>
+
+<p>像这样的教程应该有很多了，但为了自己查阅起来方便，我决定自己也写一个。这里我会尽量多的用到各种<code>theme</code>和<code>palette</code>，省得每次绘图还要一个一个试，看哪个好看（<del>通过这个过程，我可能体验到了女生出门前挑衣服的感觉</del>）。</p>
+<p>先把需要用到的包载入：</p>
+<pre class="r"><code>library(tidyverse)
+library(ggthemes)</code></pre>
+<div id="bar-plot" class="section level2">
+<h2>Bar Plot</h2>
+<p>直条图应该是最常见的了，在心理学论文中用到直条图时，一般都是把自变量放到x轴上，因变量放到y轴上，然后再添加误差条：</p>
+<pre class="r"><code>iris %&gt;% group_by(Species) %&gt;% 
+  summarise(avg_sl = mean(Sepal.Length), se = sqrt(sd(Sepal.Length)/n())) %&gt;% 
+  ggplot(aes(Species, avg_sl, fill = Species)) + 
+  geom_col(width = .5) + 
+  geom_errorbar(aes(ymin = avg_sl - se, ymax = avg_sl + se),width = .3) + 
+  scale_y_continuous(expand = c(0, 0)) + 
+  scale_fill_brewer(palette = &#39;Set2&#39;) + 
+  labs(y = &#39;Sepal.Length&#39;) + 
+  theme_classic() + 
+  theme(axis.text = element_text(color = &#39;black&#39;))</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-2-1.png" width="2100" /></p>
+<p>不过更多的时候，我是用直条图来进行数量上的对比：</p>
+<pre class="r"><code>population %&gt;% filter(year == 2013) %&gt;% 
+  top_n(12, population) %&gt;% 
+  ggplot(aes(fct_reorder(country, population), population, fill = country)) + 
+  geom_col(width = .8) + 
+  geom_text(aes(label = str_c(round(population/100000000, 2), &#39;亿&#39;)), 
+                nudge_y = -10000000) + 
+  coord_flip() + 
+  scale_y_continuous(labels = scales::comma) + 
+  scale_fill_brewer(palette = &#39;Set3&#39;) + 
+  labs(x = &#39;Country&#39;, y = &#39;Population&#39;) + 
+  theme_light() + 
+  theme(legend.position = &#39;none&#39;)</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-3-1.png" width="2100" /></p>
+<p>当然，也可以用在一些问卷调查结果的呈现上：</p>
+<pre class="r"><code>set.seed(181117)
+
+df_ques &lt;- tibble(item = letters[1:9], 
+                  satis = sample(30:50, 9, replace = TRUE), 
+                  unsatis = sample(30:50, 9, replace = TRUE)) %&gt;% 
+  mutate(uncertain = 100 - satis - unsatis) %&gt;% 
+  gather(choice, number, -item) %&gt;% 
+  mutate(choice = fct_relevel(choice, c(&#39;satis&#39;, &#39;uncertain&#39;, &#39;unsatis&#39;)))
+
+df_ques %&gt;% ggplot(aes(fct_rev(item), number, fill = choice)) + 
+  geom_col(width = .5, position = &#39;fill&#39;) + 
+  coord_flip() + 
+  scale_fill_brewer(palette = &#39;Dark2&#39;, 
+                    breaks = c(&#39;unsatis&#39;, &#39;uncertain&#39;, &#39;satis&#39;), 
+                    labels = c(&#39;不满意&#39;, &#39;不确定&#39;, &#39;满意&#39;)) + 
+  labs(x = &#39;题  目&#39;, y = &#39;比  例&#39;, fill = &#39;选  项&#39;) + 
+  theme_base() + 
+  theme(legend.position = &#39;top&#39;)</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-4-1.png" width="2100" /></p>
+</div>
+<div id="box-plot" class="section level2">
+<h2>Box Plot</h2>
+<p>箱型图可以用来进行变量内的对比，也能查看异常值的情况，这里我还添加了<code>jitter</code>了的散点图：</p>
+<pre class="r"><code>iris %&gt;% ggplot(aes(Species, Sepal.Length, fill = Species)) + 
+  geom_boxplot() + 
+  geom_point(position = position_jitter(width = .1), alpha = .5) + 
+  scale_fill_brewer(palette = &#39;Accent&#39;) + 
+  theme_bw()</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-5-1.png" width="2100" /></p>
+</div>
+<div id="heatmap" class="section level2">
+<h2>Heatmap</h2>
+<p>热力图可以参考我之前的文章<a href="https://rrtbmxl.github.io/2018/10/rick-and-morty-heatmap/">看图写代码：瑞克与莫蒂剧集评分热力图</a>。</p>
+</div>
+<div id="histgram" class="section level2">
+<h2>Histgram</h2>
+<p>直方图可以用来查看数据的分布情况，但我目前还没有用到过，因此参考了下看过的文章，随便画了个：</p>
+<pre class="r"><code>set.seed(181118)
+
+tibble(x = rnorm(10000)) %&gt;% 
+  ggplot(aes(x, fill = cut(x, 100))) + 
+  geom_histogram(binwidth = .2) + 
+  scale_fill_discrete(h = c(180, 360), c = 150, l = 80) + 
+  theme_fivethirtyeight() + 
+  theme(legend.position = &#39;none&#39;)</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-6-1.png" width="2100" /></p>
+</div>
+<div id="line-chart" class="section level2">
+<h2>Line Chart</h2>
+<p>折线图一般用来描述数据随着时间的变化，这个我倒是经常用到：</p>
+<pre class="r"><code>population %&gt;% 
+  filter(country %in% c(&#39;China&#39;, &#39;India&#39;, &#39;United States of America&#39;, 
+                        &#39;Russian Federation&#39;, &#39;Japan&#39;)) %&gt;% 
+  ggplot(aes(year, population, group = country, color = country)) + 
+  geom_line(size = 1.1) + 
+  geom_point(size = 2) + 
+  scale_y_continuous(breaks = seq(100000000, 1400000000, 100000000), 
+                     labels = seq(100, 1400, 100)) + 
+  scale_x_continuous(breaks = 1995:2013) + 
+  scale_color_brewer(palette = &#39;Set1&#39;) + 
+  labs(x = &#39;Year&#39;, y = &#39;Population (Million)&#39;) + 
+  theme_tufte() + 
+  theme(legend.position = &#39;bottom&#39;)</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-7-1.png" width="2100" /></p>
+</div>
+<div id="map" class="section level2">
+<h2>Map</h2>
+<p>以前以所在学院同年毕业的研究生地理信息数据画过一张地图，放在这里：</p>
+<pre class="r"><code>library(maptools)
+
+jky &lt;- read.csv(&#39;jky.csv&#39;, stringsAsFactors = FALSE)
+
+china_map &lt;- readShapePoly(&quot;bou2_4p.shp&quot;)
+
+map_data &lt;- china_map@data %&gt;% 
+  mutate(id = row.names(.)) %&gt;% 
+  full_join(fortify(china_map))
+
+jky_region &lt;- jky %&gt;% group_by(region) %&gt;% 
+  summarise(N = n()) %&gt;% 
+  full_join(map_data, by = c(&#39;region&#39; = &#39;NAME&#39;))
+
+china_label &lt;- read.csv(&#39;province.txt&#39;, stringsAsFactors = FALSE, 
+                        header = FALSE) %&gt;% 
+  select(region = 1, long = 4, lat = 5)
+
+ggplot(jky_region, aes(long, lat)) + 
+  geom_polygon(aes(group = group, fill = N), color = &#39;#AAAAAA&#39;, 
+               size = .2) + 
+  geom_text(aes(long, lat, label = region), data = china_label, 
+            size = 3, color = &#39;red&#39;) + 
+  coord_map(&#39;polyconic&#39;) + 
+  scale_fill_continuous(low = &#39;lightblue&#39;, high = &#39;blue&#39;, 
+                        breaks = c(5, 10, 15, 20, 25, 29),
+                        labels = c(&#39;01-05&#39;, &#39;05-09&#39;, &#39;10-14&#39;, 
+                                   &#39;15-19&#39;, &#39;20-24&#39;, &#39;25-29&#39;)) + 
+  scale_x_continuous(limits = c(73, 137)) + 
+  scale_y_continuous(limits = c(15, 55)) + 
+  theme_void() + 
+  labs(fill = &#39;人  数&#39;) + 
+  theme(plot.title = element_text(size = 24, hjust = .5, vjust = -20), 
+        legend.position = c(.16, .25),
+        legend.title = element_text(hjust = .4)) + 
+  guides(fill = guide_legend(reverse = TRUE, ncol = 2))</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-8-1.png" width="2100" /></p>
+<p>感觉这个中国地图不是很好看，世界地图就要好多了：</p>
+<pre class="r"><code>library(rvest)
+library(scales)
+
+df_oil &lt;- read_html(&quot;https://en.wikipedia.org/wiki/List_of_countries_by_oil_production&quot;) %&gt;% 
+  html_nodes(&quot;table&quot;) %&gt;% 
+  .[[1]] %&gt;% 
+  html_table() %&gt;% 
+  select(rank = 1, country = 2, oil_bbl_per_day = 3) %&gt;% 
+  mutate(rank = as.integer(rank), 
+         oil_bbl_per_day = str_replace_all(oil_bbl_per_day, &quot;,&quot;, &quot;&quot;),
+         oil_bbl_per_day = as.integer(oil_bbl_per_day),
+         opec_ind = if_else(str_detect(country, &quot;OPEC&quot;), 1, 0),
+         country = str_replace(country, &quot;\\(OPEC\\)&quot;, &quot;&quot;),
+         country = str_replace(country, &quot;\\s{2,}&quot;, &quot; &quot;)) %&gt;% 
+  select(1, 2, 4, 3)
+
+map_world &lt;- map_data(&quot;world&quot;)
+
+df_oil &lt;- df_oil %&gt;% 
+  mutate(country = recode(country, `United States` = &#39;USA&#39;, 
+                          `United Kingdom` = &#39;UK&#39;,
+                          `Congo, Democratic Republic of the` = &#39;Democratic Republic of the Congo&#39;,
+                          `Trinidad and Tobago` = &#39;Trinidad&#39;,
+                          `Sudan and South Sudan` = &#39;Sudan&#39;,
+                          `Sudan and  South Sudan` = &#39;South Sudan&#39;,
+                          `Congo, Republic of the` = &#39;Republic of Congo&#39;))
+
+map_oil &lt;- left_join(map_world, df_oil, by = c(&quot;region&quot; = &quot;country&quot;))
+
+ggplot(map_oil, aes(long, lat, group = group)) + 
+  geom_polygon(aes(fill = oil_bbl_per_day)) + 
+  scale_fill_gradientn(colours = c(&#39;#461863&#39;,&#39;#404E88&#39;,&#39;#2A8A8C&#39;,&#39;#7FD157&#39;,&#39;#F9E53F&#39;),
+                       values = rescale(c(100,96581,822675,3190373,10000000)),
+                       labels = comma,
+                       breaks = c(100,96581,822675,3190373,10000000)) + 
+  guides(fill = guide_legend(reverse = TRUE)) + 
+  labs(fill = &quot;bbl/day&quot;, title = &quot;Oil Production by Country&quot;,
+       subtitle = &quot;Barrels per day, 2016&quot;, x = NULL, y = NULL) + 
+  theme(text = element_text(color = &quot;#EEEEEE&quot;),
+        plot.title = element_text(size = 28),
+        plot.subtitle = element_text(size = 14),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        panel.grid = element_blank(),
+        panel.background = element_rect(fill = &quot;#333333&quot;), 
+        plot.background = element_rect(fill = &quot;#333333&quot;),
+        legend.position = c(.18, .36),
+        legend.background = element_blank(),
+        legend.key = element_blank()) + 
+  annotate(geom = &quot;text&quot;,
+           label = &quot;Source: U.S. Energy Information Administration\nhttps://en.wikipedia.org/wiki/List_of_countries_by_oil_production&quot;,
+           x = 18, y = -55, size = 3, color = &quot;#CCCCCC&quot;, hjust = &quot;left&quot;)</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-9-1.png" width="2100" /></p>
+<p>上图的代码是以前在一个名叫<strong>Sharp Sight</strong>的网站上看到的，不知道为什么，这个网站现在打不开了。当时看到这幅图真是感到不可思议，但现在来看，也是稀松平常。</p>
+</div>
+<div id="pie-chart" class="section level2">
+<h2>Pie Chart</h2>
+<p>饼图其实就是直条图经过了极坐标的转化形成的，因为人对面积大小的区分能力不如对长度的区分能力，所以一般不推荐用饼图：</p>
+<pre class="r"><code>iris %&gt;% count(Species) %&gt;% 
+  ggplot(aes(&#39;&#39;, n, fill = Species)) + 
+  geom_col(position = &#39;fill&#39;) + 
+  geom_text(aes(label = str_c(str_to_title(Species), &#39;:\n&#39;, n)), 
+            position = position_fill(vjust = .5)) + 
+  coord_polar(theta = &#39;y&#39;) + 
+  scale_fill_brewer(palette = &#39;Pastel1&#39;) + 
+  theme_void() + 
+  theme(legend.position = &#39;none&#39;)</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-10-1.png" width="2100" /></p>
+<p>以前对于给饼图贴标签的问题，颇下了一番功夫，但实际上<code>ggplot2</code>里自带了解决办法。另外，如果有多个直条图的话，饼图就可以变成旭日图（sunburst graph）：</p>
+<pre class="r"><code>iris %&gt;% count(Species) %&gt;% 
+  mutate(hierarchy = &#39;b&#39;) %&gt;% 
+  add_row(Species = &#39;total&#39;, n = 150, hierarchy = &#39;a&#39;, .before = 1) %&gt;% 
+  ggplot(aes(hierarchy, n, fill = Species)) + 
+  geom_col(position = &#39;fill&#39;) + 
+  geom_text(aes(label = str_c(str_to_title(Species), &#39;:\n&#39;, n)), 
+            position = position_fill(vjust = .5)) + 
+  coord_polar(theta = &#39;y&#39;) + 
+  scale_fill_brewer(palette = &#39;Pastel1&#39;) + 
+  theme_void() + 
+  theme(legend.position = &#39;none&#39;)</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-11-1.png" width="2100" /></p>
+</div>
+<div id="radar-chart" class="section level2">
+<h2>Radar Chart</h2>
+<p>雷达图经常用来呈现游戏人物的能力属性，我特意找了三国志中三位君主的属性数据（花了好多时间才找到，就没有硬核玩家来整理这些资料吗？），来呈现雷达图，用到的包是<code>ggplot2</code>的扩展包<code>ggradar</code>：</p>
+<pre class="r"><code>library(ggradar)
+
+df_tk &lt;- tibble(姓名 = c(&#39;曹操&#39;, &#39;刘备&#39;, &#39;孙权&#39;),
+                统率 = c(99, 81, 79),
+                武力 = c(72, 77, 67),
+                智力 = c(91, 78, 80),
+                政治 = c(94, 80, 89)) %&gt;% 
+  mutate_if(is.numeric, funs(./100))
+
+df_tk %&gt;% ggradar(axis.label.size = 5, 
+                  group.point.size = 3, 
+                  grid.label.size = 0) + 
+  scale_color_manual(values = c(&#39;blue&#39;, &#39;green&#39;, &#39;red&#39;)) + 
+  theme(legend.text = element_text(size = 10), 
+        legend.position = &#39;right&#39;)</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-12-1.png" width="2100" /></p>
+<p>感觉非常不理想，我又试了下<code>radarchart</code>包，这个包并不是<code>ggplot2</code>的扩展包，但呈现的结果要好一点，而且还有一定的交互性-把鼠标放到点上时会显示对应的信息：</p>
+<pre class="r"><code>library(radarchart)
+
+tibble(label = c(&#39;统率&#39;, &#39;武力&#39;, &#39;智力&#39;, &#39;政治&#39;), 
+       孙权 = c(79, 67, 80, 89), 
+       刘备 = c(81, 77, 78, 80),
+       曹操 = c(99, 72, 91, 94)) %&gt;% 
+  chartJSRadar(maxScale = 100, showToolTipLabel = TRUE)</code></pre>
+<canvas id="htmlwidget-1" class="chartJSRadar html-widget" width="2100" height="1500"></canvas>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"data":{"labels":["统率","武力","智力","政治"],"datasets":[{"label":"孙权","data":[79,67,80,89],"backgroundColor":"rgba(255,0,0,0.2)","borderColor":"rgba(255,0,0,0.8)","pointBackgroundColor":"rgba(255,0,0,0.8)","pointBorderColor":"#fff","pointHoverBackgroundColor":"#fff","pointHoverBorderColor":"rgba(255,0,0,0.8)"},{"label":"刘备","data":[81,77,78,80],"backgroundColor":"rgba(0,255,0,0.2)","borderColor":"rgba(0,255,0,0.8)","pointBackgroundColor":"rgba(0,255,0,0.8)","pointBorderColor":"#fff","pointHoverBackgroundColor":"#fff","pointHoverBorderColor":"rgba(0,255,0,0.8)"},{"label":"曹操","data":[99,72,91,94],"backgroundColor":"rgba(0,0,255,0.2)","borderColor":"rgba(0,0,255,0.8)","pointBackgroundColor":"rgba(0,0,255,0.8)","pointBorderColor":"#fff","pointHoverBackgroundColor":"#fff","pointHoverBorderColor":"rgba(0,0,255,0.8)"}]},"options":{"responsive":true,"title":{"display":false,"text":null},"scale":{"ticks":{"max":100,"min":0},"pointLabels":{"fontSize":18}},"tooltips":{"enabled":true,"mode":"label"},"legend":{"display":true}}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="scatter-plot" class="section level2">
+<h2>Scatter Plot</h2>
+<p>散点图常用来描绘两个数值型变量之间的关系，有时候关系是一样的，但内容可能截然不同：</p>
+<pre class="r"><code>tibble(id = c(rep(1:11, each = 4)), set = rep(1:4, 11), 
+       x = c(t(anscombe[,1:4])), y = c(t(anscombe[,5:8]))) %&gt;%
+  ggplot(aes(x, y)) + 
+  geom_point() + 
+  geom_smooth(method = &quot;lm&quot;, se = FALSE) +
+  facet_wrap(~ set) + 
+  theme_light() + 
+  labs(title = &quot;Anscombe&#39;s quartet&quot;)</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-14-1.png" width="2100" /></p>
+<p>当把数据中的某个变量映射到点的大小上时，散点图就变成了气泡图：</p>
+<pre class="r"><code>library(gapminder)
+library(ggrepel)
+
+gapminder %&gt;% filter(year == 2007) %&gt;% 
+  top_n(12, pop) %&gt;% 
+  ggplot(aes(gdpPercap, lifeExp)) + 
+  geom_point(aes(size = pop, color = pop), show.legend = FALSE) + 
+  geom_text_repel(aes(label = country)) + 
+  scale_size_continuous(range = c(2, 10)) + 
+  scale_color_continuous_tableau(palette = &#39;Orange&#39;) + 
+  theme_minimal()</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-15-1.png" width="2100" /></p>
+</div>
+<div id="treemap" class="section level2">
+<h2>Treemap</h2>
+<p>树状图可以用来展示文字的频次，在文字的数量不是很多的情况下，比词汇云要好一点：</p>
+<pre class="r"><code>library(tidytext)
+library(treemapify)
+
+set.seed(181117)
+
+df_col &lt;- tibble(color = sample(colors(), 15, replace = FALSE), 
+                 n = sample(10:1000, 15)) %&gt;% 
+  arrange(color)
+
+df_col %&gt;% 
+  ggplot(aes(area = n, fill = color)) + 
+  geom_treemap() + 
+  geom_treemap_text(aes(label = str_c(df_col$color, &#39;:\n&#39;, df_col$n)), 
+                    place = &#39;center&#39;) + 
+  scale_fill_manual(values = c(&quot;aliceblue&quot;, &quot;burlywood2&quot;, &quot;gray34&quot;, &quot;gray37&quot;, 
+                               &quot;gray51&quot;, &quot;gray80&quot;, &quot;green&quot;, &quot;green4&quot;,         
+                               &quot;grey29&quot;, &quot;lightcyan4&quot;, &quot;lightgoldenrod3&quot;, 
+                               &quot;maroon2&quot;, &quot;mediumslateblue&quot;, &quot;tan3&quot;, &quot;tomato4&quot; )) + 
+  theme(legend.position = &#39;none&#39;)</code></pre>
+<p><img src="/post/2018-11-18-ggplot2-collection_files/figure-html/unnamed-chunk-16-1.png" width="2100" /></p>
+<p>因子型的数据有时候挺难搞的，这里就没找到好办法，最后干脆全列了出来，以后再想办法解决这个问题吧。</p>
+</div>

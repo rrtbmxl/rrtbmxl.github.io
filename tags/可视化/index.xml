@@ -6,10 +6,22 @@
     <description>Recent content in 可视化 on RPG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 18 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/%E5%8F%AF%E8%A7%86%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ggplot2及其扩展包绘图总结</title>
+      <link>/2018/11/ggplot2-collection/</link>
+      <pubDate>Sun, 18 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/11/ggplot2-collection/</guid>
+      <description>Bar PlotBox PlotHeatmapHistgramLine ChartMapPie ChartRadar ChartScatter PlotTreemap像这样的教程应该有很多了，但为了自己查阅起来方便，我决定自己也写一个。这里我会尽量多的用到各种theme和palette，省得每次绘图还要一个一个试，看哪个好看（通过这个过程，我可能体验到了女生出门前挑衣服的感觉）。
+先把需要用到的包载入：
+library(tidyverse)library(ggthemes)Bar Plot直条图应该是最常见的了，在心理学论文中用到直条图时，一般都是把自变量放到x轴上，因变量放到y轴上，然后再添加误差条：
+iris %&amp;gt;% group_by(Species) %&amp;gt;% summarise(avg_sl = mean(Sepal.Length), se = sqrt(sd(Sepal.Length)/n())) %&amp;gt;% ggplot(aes(Species, avg_sl, fill = Species)) + geom_col(width = .5) + geom_errorbar(aes(ymin = avg_sl - se, ymax = avg_sl + se),width = .3) + scale_y_continuous(expand = c(0, 0)) + scale_fill_brewer(palette = &amp;#39;Set2&amp;#39;) + labs(y = &amp;#39;Sepal.</description>
+    </item>
     
     <item>
       <title>看图写代码：瑞克与莫蒂剧集评分热力图</title>
