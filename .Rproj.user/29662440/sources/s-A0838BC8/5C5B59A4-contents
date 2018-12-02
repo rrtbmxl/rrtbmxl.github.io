@@ -88,6 +88,14 @@ datafile[order(-datafile$zscore),]
 ### Blogdown
 
  - [Starting a Rmarkdown Blog with Blogdown + Hugo + Github](https://talesofr.wordpress.com/2017/08/18/starting-a-rmarkdown-blog-with-bookdown-hugo-github/)（181110）看了好几篇介绍用`blogdown`搭建博客的文章，只有这一篇文章介绍的方法让我成功了。
+ 
+### Report
+
+ - [Create Multiple Reports with RMarkdown](https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html)（181129）介绍了如何用`Rmarkdown`批量生成报告，真的是非常实用了。
+ 
+### Shiny
+
+ - [Shiny](http://shiny.rstudio.com/)（181202）Shiny的官网，简单地看了下其中一个教程。
 
 ### Word
 
@@ -120,6 +128,8 @@ datafile[order(-datafile$zscore),]
 挺久以前看的了，当时还没有完成，而且以前似乎不是叫现在这个名字。感觉没有上面那本书好，但有一章介绍了一些绘图的理论，值得一看。
 
  - [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/)（181112）两年前的书，部分内容已经过时了，但帮我补充了很多诸如**Vectorized Operations**，**Lazy Evaluation**，**Scoping Rules**的知识，另外也让我找到了之前想了很久都没想起来的`dput`函数。
+ 
+ - [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)（181130）跟上面那本书是同一个作者，部分内容有重叠，虽然主要以`Base`绘图为主，但也介绍了`ggplot2`的一些内容，值得一看；另外，还有几章介绍了层次聚类、K均值聚类以及降维，基本上是没看懂。
 
 ### Tidyverse
 
@@ -180,8 +190,6 @@ datafile[order(-datafile$zscore),]
  - [ggplot2 extensions](http://www.ggplot2-exts.org/)（181113）介绍了基于`ggplot2`的一些扩展包。
  
  - [htmlwidgets for R](http://gallery.htmlwidgets.org/)（181113）R的一些可视化方面（也不全是）的扩展包。
- 
- - [htmlwidgets for R](http://www.htmlwidgets.org/)（181113）跟上面的名字一样，网址也很像，内容方面比较精简。
 
  - [googleVis examples](https://cran.r-project.org/web/packages/googleVis/vignettes/googleVis_examples.html)（181114）`gppgleVis`包的例子介绍，这些图都好漂亮了，有时间一定要研究一下这个包。
 
