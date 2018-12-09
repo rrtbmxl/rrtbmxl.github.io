@@ -877,12 +877,12 @@ library(scales)</code></pre>
           <div class="media">
             
             <div class="media-body">
-              <a class="link-unstyled" href="/2018/11/r-source-collection/">
+              <a class="link-unstyled" href="/2018/12/r-source-collection/">
                 <h3 class="media-heading">R语言学习资源总结</h3>
               </a>
               <span class="media-meta">
                 <span class="media-date text-small">
-                  Nov 11, 2018
+                  Dec 12, 2018
                 </span>
               </span>
               <div class="media-content hide-xs font-merryweather">ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordTutorialOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicColorExtensionHistogramLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
@@ -892,6 +892,28 @@ AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语�
 6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。
 ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。
 Non-tidy data（181110）有tidy data就是相应的non-tidy data，不过文章具体写的啥，我已经忘啦。</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/12/red-envelope/">
+                <h3 class="media-heading">使用R语言模拟抢红包</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">有一次参加了一个特别无聊的讲座，实在是无事可做，就琢磨了一下像微信抢红包那样的机制是如何实现的。自己当时想了一个模拟的方式，出来的结果似乎也可以以假乱真。后来把相关的代码完善了下，用来在自己组织的R语言课上讲for循环和自编函数。现在把这些内容整理出来，权当作一篇小小的教程。
+首先假设，有人发了一个200块钱的红包，分给10个人抢：
+money &lt;- 200people &lt;- 10给每个人安排一个随机数：
+set.seed(181209)rand_number &lt;- sample(1:10000, people, replace = TRUE)rand_number## [1] 4188 591 2386 4520 3692 979 8170 3728 7121 4408随后用每个随机数除以所有随机数的总和得到一个比值，乘以总钱数，进而得到每个人的钱数：
+rand_money &lt;- rand_number/sum(rand_number)*moneyrand_money## [1] 21.054219 2.971118 11.995073 22.723274 18.560692 4.921700 41.072820## [8] 18.741674 35.799211 22.160219然后就可以知道具体每个人得到多少钱了：
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.05元，红包剩余178.95元。&quot;paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[2], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:2]), 2), &#39;元。&#39;)## [1] &quot;ptdpj得到了2.</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -1043,7 +1065,7 @@ douban &lt;- read_csv(&#39;douban.csv&#39;)## Parsed with column specification:
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         7 posts found
+         8 posts found
       </p>
     </div>
   </div>

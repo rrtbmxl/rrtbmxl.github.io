@@ -1,0 +1,188 @@
+---
+title: 使用R语言模拟抢红包
+author: ''
+date: '2018-12-09'
+slug: red-envelope
+categories:
+  - R
+tags:
+  - 教程
+---
+
+有一次参加了一个特别无聊的讲座，实在是无事可做，就琢磨了一下像微信抢红包那样的机制是如何实现的。自己当时想了一个模拟的方式，出来的结果似乎也可以以假乱真。后来把相关的代码完善了下，用来在自己组织的R语言课上讲`for`循环和自编函数。现在把这些内容整理出来，权当作一篇小小的教程。
+
+首先假设，有人发了一个200块钱的红包，分给10个人抢：
+
+```{r}
+money <- 200
+people <- 10
+```
+
+给每个人安排一个随机数：
+
+```{r}
+set.seed(181209)
+rand_number <- sample(1:10000, people, replace = TRUE)
+rand_number
+```
+
+随后用每个随机数除以所有随机数的总和得到一个比值，乘以总钱数，进而得到每个人的钱数：
+
+```{r}
+rand_money <- rand_number/sum(rand_number)*money
+rand_money
+```
+
+然后就可以知道具体每个人得到多少钱了：
+
+```{r}
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = ''),
+       '得到了', round(rand_money[1], 2), '元，红包剩余', 
+      round(money - sum(rand_money[1:1]), 2), '元。')
+```
+
+```{r}
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = ''),
+       '得到了', round(rand_money[2], 2), '元，红包剩余', 
+      round(money - sum(rand_money[1:2]), 2), '元。')
+```
+
+```{r}
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = ''),
+       '得到了', round(rand_money[3], 2), '元，红包剩余', 
+      round(money - sum(rand_money[1:3]), 2), '元。')
+```
+
+但是一个人一行代码实在是太麻烦了，这时候就需要`for`循环，把相似的代码重复固定的次数，如：
+
+```{r}
+for (number in seq(people)) {
+  
+  message <- paste0('我是', number, '号！')
+  
+  print(message)
+  
+}
+```
+
+具体到这个例子，就是这样：
+
+```{r}
+for (number in seq(people)) {
+  
+  message <- paste0(paste0(sample(letters, 5, replace = TRUE), collapse = ''),
+                    '得到了', round(rand_money[number], 2), '元，红包剩余', 
+                   round(money - sum(rand_money[1:number]), 2), '元。')
+  
+  print(message)
+  
+}
+```
+
+以上的代码可以写进一个函数中。因为每次的红包不会都是200的，也不是每次都会有10个人抢，这两个值可以作为函数的参数，需要的时候可以设定新的数值：
+
+```{r}
+hongbao <- function(money = 200, people = 10) { 
+  
+  set.seed(181209)
+  
+  rand_number <- sample(1:10000, people)
+  
+  rand_money <- rand_number/sum(rand_number)*money
+  
+  message <- paste0(paste0(sample(letters, 5, replace = TRUE), collapse = ''),
+                    '得到了', round(rand_money[sample(1:people,1)], 2), '元，红包剩余', 
+                   round(money - sum(rand_money[1:sample(1:people,1)]), 2), '元。')
+  
+  return(message)
+}
+```
+
+因此设置了参数的默认值，所以直接输入函数名就可以看到默认的结果：
+
+```{r}
+hongbao()
+```
+
+也可以重新设定新的钱数和人数：
+
+```{r}
+hongbao(money = 100, people = 20)
+```
+
+这时候只会显示一条抢红包的信息，如果想要知道红包已经被多少人抢过了，以及手气最佳的信息，还需要加一些东西：
+
+```{r}
+hongbao <- function(money = 200, people = 10) { 
+  
+  rand_number <- sample(1:10000, people)
+  
+  you <- sample(1:people, 1)
+  
+  rand_money <- rand_number/sum(rand_number)*money
+  
+  message <- paste0('你得到了', round(rand_money[you], 2), '元，红包剩余', 
+                   round(money - sum(rand_money[1:you]), 2), '元。')
+  
+  print(message)
+  
+  message_number <- paste0('红包已抢', you, '/', people, '个。')
+  
+  print(message_number)
+  
+  for (number in seq(you)) {
+    
+    if (max(rand_money[1:you]) - rand_money[number] < .00001) {
+      
+      if (number < you) {
+      
+        name <- paste0(sample(letters, 5, replace = TRUE), collapse = '')
+        
+        message_overall <- paste0(name, '得到了', round(rand_money[number], 2), '元，手气最佳。')
+
+      }
+      
+      else {
+      
+       message_overall <- paste0('你', '得到了', round(rand_money[number], 2), '元，手气最佳。')
+      
+      }
+      
+    }
+    
+    else {
+      
+      if (number < you) {
+      
+        name <- paste0(sample(letters, 5, replace = TRUE), collapse = '')
+        
+        message_overall <- paste0(name, '得到了', round(rand_money[number], 2), '元。')
+
+      }
+      
+      else {
+      
+       message_overall <- paste0('你', '得到了', round(rand_money[number], 2), '元。')
+      
+      }
+      
+    }
+  
+  print(message_overall)
+  
+}
+  
+}
+```
+
+然后再看一下：
+
+```{r}
+hongbao()
+```
+
+```{r}
+hongbao(20, 20)
+```
+
+最后的代码有点乱，但没时间整理了，就这样吧。

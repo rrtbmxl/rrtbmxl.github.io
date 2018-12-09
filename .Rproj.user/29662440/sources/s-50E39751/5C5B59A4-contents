@@ -1,7 +1,7 @@
 ---
 title: R语言学习资源总结
 author: ''
-date: '2018-11-18'
+date: '2018-12-09'
 categories:
   - R
 tags:
@@ -83,7 +83,7 @@ datafile[order(-datafile$zscore),]
 
 # Communication
 
-这一部分暂时只包括Blogdown和Word两部分，近期我想研究下`Shiny`，等研究得差不多了再加上。
+这一部分包括与报告相关的内容，以及与`blogdown`和`shiny`相关的内容。
 
 ### Blogdown
 
@@ -146,10 +146,12 @@ datafile[order(-datafile$zscore),]
  - [Statistical tools for high-throughput data analysis](http://www.sthda.com/english/)（181108）看过可视化那部分，介绍`ggplot2`包的内容规范而细致，适合入门。
  
  - [stat545](http://stat545.com/topics.html)（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。
+ 
+ - [Cookbook for R ](http://www.cookbook-r.com/)（181208）很早就知道的一个网站，但最近才完整看了一遍，除了`ggplot2`部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。
 
 # Visualization
 
-虽然这一部分叫可视化，但目前还仅包含与`ggplot2`相关的内容。
+虽然这一部分叫可视化，但主要是与`ggplot2`相关的内容。
 
 ### Adjustment
 

@@ -350,7 +350,7 @@ datafile[order(-datafile$zscore),]</code></pre>
 </div>
 <div id="communication" class="section level1">
 <h1>Communication</h1>
-<p>这一部分暂时只包括Blogdown和Word两部分，近期我想研究下<code>Shiny</code>，等研究得差不多了再加上。</p>
+<p>这一部分包括与报告相关的内容，以及与<code>blogdown</code>和<code>shiny</code>相关的内容。</p>
 <div id="blogdown" class="section level3">
 <h3>Blogdown</h3>
 <ul>
@@ -409,12 +409,13 @@ datafile[order(-datafile$zscore),]</code></pre>
 <li><p><a href="https://www.statmethods.net/index.html">Quick-R</a>（181108）《R语言实战》作者的教程网站，很早以前看过的，内容应该比较基础。</p></li>
 <li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a>（181108）看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
 <li><p><a href="http://stat545.com/topics.html">stat545</a>（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
+<li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a>（181208）很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
 </ul>
 </div>
 </div>
 <div id="visualization" class="section level1">
 <h1>Visualization</h1>
-<p>虽然这一部分叫可视化，但目前还仅包含与<code>ggplot2</code>相关的内容。</p>
+<p>虽然这一部分叫可视化，但主要是与<code>ggplot2</code>相关的内容。</p>
 <div id="adjustment" class="section level3">
 <h3>Adjustment</h3>
 <ul>
@@ -515,7 +516,7 @@ datafile[order(-datafile$zscore),]</code></pre>
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/12/red-envelope/" data-tooltip="使用R语言模拟抢红包">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -601,7 +602,7 @@ datafile[order(-datafile$zscore),]</code></pre>
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/12/red-envelope/" data-tooltip="使用R语言模拟抢红包">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -726,6 +727,28 @@ datafile[order(-datafile$zscore),]</code></pre>
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/12/red-envelope/">
+                <h3 class="media-heading">使用R语言模拟抢红包</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">有一次参加了一个特别无聊的讲座，实在是无事可做，就琢磨了一下像微信抢红包那样的机制是如何实现的。自己当时想了一个模拟的方式，出来的结果似乎也可以以假乱真。后来把相关的代码完善了下，用来在自己组织的R语言课上讲for循环和自编函数。现在把这些内容整理出来，权当作一篇小小的教程。
+首先假设，有人发了一个200块钱的红包，分给10个人抢：
+money &lt;- 200people &lt;- 10给每个人安排一个随机数：
+set.seed(181209)rand_number &lt;- sample(1:10000, people, replace = TRUE)rand_number## [1] 4188 591 2386 4520 3692 979 8170 3728 7121 4408随后用每个随机数除以所有随机数的总和得到一个比值，乘以总钱数，进而得到每个人的钱数：
+rand_money &lt;- rand_number/sum(rand_number)*moneyrand_money## [1] 21.054219 2.971118 11.995073 22.723274 18.560692 4.921700 41.072820## [8] 18.741674 35.799211 22.160219然后就可以知道具体每个人得到多少钱了：
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.05元，红包剩余178.95元。&quot;paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[2], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:2]), 2), &#39;元。&#39;)## [1] &quot;ptdpj得到了2.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -896,7 +919,7 @@ douban &lt;- read_csv(&#39;douban.csv&#39;)## Parsed with column specification:
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         7 posts found
+         8 posts found
       </p>
     </div>
   </div>

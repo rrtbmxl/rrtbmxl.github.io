@@ -225,16 +225,16 @@
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="/2018/11/r-source-collection/">
+        <a class="link-unstyled" href="/2018/12/r-source-collection/">
           R语言学习资源总结
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2018-11-18T00:00:00Z">
+      <time itemprop="datePublished" datetime="2018-12-09T00:00:00Z">
         
-  November 18, 2018
+  December 9, 2018
 
       </time>
     
@@ -259,7 +259,66 @@ AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语�
 ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。
 Non-tidy data（181110）有tidy data就是相应的non-tidy data，不过文章具体写的啥，我已经忘啦。
       <p>
-        <a href="/2018/11/r-source-collection/" class="postShorten-excerpt_link link">Continue reading</a>
+        <a href="/2018/12/r-source-collection/" class="postShorten-excerpt_link link">Continue reading</a>
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+          
+            
+  
+    
+      
+        
+      
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title" itemprop="headline">
+        <a class="link-unstyled" href="/2018/12/red-envelope/">
+          使用R语言模拟抢红包
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2018-12-09T00:00:00Z">
+        
+  December 9, 2018
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt" itemprop="articleBody">
+      有一次参加了一个特别无聊的讲座，实在是无事可做，就琢磨了一下像微信抢红包那样的机制是如何实现的。自己当时想了一个模拟的方式，出来的结果似乎也可以以假乱真。后来把相关的代码完善了下，用来在自己组织的R语言课上讲for循环和自编函数。现在把这些内容整理出来，权当作一篇小小的教程。
+首先假设，有人发了一个200块钱的红包，分给10个人抢：
+money &lt;- 200people &lt;- 10给每个人安排一个随机数：
+set.seed(181209)rand_number &lt;- sample(1:10000, people, replace = TRUE)rand_number## [1] 4188 591 2386 4520 3692 979 8170 3728 7121 4408随后用每个随机数除以所有随机数的总和得到一个比值，乘以总钱数，进而得到每个人的钱数：
+rand_money &lt;- rand_number/sum(rand_number)*moneyrand_money## [1] 21.054219 2.971118 11.995073 22.723274 18.560692 4.921700 41.072820## [8] 18.741674 35.799211 22.160219然后就可以知道具体每个人得到多少钱了：
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.05元，红包剩余178.95元。&quot;paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[2], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:2]), 2), &#39;元。&#39;)## [1] &quot;ptdpj得到了2.
+      <p>
+        <a href="/2018/12/red-envelope/" class="postShorten-excerpt_link link">Continue reading</a>
         
       </p>
     </div>
@@ -565,71 +624,24 @@ reading %&gt;% head() %&gt;% kable()yearregionpassagesentencesentence_low
 </article>
 
           
-            
-  
-    
+          
+  <div class="pagination-bar">
+    <ul class="pagination">
       
         
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="/2018/02/stereotype-on-anime/">
-          关于动画的刻板印象
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2018-02-14T00:00:00Z">
         
-  February 14, 2018
-
-      </time>
-    
-    
-  
-  
-    <span>in</span>
-    
-      <a class="category-link" href="/categories/r">R</a>
-    
-  
-
+          <li class="pagination-next">
+            <a class="btn btn--default btn--small" href="/post/page/2/">
+              <span>OLDER POSTS</span>
+              <i class="fa fa-angle-right text-base icon-ml"></i>
+            </a>
+          </li>
+        
+      
+      <li class="pagination-number">page 1 of 2</li>
+    </ul>
   </div>
 
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      前段时间带孩子去看了《金龟子》动画大电影，感觉很无趣。我原以为其身为童年回忆，来到屏幕，面对长幼两辈，必有看点，没想到竟演出如此幼稚之戏！看了几分钟之后，我就开始玩手机了。坐我前面的也是一对父子，动画放了一半的时候，孩子问了他爸爸一句话，让我印象很深刻。他问：“爸爸，你怎么不看啊？”孩子显然是很喜欢这部动画的，希望他爸爸也跟他一起看，但这动画实在无法勾起我们的兴趣。电影结束回到家后，我产生了一个疑问，难道这部动画真的没办法制作成老少咸宜的吗？是出于什么原因，导致这部本来可以通过卖情怀让成年人也产生兴趣的动画最终只是一部低龄向动画？我想，原因不外乎在我们国家对于动画一直存在一个根深蒂固的刻板印象，即，动画是给小孩子看的。
-小时候就经常听到大人们说，“你看谁谁谁，真是没出息，这么大了还看动画片。”我关于“动画是给小孩子看的”这一刻板印象应该就是那个时候形成的。不过，虽然有这么个刻板印象，我还是从小看到了大（别说，也确实没什么出息），因为在看的过程中，我并没有体验到“动画是给小孩子看的”这一点，不过大了之后，我从来不看国产动画就是了（除了陪孩子看《喜羊羊》《熊出没》之类的动画，不过说起来，好像连我家孩子也很少看这两部动画了），即便现在国产动画天天“崛起”，我也一丁点不想看。究其原因，大概是因为我关于动画的刻板印象在之前的基础之上发生了变化，变成了“国产动画是给小孩子看的”。
-中学时一直在在追漫画《神兵玄奇》，后来听说要改编成动画了，挺激动的，谁知道改编成了《神兵小将》。这部时不时会有少儿不宜场景的成人向漫画到底经过了怎样的反向魔改才成为低龄向动画的？还是之前那个疑问，这部动画难道就不能通过适当的删改，制作成全年龄的吗？带着这种疑问，我试图去知网上寻找答案，我在检索处输入了“动画”一词，第一个匹配的关键词是“幼儿”，第二个是“身心发展”，看起来这一刻板印象确实是挺普遍的，连搞学术的人都这么认为了。我最终没能在知网上找到答案，所以我决定自己来对这一问题进行一下探究。
-首先，我要确定两件事情：
-关于动画是不是存在这样的刻板印象？
-如果存在的话，这一刻板印象是仅限于我们国家，还是全都这样？
-要进行验证的话，首先要有相关的数据。虽然我平常关于动画的信息会参考IMDB和MAL，但要完成这一任务，显然还是豆瓣更合适。我试图在豆瓣网站上爬取我所需要的信息，但折腾了一上午才发现，我所掌握的那一点点爬虫技术根本就无法爬取我所需要的数据，于是我就在网上找了一份现成的（早知道就不折腾了）。这份数据是2016年的，还算比较新，内容也完全符合我的需要。其次，要找到具有代表性的作品。关于哪些动画是代表性的，每个人肯定都有不同的看法，可能不会有特定的原型，所以这里我先用豆瓣上的评价人数为指标来评定动画的代表性，评价人数越多，就说明其越具有代表性。另外，要拿国产动画和国外动画进行对比，但实际上所谓的国外动画，主要就是美国和日本的动画（三个国家的动画数量占了全部动画数量的81.4%），所以后面只挑了这三个地区的数据。
-先载入要用到的包：
-library(tidyverse)library(knitr)library(scales)按照惯例，先载入了tidyverse包；然后为了数据能展示得更好看一点，以及数据的正常显示，也载入了knitr包；另外，后面在画图的时候，还要用到scales包，这里也一并载入。
-然后来看一下这份数据：
-douban &lt;- read_csv(&#39;douban.csv&#39;)## Parsed with column specification:## cols(## 评分 = col_double(),## 名字 = col_character(),## 投票人数 = col_integer(),## 类型 = col_character(),## 产地 = col_character(),## 上映时间 = col_character(),## 时长 = col_character(),## 年代 = col_character(),## 是否连续剧 = col_integer(),## 集数 = col_character(),## 看过 = col_integer(),## 待看 = col_character()## )head(douban, 10) %&gt;% kable()评分名字投票人数类型产地上映时间时长年代是否连续剧集数看过待看7.
-      <p>
-        <a href="/2018/02/stereotype-on-anime/" class="postShorten-excerpt_link link">Continue reading</a>
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-          
-          
 
         </section>
         <footer id="footer" class="main-content-wrap">
@@ -680,12 +692,12 @@ douban &lt;- read_csv(&#39;douban.csv&#39;)## Parsed with column specification:
           <div class="media">
             
             <div class="media-body">
-              <a class="link-unstyled" href="/2018/11/r-source-collection/">
+              <a class="link-unstyled" href="/2018/12/r-source-collection/">
                 <h3 class="media-heading">R语言学习资源总结</h3>
               </a>
               <span class="media-meta">
                 <span class="media-date text-small">
-                  Nov 11, 2018
+                  Dec 12, 2018
                 </span>
               </span>
               <div class="media-content hide-xs font-merryweather">ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordTutorialOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicColorExtensionHistogramLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
@@ -695,6 +707,28 @@ AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语�
 6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。
 ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。
 Non-tidy data（181110）有tidy data就是相应的non-tidy data，不过文章具体写的啥，我已经忘啦。</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/12/red-envelope/">
+                <h3 class="media-heading">使用R语言模拟抢红包</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">有一次参加了一个特别无聊的讲座，实在是无事可做，就琢磨了一下像微信抢红包那样的机制是如何实现的。自己当时想了一个模拟的方式，出来的结果似乎也可以以假乱真。后来把相关的代码完善了下，用来在自己组织的R语言课上讲for循环和自编函数。现在把这些内容整理出来，权当作一篇小小的教程。
+首先假设，有人发了一个200块钱的红包，分给10个人抢：
+money &lt;- 200people &lt;- 10给每个人安排一个随机数：
+set.seed(181209)rand_number &lt;- sample(1:10000, people, replace = TRUE)rand_number## [1] 4188 591 2386 4520 3692 979 8170 3728 7121 4408随后用每个随机数除以所有随机数的总和得到一个比值，乘以总钱数，进而得到每个人的钱数：
+rand_money &lt;- rand_number/sum(rand_number)*moneyrand_money## [1] 21.054219 2.971118 11.995073 22.723274 18.560692 4.921700 41.072820## [8] 18.741674 35.799211 22.160219然后就可以知道具体每个人得到多少钱了：
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.05元，红包剩余178.95元。&quot;paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[2], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:2]), 2), &#39;元。&#39;)## [1] &quot;ptdpj得到了2.</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -846,7 +880,7 @@ douban &lt;- read_csv(&#39;douban.csv&#39;)## Parsed with column specification:
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         7 posts found
+         8 posts found
       </p>
     </div>
   </div>
