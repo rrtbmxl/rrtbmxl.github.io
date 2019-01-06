@@ -28,9 +28,11 @@ output:
 <li><a href="#word">Word</a></li>
 </ul></li>
 <li><a href="#tutorial">Tutorial</a><ul>
+<li><a href="#machine-learning">Machine Learning</a></li>
 <li><a href="#onlinebook">Onlinebook</a></li>
 <li><a href="#tidyverse">Tidyverse</a></li>
 <li><a href="#website">Website</a></li>
+<li><a href="#web-scraping">Web Scraping</a></li>
 </ul></li>
 <li><a href="#visualization">Visualization</a><ul>
 <li><a href="#adjustment">Adjustment</a></li>
@@ -133,7 +135,18 @@ datafile[order(-datafile$zscore),]</code></pre>
 </div>
 <div id="tutorial" class="section level1">
 <h1>Tutorial</h1>
-<p>这一部分主要包括Onlinebook、<code>Tidyverse</code>以及与学习R相关的Website三部分。</p>
+<p>这一部分主要包括Onlinebook、<code>Tidyverse</code>以及与学习R相关的Website三部分，19年之后加入了Web Scraping和Machine Learning两部分，这两项内容是我一直都很想学的，但也一直都处于连入门都算不上的水平。</p>
+<div id="machine-learning" class="section level3">
+<h3>Machine Learning</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/machine-learning-in-r">Machine Learning in R for beginners</a>（190103）用KNN算法介绍了机器学习，这种难度的教程比较适合我，哈哈。</p></li>
+<li><p><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/?from=%40&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">A visual introduction to machine learning</a>（190103）另一个介绍机器学习的文章，跟R没啥关系，但网页做得很酷炫。</p></li>
+<li><p><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-2/?from=%40&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Model Tuning and the Bias-Variance Tradeoff</a>（190103）上面那篇文章的后续，说是还有第三部分，但目前还没。</p></li>
+<li><p><a href="https://blog.datascienceheroes.com/introduction-to-machine-learning-for-non-developers/">Introduction to Machine Learning for non-developers</a>（190103）另一个介绍机器学习的教程，这次用的是随机森林算法。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/k-means-clustering-r?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">K-Means Clustering in R Tutorial</a>（190103）如题目所示，这篇介绍了K均值聚类。</p></li>
+<li><p><a href="http://www.blopig.com/blog/2017/04/a-very-basic-introduction-to-random-forests-using-r/">A very basic introduction to Random Forests using R</a>（190103）另一个介绍随机森林算法的文章。</p></li>
+</ul>
+</div>
 <div id="onlinebook" class="section level3">
 <h3>Onlinebook</h3>
 <ul>
@@ -148,6 +161,7 @@ datafile[order(-datafile$zscore),]</code></pre>
 <li><p><a href="http://socviz.co/">Data Visualization: A practical introduction</a>（181108） 挺久以前看的了，当时还没有完成，而且以前似乎不是叫现在这个名字。感觉没有上面那本书好，但有一章介绍了一些绘图的理论，值得一看。</p></li>
 <li><p><a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a>（181112）两年前的书，部分内容已经过时了，但帮我补充了很多诸如<strong>Vectorized Operations</strong>，<strong>Lazy Evaluation</strong>，<strong>Scoping Rules</strong>的知识，另外也让我找到了之前想了很久都没想起来的<code>dput</code>函数。</p></li>
 <li><p><a href="https://bookdown.org/rdpeng/exdata/">Exploratory Data Analysis with R</a>（181130）跟上面那本书是同一个作者，部分内容有重叠，虽然主要以<code>Base</code>绘图为主，但也介绍了<code>ggplot2</code>的一些内容，值得一看；另外，还有几章介绍了层次聚类、K均值聚类以及降维，基本上是没看懂。</p></li>
+<li><p><a href="https://livebook.datascienceheroes.com/">Data Science Live Book</a>（181218）一个R包的文档扩展成的书，排班有点乱，不推荐看。</p></li>
 </ul>
 </div>
 <div id="tidyverse" class="section level3">
@@ -165,6 +179,16 @@ datafile[order(-datafile$zscore),]</code></pre>
 <li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a>（181108）看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
 <li><p><a href="http://stat545.com/topics.html">stat545</a>（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
 <li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a>（181208）很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
+</ul>
+</div>
+<div id="web-scraping" class="section level3">
+<h3>Web Scraping</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/r-web-scraping-rvest?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Web Scraping in R: rvest Tutorial</a>（190103）爬虫的入门教程，介绍了<code>rvest</code>包，只能爬静态网页。</p></li>
+<li><p><a href="https://velaco.github.io/how-to-scrape-data-from-javascript-websites-with-R/">How to Scrape Data from a JavaScript Website with R</a>（190103）介绍了一种爬取动态网页（？）的方法，要用到<code>rvest</code>和<code>PhantomJS</code>包，我最终没有使用这种方法，因此也没有尝试。</p></li>
+<li><p><a href="https://datascienceplus.com/scraping-javascript-rendered-web-content-using-r/">Scraping Javascript-rendered web content using R</a>（190103）跟上面那个好像差不多，也没有去试。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r">Web Scraping with R and PhantomJS</a>（190103）还是同上。</p></li>
+<li><p><a href="http://ropensci.github.io/RSelenium/articles/basics.html">Basics·RSelenium/</a>（190103）<code>RSelenium</code>包的官方网站，这个包可以用来爬取动态网页，我试了这种方法，成功了，其实就是用来模拟鼠标操作的。</p></li>
 </ul>
 </div>
 </div>

@@ -281,7 +281,7 @@ reading %&gt;% head() %&gt;% kable()yearregionpassagesentencesentence_low
         
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2018 孟祥良. All Rights Reserved
+    &copy; 2019 孟祥良. All Rights Reserved
   </span>
 </footer>
 
@@ -327,6 +327,29 @@ reading %&gt;% head() %&gt;% kable()yearregionpassagesentencesentence_low
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="/2019/01/pseudo-dynamic-website-scraping/">
+                <h3 class="media-heading">（伪）动态网页爬虫-《狗十三》豆瓣短评爬取</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jan 1, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">这周公司组织了电影赏析，看的电影是《狗十三》。我之前并没有看过这部电影，就想着先去豆瓣上看一下评论。这电影的评论还不少，有好几百条，完全可以全爬下来，分析一下。拉到页面下面，点击后页，url就会跟着变化（start=那里），说明这也不是啥动态网页，完全可以写个循环，用rvest包一页一页的爬。但实际爬取的时候，遇到了问题，就是未登陆的状态下，只能爬前220条评论。我搜索了一下模拟登录的办法，似乎是成功了，但后续该怎么弄，我就不知道了。我在这里卡了一天，没想到解决办法。昨天早上躺在被窝里，突然想到，我之前研究了下用RSelenium爬取动态网页，这里我完全可以先用RSelenium模拟登录，然后把网页当成动态网页爬啊。试了一下，成功了，下面就是相关的操作过程。
+首先还是载入需要用的包，要使用RSelenium包，还要先进行一些配置，具体内容可以看RSelenium包的官方网站（这网站好像需要科学上网）：
+library(tidyverse)library(RSelenium)library(rvest)library(jiebaR)library(wordcloud2)library(knitr)接下来跟Selenium Server进行连接，这里我用的是Chrome浏览器（变量名rd本应该在第一行，不知道为什么跑到下边去了……）：
+ rd &lt;- remoteDriver(remoteServerAddr = &quot;localhost&quot;,port = 4444L,browserName = &quot;chrome&quot;)然后模拟打开豆瓣电影的登录页面，输入用户名和密码，点击登录按键，就可以登录了：
+rd$open()rd$navigate(&#39;https://www.douban.com/accounts/login?source=movie&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;email&quot;]&#39;)we$sendKeysToElement(list(&#39;用户名&#39;))we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;password&quot;]&#39;)we$sendKeysToElement(list(&#39;密码&#39;))we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;lzform&quot;]/div[6]/input&#39;)we$clickElement()如果没接触过爬虫的，看着上面的代码可能有点懵，但实际上没啥太玄奥的东西。RSelenium包中的函数名就明白显示了它是干什么的，而参数中的那些xpath，在Chrome浏览器中都是可以直接复制出来的。
+后面就可以开始爬虫了。我只爬了评价星级、短评时间、有帮助次数和短评文本四项信息。需要说明的是，有些用户虽然写了短评，但不会打分，这种情况下，我认为的将其评价星级定位“无评价”。因为不打分也会影响后面内容的xpath，所以那部分用了一些if条件。另外，虽然不知道会不会用上，在每页的内容爬取完之后，我也会让程序随机休息几秒，省得被轻易地认定为是爬虫程序。
+rd$navigate(&#39;https://movie.douban.com/subject/25716096/comments?start=0&amp;limit=20&amp;sort=new_score&amp;status=P&#39;)dog13 &lt;- tibble()for (i in 1:50) {rank &lt;- character(0)time &lt;- character(0)help &lt;- character(0)text &lt;- character(0)temp &lt;- tibble()for (j in 1:20) {xpath_rank &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[2]&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_rank)rank[j] &lt;- ifelse(str_length(we$getElementAttribute(&#39;title&#39;) %&gt;% unlist()) &gt; 2, &#39;无评价&#39;, we$getElementAttribute(&#39;title&#39;) %&gt;% unlist())if (str_length(we$getElementAttribute(&#39;title&#39;) %&gt;% unlist()) &lt; 3) {xpath_time &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[3]&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_time)time[j] &lt;- we$getElementText() %&gt;% unlist()} else {xpath_time &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[2]&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_time)time[j] &lt;- we$getElementText() %&gt;% unlist()}xpath_help &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[1]/span&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_help)help[j] &lt;- we$getElementText() %&gt;% unlist()xpath_text &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/p/span&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_text)text[j] &lt;- we$getElementText() %&gt;% unlist()df &lt;- tibble(rank, time, help, text)}dog13 &lt;- bind_rows(dog13, df)rest &lt;- sample(1:10, 1)if (i &lt; 2) {we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;paginator&quot;]/a&#39;)we$clickElement()Sys.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="/2018/12/r-source-collection/">
                 <h3 class="media-heading">R语言学习资源总结</h3>
               </a>
@@ -335,13 +358,12 @@ reading %&gt;% head() %&gt;% kable()yearregionpassagesentencesentence_low
                   Dec 12, 2018
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather">ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordTutorialOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicColorExtensionHistogramLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+              <div class="media-content hide-xs font-merryweather">ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordTutorialMachine LearningOnlinebookTidyverseWebsiteWeb ScrapingVisualizationAdjustmentBasicColorExtensionHistogramLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
 还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
 Article这里罗列了一些关于R语言的文章，主要包括R的优势、R的一些概念、R的历史以及如何学习R。
 AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语言的一些优点，作者是从R开始接触编程语言的，观点可能有失偏颇；我也差不多是从R开始接触编程语言的，所以是不是真的偏颇了，我也看不出来。
 6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。
-ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。
-Non-tidy data（181110）有tidy data就是相应的non-tidy data，不过文章具体写的啥，我已经忘啦。</div>
+ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -515,7 +537,7 @@ douban &lt;- read_csv(&#39;douban.csv&#39;)## Parsed with column specification:
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         8 posts found
+         9 posts found
       </p>
     </div>
   </div>

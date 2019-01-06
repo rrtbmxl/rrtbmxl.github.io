@@ -1,0 +1,185 @@
+---
+title: （伪）动态网页爬虫-《狗十三》豆瓣短评爬取
+author: ''
+date: '2019-01-06'
+slug: pseudo-dynamic-website-scraping
+categories:
+  - R
+tags:
+  - 爬虫
+---
+
+这周公司组织了电影赏析，看的电影是《狗十三》。我之前并没有看过这部电影，就想着先去[豆瓣](https://movie.douban.com/subject/25716096/comments?start=0&sort=new_score&status=P&percent_type=)上看一下评论。这电影的评论还不少，有好几百条，完全可以全爬下来，分析一下。拉到页面下面，点击**后页**，url就会跟着变化（start=那里），说明这也不是啥动态网页，完全可以写个循环，用`rvest`包一页一页的爬。但实际爬取的时候，遇到了问题，就是未登陆的状态下，只能爬前220条评论。我搜索了一下[模拟登录](https://stackoverflow.com/questions/28418770/using-rvest-or-httr-to-log-in-to-non-standard-forms-on-a-webpage)的办法，似乎是成功了，但后续该怎么弄，我就不知道了。我在这里卡了一天，没想到解决办法。昨天早上躺在被窝里，突然想到，我之前研究了下用`RSelenium`爬取动态网页，这里我完全可以先用`RSelenium`模拟登录，然后把网页当成动态网页爬啊。试了一下，成功了，下面就是相关的操作过程。
+
+首先还是载入需要用的包，要使用`RSelenium`包，还要先进行一些配置，具体内容可以看`RSelenium`包的[官方网站](http://ropensci.github.io/RSelenium/articles/basics.html)（这网站好像需要科学上网）：
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(RSelenium)
+library(rvest)
+library(jiebaR)
+library(wordcloud2)
+library(knitr)
+```
+
+接下来跟**Selenium Server**进行连接，这里我用的是**Chrome**浏览器（变量名rd本应该在第一行，不知道为什么跑到下边去了......）：
+```{r eval = FALSE}
+ rd <- remoteDriver(
+   remoteServerAddr = "localhost",
+   port = 4444L,
+   browserName = "chrome"
+)
+```
+
+然后模拟打开豆瓣电影的登录页面，输入用户名和密码，点击登录按键，就可以登录了：
+
+```{r eval = FALSE}
+rd$open()
+rd$navigate('https://www.douban.com/accounts/login?source=movie')
+
+we <- rd$findElement(using = 'xpath', '//*[@id="email"]')
+we$sendKeysToElement(list('用户名'))
+
+we <- rd$findElement(using = 'xpath', '//*[@id="password"]')
+we$sendKeysToElement(list('密码'))
+
+we <- rd$findElement(using = 'xpath', '//*[@id="lzform"]/div[6]/input')
+we$clickElement()
+```
+
+如果没接触过爬虫的，看着上面的代码可能有点懵，但实际上没啥太玄奥的东西。`RSelenium`包中的函数名就明白显示了它是干什么的，而参数中的那些**xpath**，在**Chrome**浏览器中都是可以直接复制出来的。
+
+后面就可以开始爬虫了。我只爬了评价星级、短评时间、有帮助次数和短评文本四项信息。需要说明的是，有些用户虽然写了短评，但不会打分，这种情况下，我认为的将其评价星级定位“无评价”。因为不打分也会影响后面内容的**xpath**，所以那部分用了一些`if`条件。另外，虽然不知道会不会用上，在每页的内容爬取完之后，我也会让程序随机休息几秒，省得被轻易地认定为是爬虫程序。
+
+```{r eval = FALSE}
+rd$navigate('https://movie.douban.com/subject/25716096/comments?start=0&limit=20&sort=new_score&status=P')
+
+dog13 <- tibble()
+for (i in 1:50) {
+  
+  rank <- character(0)
+  time <- character(0)
+  help <- character(0)
+  text <- character(0)
+  temp <- tibble()
+  
+  for (j in 1:20) {
+    
+    xpath_rank <- str_c('//*[@id="comments"]/div[', j, ']/div[2]/h3/span[2]/span[2]')
+    we <- rd$findElement(using = 'xpath', xpath_rank)
+    rank[j] <- ifelse(str_length(we$getElementAttribute('title') %>% unlist()) > 2, 
+                      '无评价', we$getElementAttribute('title') %>% unlist())
+    
+    if (str_length(we$getElementAttribute('title') %>% unlist()) < 3) {
+      
+      xpath_time <- str_c('//*[@id="comments"]/div[', j, ']/div[2]/h3/span[2]/span[3]')
+      we <- rd$findElement(using = 'xpath', xpath_time)
+      time[j] <- we$getElementText() %>% unlist()
+      
+    } else {
+      
+      xpath_time <- str_c('//*[@id="comments"]/div[', j, ']/div[2]/h3/span[2]/span[2]')
+      we <- rd$findElement(using = 'xpath', xpath_time)
+      time[j] <- we$getElementText() %>% unlist()
+      
+    }
+    
+    xpath_help <- str_c('//*[@id="comments"]/div[', j, ']/div[2]/h3/span[1]/span')
+    we <- rd$findElement(using = 'xpath', xpath_help)
+    help[j] <- we$getElementText() %>% unlist()
+    
+    xpath_text <- str_c('//*[@id="comments"]/div[', j, ']/div[2]/p/span')
+    we <- rd$findElement(using = 'xpath', xpath_text)
+    text[j] <- we$getElementText() %>% unlist()
+    
+    df <- tibble(rank, time, help, text)
+    
+  }
+  
+  dog13 <- bind_rows(dog13, df)
+  
+  rest <- sample(1:10, 1)
+  
+  if (i < 2) {
+    
+    we <- rd$findElement(using = 'xpath', '//*[@id="paginator"]/a')
+    we$clickElement()
+    Sys.sleep(rest)
+    
+  } else {
+    
+    we <- rd$findElement(using = 'xpath', '//*[@id="paginator"]/a[3]')
+    we$clickElement()
+    Sys.sleep(rest)
+    
+  }
+  
+}
+```
+
+到这里，需要的内容就爬取完毕了，不过，既然已经爬到了，还是简单分析一下吧。进行分析前，先简单处理一下：
+```{r}
+dog13 <- read.csv('dog13.csv', stringsAsFactors = FALSE) %>% 
+  mutate(score = case_when(rank == '力荐' ~ 5, rank == '推荐' ~ 4,
+                           rank == '还行' ~ 3, rank == '较差' ~ 2,
+                           rank == '很差' ~ 1) %>% as.integer(),
+         year = str_sub(time, 1, 4) %>% as.integer())
+```
+
+现在的数据是这样的：
+```{r}
+dog13 %>% head() %>% kable()
+```
+
+看看愿意花时间写短评的人们对该片的评分：
+```{r}
+mean(dog13$score, na.rm = TRUE) %>% round(1) * 2
+```
+
+比主页面上的8.2分好像低不少的。
+
+看看评分随时间的变化：
+```{r}
+dog13 %>% group_by(year) %>% 
+  summarise(n = n(), 
+            score = mean(score, na.rm = TRUE) %>% round(1) * 2) %>% 
+  select(年份 = 1, 评价数 = 2, 分数 = 3) %>% 
+  kable()
+```
+
+评分随时间先增后减，短评主要集中在解禁后的18年。
+
+最后画个词云吧：
+```{r}
+worker <- worker(stop_word = 'stopwords_cn.txt')
+
+dog13_overall <- str_c(dog13$text, collapse = '')
+
+dog13_word_overall <- worker[dog13_overall]
+
+dog13_word_overall_freq <- dog13_word_overall %>% 
+  table() %>% 
+  as.tibble() %>% 
+  select(word = 1, freq = 2) %>%
+  filter(!str_detect(word, '(\\d+)|([A-Za-z]+)|(\\s+)')) %>% 
+  filter(str_length(word) > 1) %>% 
+  arrange(-freq) %>% 
+  filter(freq > 20)
+
+wordcloud2(dog13_word_overall_freq, size = .6)
+```
+
+这部电影的主题应该很明显了。
+
+P.S.再附上另一种不知道该如何进一步使用的模拟登录的方法：
+```{r eval = FALSE}
+url <- 'https://accounts.douban.com/login?source=movie'
+login <- html_session(url)
+form <- html_form(login)[[1]]
+
+filled_form <- set_values(form,
+                          'form_email' = '用户名',
+                          'form_password' = '密码')
+
+submit <- submit_form(login, filled_form)
+```

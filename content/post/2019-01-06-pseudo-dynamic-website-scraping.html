@@ -1,0 +1,266 @@
+---
+title: （伪）动态网页爬虫-《狗十三》豆瓣短评爬取
+author: ''
+date: '2019-01-06'
+slug: pseudo-dynamic-website-scraping
+categories:
+  - R
+tags:
+  - 爬虫
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="/rmarkdown-libs/wordcloud2/wordcloud.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/wordcloud2/wordcloud2-all.js"></script>
+<script src="/rmarkdown-libs/wordcloud2/hover.js"></script>
+<script src="/rmarkdown-libs/wordcloud2-binding/wordcloud2.js"></script>
+
+
+<p>这周公司组织了电影赏析，看的电影是《狗十三》。我之前并没有看过这部电影，就想着先去<a href="https://movie.douban.com/subject/25716096/comments?start=0&amp;sort=new_score&amp;status=P&amp;percent_type=">豆瓣</a>上看一下评论。这电影的评论还不少，有好几百条，完全可以全爬下来，分析一下。拉到页面下面，点击<strong>后页</strong>，url就会跟着变化（start=那里），说明这也不是啥动态网页，完全可以写个循环，用<code>rvest</code>包一页一页的爬。但实际爬取的时候，遇到了问题，就是未登陆的状态下，只能爬前220条评论。我搜索了一下<a href="https://stackoverflow.com/questions/28418770/using-rvest-or-httr-to-log-in-to-non-standard-forms-on-a-webpage">模拟登录</a>的办法，似乎是成功了，但后续该怎么弄，我就不知道了。我在这里卡了一天，没想到解决办法。昨天早上躺在被窝里，突然想到，我之前研究了下用<code>RSelenium</code>爬取动态网页，这里我完全可以先用<code>RSelenium</code>模拟登录，然后把网页当成动态网页爬啊。试了一下，成功了，下面就是相关的操作过程。</p>
+<p>首先还是载入需要用的包，要使用<code>RSelenium</code>包，还要先进行一些配置，具体内容可以看<code>RSelenium</code>包的<a href="http://ropensci.github.io/RSelenium/articles/basics.html">官方网站</a>（这网站好像需要科学上网）：</p>
+<pre class="r"><code>library(tidyverse)
+library(RSelenium)
+library(rvest)
+library(jiebaR)
+library(wordcloud2)
+library(knitr)</code></pre>
+<p>接下来跟<strong>Selenium Server</strong>进行连接，这里我用的是<strong>Chrome</strong>浏览器（变量名rd本应该在第一行，不知道为什么跑到下边去了……）：</p>
+<pre class="r"><code> rd &lt;- remoteDriver(
+   remoteServerAddr = &quot;localhost&quot;,
+   port = 4444L,
+   browserName = &quot;chrome&quot;
+)</code></pre>
+<p>然后模拟打开豆瓣电影的登录页面，输入用户名和密码，点击登录按键，就可以登录了：</p>
+<pre class="r"><code>rd$open()
+rd$navigate(&#39;https://www.douban.com/accounts/login?source=movie&#39;)
+
+we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;email&quot;]&#39;)
+we$sendKeysToElement(list(&#39;用户名&#39;))
+
+we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;password&quot;]&#39;)
+we$sendKeysToElement(list(&#39;密码&#39;))
+
+we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;lzform&quot;]/div[6]/input&#39;)
+we$clickElement()</code></pre>
+<p>如果没接触过爬虫的，看着上面的代码可能有点懵，但实际上没啥太玄奥的东西。<code>RSelenium</code>包中的函数名就明白显示了它是干什么的，而参数中的那些<strong>xpath</strong>，在<strong>Chrome</strong>浏览器中都是可以直接复制出来的。</p>
+<p>后面就可以开始爬虫了。我只爬了评价星级、短评时间、有帮助次数和短评文本四项信息。需要说明的是，有些用户虽然写了短评，但不会打分，这种情况下，我认为的将其评价星级定位“无评价”。因为不打分也会影响后面内容的<strong>xpath</strong>，所以那部分用了一些<code>if</code>条件。另外，虽然不知道会不会用上，在每页的内容爬取完之后，我也会让程序随机休息几秒，省得被轻易地认定为是爬虫程序。</p>
+<pre class="r"><code>rd$navigate(&#39;https://movie.douban.com/subject/25716096/comments?start=0&amp;limit=20&amp;sort=new_score&amp;status=P&#39;)
+
+dog13 &lt;- tibble()
+for (i in 1:50) {
+  
+  rank &lt;- character(0)
+  time &lt;- character(0)
+  help &lt;- character(0)
+  text &lt;- character(0)
+  temp &lt;- tibble()
+  
+  for (j in 1:20) {
+    
+    xpath_rank &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[2]&#39;)
+    we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_rank)
+    rank[j] &lt;- ifelse(str_length(we$getElementAttribute(&#39;title&#39;) %&gt;% unlist()) &gt; 2, 
+                      &#39;无评价&#39;, we$getElementAttribute(&#39;title&#39;) %&gt;% unlist())
+    
+    if (str_length(we$getElementAttribute(&#39;title&#39;) %&gt;% unlist()) &lt; 3) {
+      
+      xpath_time &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[3]&#39;)
+      we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_time)
+      time[j] &lt;- we$getElementText() %&gt;% unlist()
+      
+    } else {
+      
+      xpath_time &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[2]&#39;)
+      we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_time)
+      time[j] &lt;- we$getElementText() %&gt;% unlist()
+      
+    }
+    
+    xpath_help &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[1]/span&#39;)
+    we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_help)
+    help[j] &lt;- we$getElementText() %&gt;% unlist()
+    
+    xpath_text &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/p/span&#39;)
+    we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_text)
+    text[j] &lt;- we$getElementText() %&gt;% unlist()
+    
+    df &lt;- tibble(rank, time, help, text)
+    
+  }
+  
+  dog13 &lt;- bind_rows(dog13, df)
+  
+  rest &lt;- sample(1:10, 1)
+  
+  if (i &lt; 2) {
+    
+    we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;paginator&quot;]/a&#39;)
+    we$clickElement()
+    Sys.sleep(rest)
+    
+  } else {
+    
+    we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;paginator&quot;]/a[3]&#39;)
+    we$clickElement()
+    Sys.sleep(rest)
+    
+  }
+  
+}</code></pre>
+<p>到这里，需要的内容就爬取完毕了，不过，既然已经爬到了，还是简单分析一下吧。进行分析前，先简单处理一下：</p>
+<pre class="r"><code>dog13 &lt;- read.csv(&#39;dog13.csv&#39;, stringsAsFactors = FALSE) %&gt;% 
+  mutate(score = case_when(rank == &#39;力荐&#39; ~ 5, rank == &#39;推荐&#39; ~ 4,
+                           rank == &#39;还行&#39; ~ 3, rank == &#39;较差&#39; ~ 2,
+                           rank == &#39;很差&#39; ~ 1) %&gt;% as.integer(),
+         year = str_sub(time, 1, 4) %&gt;% as.integer())</code></pre>
+<p>现在的数据是这样的：</p>
+<pre class="r"><code>dog13 %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">rank</th>
+<th align="left">time</th>
+<th align="right">help</th>
+<th align="left">text</th>
+<th align="right">score</th>
+<th align="right">year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">力荐</td>
+<td align="left">2018-01-28</td>
+<td align="right">11204</td>
+<td align="left">“你看，这个孩子好懂事啊。”“你怎么知道她是不是害怕、沉默、妥协呢？”</td>
+<td align="right">5</td>
+<td align="right">2018</td>
+</tr>
+<tr class="even">
+<td align="left">力荐</td>
+<td align="left">2016-09-02</td>
+<td align="right">8650</td>
+<td align="left">原来我们都是这样长大的……或者说，如果没有共鸣，你知不知道你有多幸运……</td>
+<td align="right">5</td>
+<td align="right">2016</td>
+</tr>
+<tr class="odd">
+<td align="left">力荐</td>
+<td align="left">2014-02-19</td>
+<td align="right">4540</td>
+<td align="left">我之所以坚决认为不该要孩子，没有别的原因，仅仅是因为我实在没有把握让一个充满灵气的生命不被“成长”为一个认为《时间简史》只是给孩子看的、用一个谎言去圆另一个谎言的大人。PS：这应该就是今年你能看到的最好的华语电影</td>
+<td align="right">5</td>
+<td align="right">2014</td>
+</tr>
+<tr class="even">
+<td align="left">还行</td>
+<td align="left">2013-10-16</td>
+<td align="right">4335</td>
+<td align="left">狗是引题，13是成长，狗B是伪善的成人世界。家长不知教育孩子的根本，而拿狗出气，这就是中国式教育的最大问题。新狗代替老狗去死，女孩意识到狗狗回来受罪不如在外人那好吃好伺候着，这是她向成人世界的妥协也是她逐渐迈向成人的成长。</td>
+<td align="right">3</td>
+<td align="right">2013</td>
+</tr>
+<tr class="odd">
+<td align="left">力荐</td>
+<td align="left">2018-02-21</td>
+<td align="right">3896</td>
+<td align="left">李玩的名字是胡乱取的，弟弟的名字是认真取的，因为“男孩的名字不能太随便了”。 继母随便找只狗来敷衍李玩，爸爸还强迫她承认这就是爱因斯坦。 是继母买来了新狗，也是继母要把新狗卖了。狗只是畜生，利用完了就可以扔了。 李玩推倒了爷爷，遭到了爸爸的暴打；弟弟打了奶奶，爸爸却反过来哄弟弟。 弟弟挑衅新狗在先，爸爸却去打新狗。 李玩永远是错的，弟弟永远是对的。 于是，李玩变得“成熟懂事”了，她会不让爸爸难堪，忍痛吃狗肉；她会为了不让爱因斯坦跟她受苦，忍痛离开。 但我还是想念最真实的她，希望她能做回自己。 我们人人都是李玩，被生活磨平了棱角，失去了个性，扔掉了脾气，忘记了初心，还美其名曰“这就是成长”。 我们“提高了”情商，“学会了”做违心的事，说违心的话，再也不遵循自己的内心。 狗永远是狗，人有时却不是人。</td>
+<td align="right">5</td>
+<td align="right">2018</td>
+</tr>
+<tr class="even">
+<td align="left">推荐</td>
+<td align="left">2018-12-02</td>
+<td align="right">3016</td>
+<td align="left">这毕竟还是大城市的较为体面的家庭的故事了，女孩要在父亲面前挑衅地吹啤酒瓶才会挨一顿打，打完还能得到道歉与补偿。在我们十八线小城市的版本里，女孩准备出门找狗的时候就已经可以赢得两记耳光了，没有发出尖叫的机会，没有摔门摔碗的机会，只能把头深深地埋进被窝里无声哭一场，第二天起来，就长大了。</td>
+<td align="right">4</td>
+<td align="right">2018</td>
+</tr>
+</tbody>
+</table>
+<p>看看愿意花时间写短评的人们对该片的评分：</p>
+<pre class="r"><code>mean(dog13$score, na.rm = TRUE) %&gt;% round(1) * 2</code></pre>
+<pre><code>## [1] 7.6</code></pre>
+<p>比主页面上的8.2分好像低不少的。</p>
+<p>看看评分随时间的变化：</p>
+<pre class="r"><code>dog13 %&gt;% group_by(year) %&gt;% 
+  summarise(n = n(), 
+            score = mean(score, na.rm = TRUE) %&gt;% round(1) * 2) %&gt;% 
+  select(年份 = 1, 评价数 = 2, 分数 = 3) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="center">年份</th>
+<th align="center">评价数</th>
+<th align="center">分数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">2013</td>
+<td align="center">35</td>
+<td align="center">7.8</td>
+</tr>
+<tr class="even">
+<td align="center">2014</td>
+<td align="center">17</td>
+<td align="center">8.2</td>
+</tr>
+<tr class="odd">
+<td align="center">2015</td>
+<td align="center">6</td>
+<td align="center">8.4</td>
+</tr>
+<tr class="even">
+<td align="center">2016</td>
+<td align="center">26</td>
+<td align="center">8.0</td>
+</tr>
+<tr class="odd">
+<td align="center">2017</td>
+<td align="center">6</td>
+<td align="center">7.6</td>
+</tr>
+<tr class="even">
+<td align="center">2018</td>
+<td align="center">408</td>
+<td align="center">7.6</td>
+</tr>
+<tr class="odd">
+<td align="center">2019</td>
+<td align="center">2</td>
+<td align="center">6.0</td>
+</tr>
+</tbody>
+</table>
+<p>评分随时间先增后减，短评主要集中在解禁后的18年。</p>
+<p>最后画个词云吧：</p>
+<pre class="r"><code>worker &lt;- worker(stop_word = &#39;stopwords_cn.txt&#39;)
+
+dog13_overall &lt;- str_c(dog13$text, collapse = &#39;&#39;)
+
+dog13_word_overall &lt;- worker[dog13_overall]
+
+dog13_word_overall_freq &lt;- dog13_word_overall %&gt;% 
+  table() %&gt;% 
+  as.tibble() %&gt;% 
+  select(word = 1, freq = 2) %&gt;%
+  filter(!str_detect(word, &#39;(\\d+)|([A-Za-z]+)|(\\s+)&#39;)) %&gt;% 
+  filter(str_length(word) &gt; 1) %&gt;% 
+  arrange(-freq) %&gt;% 
+  filter(freq &gt; 20)
+
+wordcloud2(dog13_word_overall_freq, size = .6)</code></pre>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="wordcloud2 html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"word":["成长","电影","孩子","青春","世界","李玩","长大","教育","家庭","爱因斯坦","大人","成人","妥协","少女","社会","懂事","保平","中国","爸爸","父亲","中国式","导演","父母","故事","真实","残酷","狗肉","女孩","真的","过程","喜欢","理解","生活","经历","这部","一部","影片","弟弟","家长","青春片","终于","片子","伪善","观众","十三","现实","学会","叛逆","张雪迎","成熟","剧本","青春期","一点","表达","一场","宇宙","配乐","角色","接受","平行","情绪","编剧","共鸣","女主","希望","自我"],"freq":[197,133,115,108,94,91,82,72,70,69,62,61,58,56,54,52,51,51,50,50,49,46,45,45,45,43,43,43,42,40,40,39,39,35,34,32,31,30,30,30,30,29,29,28,28,28,28,27,27,26,26,25,25,24,24,24,23,22,22,22,22,21,21,21,21,21],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.548223350253807,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<p>这部电影的主题应该很明显了。</p>
+<p>P.S.再附上另一种不知道该如何进一步使用的模拟登录的方法：</p>
+<pre class="r"><code>url &lt;- &#39;https://accounts.douban.com/login?source=movie&#39;
+login &lt;- html_session(url)
+form &lt;- html_form(login)[[1]]
+
+filled_form &lt;- set_values(form,
+                          &#39;form_email&#39; = &#39;用户名&#39;,
+                          &#39;form_password&#39; = &#39;密码&#39;)
+
+submit &lt;- submit_form(login, filled_form)</code></pre>
