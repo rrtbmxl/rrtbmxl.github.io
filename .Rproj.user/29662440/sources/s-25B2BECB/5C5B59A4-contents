@@ -1,7 +1,7 @@
 ---
 title: R语言学习资源总结
 author: ''
-date: '2018-12-09'
+date: '2019-01-28'
 categories:
   - R
 tags:
@@ -34,6 +34,8 @@ output:
  
  - [Explain R environments like I’m five](https://colinfay.me/explain-environments-eli5/?utm_campaign=News&utm_medium=Community&utm_source=DataCamp.com)（181110）介绍什么是R语言的环境，真的非常简单易懂。
  
+ - [Environments in R](https://digitheadslabnotebook.blogspot.com/2011/06/environments-in-r.html)（190128）介绍了R中的环境和一些相关的内容，并没有看太明白。
+ 
 ### History
 
  - [R generation](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1740-9713.2018.01169.x)（181110）详细介绍了R语言的历史。前段时间才看过，不知道为什么现在只剩一个摘要了，暂时先留着这个链接。
@@ -41,6 +43,8 @@ output:
  - [stringsAsFactors: An unauthorized biography](https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/)（181110）据说`stringsAsFactors`参数问题，是R语言历史上争论最激烈的问题。
  
  - [Why do we use arrow as an assignment operator?](https://colinfay.me/r-assignment/)（181110）为什么用箭头作赋值符，了解一下？
+ 
+ - [Here's why 2019 is a great year to start with R: A story of 10 year old R code then and now](https://jozefhajnala.gitlab.io/r/r908-10-year-old-code/)（190114）作者通过回顾自己时间前的代码，简单介绍了以下R的历史。
 
 ### Learning
 
@@ -103,7 +107,35 @@ datafile[order(-datafile$zscore),]
 
 # Tutorial
 
-这一部分主要包括Onlinebook、`Tidyverse`以及与学习R相关的Website三部分，19年之后加入了Web Scraping和Machine Learning两部分，这两项内容是我一直都很想学的，但也一直都处于连入门都算不上的水平。
+这一部分主要包括Onlinebook、`Tidyverse`以及与学习R相关的Website三部分，19年之后加入了Data Acquisition和Machine Learning两部分，这两项内容是我一直都很想学的，但也一直都处于连入门都算不上的水平，1月底又加入了Program部分。
+
+### Website
+
+ - [Quick-R](https://www.statmethods.net/index.html)（181108）《R语言实战》作者的教程网站，很早以前看过的，内容应该比较基础。
+ 
+ - [Statistical tools for high-throughput data analysis](http://www.sthda.com/english/)（181108）看过可视化那部分，介绍`ggplot2`包的内容规范而细致，适合入门。
+ 
+ - [stat545](http://stat545.com/topics.html)（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。
+ 
+ - [Cookbook for R ](http://www.cookbook-r.com/)（181208）很早就知道的一个网站，但最近才完整看了一遍，除了`ggplot2`部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。
+ 
+ - [Data Analysis and Visualization in R for Ecologists](https://datacarpentry.org/R-ecology-lesson/index.html)（190114）一个简单但实用的R教程网站，跟生态学好像也没啥太多的关系，有一部分数据库的内容还挺适合我的。
+ 
+### Data Acquisition
+
+ - [Web Scraping in R: rvest Tutorial](https://www.datacamp.com/community/tutorials/r-web-scraping-rvest?utm_campaign=News&utm_medium=Community&utm_source=DataCamp.com)（190103）爬虫的入门教程，介绍了`rvest`包，只能爬静态网页。
+ 
+ - [How to Scrape Data from a JavaScript Website with R](https://velaco.github.io/how-to-scrape-data-from-javascript-websites-with-R/)（190103）介绍了一种爬取动态网页（？）的方法，要用到`rvest`和`PhantomJS`包，我最终没有使用这种方法，因此也没有尝试。
+ 
+ - [Scraping Javascript-rendered web content using R](https://datascienceplus.com/scraping-javascript-rendered-web-content-using-r/)（190103）跟上面那个好像差不多，也没有去试。
+ 
+ - [Web Scraping with R and PhantomJS](https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r)（190103）还是同上。
+ 
+ - [Basics·RSelenium/](http://ropensci.github.io/RSelenium/articles/basics.html)（190103）`RSelenium`包的官方网站，这个包可以用来爬取动态网页，我试了这种方法，成功了，其实就是用来模拟鼠标操作的。
+
+ - [Data acquisition in R (1/4)](https://ikashnitsky.github.io/2017/data-acquisition-one/);[Data acquisition in R (2/4)](https://ikashnitsky.github.io/2017/data-acquisition-two/);[Data acquisition in R (3/4)](https://ikashnitsky.github.io/2017/data-acquisition-three/)（190114）介绍了一些数据的获取方法，似乎并不会有第四部分了。
+ 
+ - [R Data Import/Export](https://cran.r-project.org/doc/manuals/r-release/R-data.html)（190114）介绍数据导入和导出的文档，内容似乎比较旧，而且很多也用不上，需要的时候可以参考一下。
 
 ### Machine Learning
 
@@ -147,6 +179,16 @@ the Bias-Variance Tradeoff](http://www.r2d3.us/visual-intro-to-machine-learning-
  - [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)（181130）跟上面那本书是同一个作者，部分内容有重叠，虽然主要以`Base`绘图为主，但也介绍了`ggplot2`的一些内容，值得一看；另外，还有几章介绍了层次聚类、K均值聚类以及降维，基本上是没看懂。
  
  - [Data Science Live Book](https://livebook.datascienceheroes.com/)（181218）一个R包的文档扩展成的书，排班有点乱，不推荐看。
+ 
+ - [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/)（190128）`bookdown`的文档，我应该是用不上，随便看看。
+ 
+ - [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/)（190128）用`bookdown`写的书都会发布在这里，这一模块的大部分书都能在这里找到。
+ 
+### Program
+
+这一部分主要是关于R语言编程的，但由于我目前还没有太多这方面的需要，水平也不足够，所以内容暂时不多。
+
+ - [A Tutorial on Loops in R - Usage and Alternatives](https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r)（190128）介绍了`R`中的几种循环，包括`for`循环、`while`循环以及`repeat`循环，这也是头一次知道`R`里还有个`repeat`循环。
 
 ### Tidyverse
 
@@ -156,27 +198,7 @@ the Bias-Variance Tradeoff](http://www.r2d3.us/visual-intro-to-machine-learning-
 
  - [Data Wrangling Part 1: Basic to Advanced Ways to Select Columns](https://suzan.rbind.io/2018/01/dplyr-tutorial-1/?utm_campaign=News&utm_medium=Community&utm_source=DataCamp.com)；[Data Wrangling Part 2: Transforming your columns into the right shape](https://suzan.rbind.io/2018/02/dplyr-tutorial-2/)；[Data Wrangling Part 3: Basic and more advanced ways to filter rows](https://suzan.rbind.io/2018/02/dplyr-tutorial-3/)；[Data Wrangling Part 4: Summarizing and slicing your data](https://suzan.rbind.io/2018/04/dplyr-tutorial-4/)（181108）系统介绍`dplyr`包的系列文章，非常值得一看。
 
-### Website
-
- - [Quick-R](https://www.statmethods.net/index.html)（181108）《R语言实战》作者的教程网站，很早以前看过的，内容应该比较基础。
- 
- - [Statistical tools for high-throughput data analysis](http://www.sthda.com/english/)（181108）看过可视化那部分，介绍`ggplot2`包的内容规范而细致，适合入门。
- 
- - [stat545](http://stat545.com/topics.html)（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。
- 
- - [Cookbook for R ](http://www.cookbook-r.com/)（181208）很早就知道的一个网站，但最近才完整看了一遍，除了`ggplot2`部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。
- 
-### Web Scraping
-
- - [Web Scraping in R: rvest Tutorial](https://www.datacamp.com/community/tutorials/r-web-scraping-rvest?utm_campaign=News&utm_medium=Community&utm_source=DataCamp.com)（190103）爬虫的入门教程，介绍了`rvest`包，只能爬静态网页。
- 
- - [How to Scrape Data from a JavaScript Website with R](https://velaco.github.io/how-to-scrape-data-from-javascript-websites-with-R/)（190103）介绍了一种爬取动态网页（？）的方法，要用到`rvest`和`PhantomJS`包，我最终没有使用这种方法，因此也没有尝试。
- 
- - [Scraping Javascript-rendered web content using R](https://datascienceplus.com/scraping-javascript-rendered-web-content-using-r/)（190103）跟上面那个好像差不多，也没有去试。
- 
- - [Web Scraping with R and PhantomJS](https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r)（190103）还是同上。
- 
- - [Basics·RSelenium/](http://ropensci.github.io/RSelenium/articles/basics.html)（190103）`RSelenium`包的官方网站，这个包可以用来爬取动态网页，我试了这种方法，成功了，其实就是用来模拟鼠标操作的。
+ - [TIDYING MESSY EXCEL DATA (TIDYXL)](https://statbandit.wordpress.com/2018/05/08/tidying-messy-excel-data-tidyxl/)（190128）介绍了几种清洗excel数据表格的包。
 
 # Visualization
 

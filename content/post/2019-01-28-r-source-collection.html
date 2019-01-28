@@ -1,7 +1,7 @@
 ---
 title: R语言学习资源总结
 author: ''
-date: '2018-12-09'
+date: '2019-01-28'
 categories:
   - R
 tags:
@@ -28,11 +28,12 @@ output:
 <li><a href="#word">Word</a></li>
 </ul></li>
 <li><a href="#tutorial">Tutorial</a><ul>
+<li><a href="#website">Website</a></li>
+<li><a href="#data-acquisition">Data Acquisition</a></li>
 <li><a href="#machine-learning">Machine Learning</a></li>
 <li><a href="#onlinebook">Onlinebook</a></li>
+<li><a href="#program">Program</a></li>
 <li><a href="#tidyverse">Tidyverse</a></li>
-<li><a href="#website">Website</a></li>
-<li><a href="#web-scraping">Web Scraping</a></li>
 </ul></li>
 <li><a href="#visualization">Visualization</a><ul>
 <li><a href="#adjustment">Adjustment</a></li>
@@ -66,6 +67,7 @@ output:
 <li><p><a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/window-functions.html">Window functions</a>（181110）介绍了什么是<strong>window function</strong>，感觉我目前还没有把这个概念完全吃透，但后面有一些<code>dplyr</code>包的使用技巧，值得一看。</p></li>
 <li><p><a href="https://simplystatistics.org/2016/02/17/non-tidy-data/">Non-tidy data</a>（181110）有<strong>tidy data</strong>就是相应的<strong>non-tidy data</strong>，不过文章具体写的啥，我已经忘啦。</p></li>
 <li><p><a href="https://colinfay.me/explain-environments-eli5/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Explain R environments like I’m five</a>（181110）介绍什么是R语言的环境，真的非常简单易懂。</p></li>
+<li><p><a href="https://digitheadslabnotebook.blogspot.com/2011/06/environments-in-r.html">Environments in R</a>（190128）介绍了R中的环境和一些相关的内容，并没有看太明白。</p></li>
 </ul>
 </div>
 <div id="history" class="section level3">
@@ -74,6 +76,7 @@ output:
 <li><p><a href="https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1740-9713.2018.01169.x">R generation</a>（181110）详细介绍了R语言的历史。前段时间才看过，不知道为什么现在只剩一个摘要了，暂时先留着这个链接。</p></li>
 <li><p><a href="https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/">stringsAsFactors: An unauthorized biography</a>（181110）据说<code>stringsAsFactors</code>参数问题，是R语言历史上争论最激烈的问题。</p></li>
 <li><p><a href="https://colinfay.me/r-assignment/">Why do we use arrow as an assignment operator?</a>（181110）为什么用箭头作赋值符，了解一下？</p></li>
+<li><p><a href="https://jozefhajnala.gitlab.io/r/r908-10-year-old-code/">Here’s why 2019 is a great year to start with R: A story of 10 year old R code then and now</a>（190114）作者通过回顾自己时间前的代码，简单介绍了以下R的历史。</p></li>
 </ul>
 </div>
 <div id="learning" class="section level3">
@@ -135,7 +138,29 @@ datafile[order(-datafile$zscore),]</code></pre>
 </div>
 <div id="tutorial" class="section level1">
 <h1>Tutorial</h1>
-<p>这一部分主要包括Onlinebook、<code>Tidyverse</code>以及与学习R相关的Website三部分，19年之后加入了Web Scraping和Machine Learning两部分，这两项内容是我一直都很想学的，但也一直都处于连入门都算不上的水平。</p>
+<p>这一部分主要包括Onlinebook、<code>Tidyverse</code>以及与学习R相关的Website三部分，19年之后加入了Data Acquisition和Machine Learning两部分，这两项内容是我一直都很想学的，但也一直都处于连入门都算不上的水平，1月底又加入了Program部分。</p>
+<div id="website" class="section level3">
+<h3>Website</h3>
+<ul>
+<li><p><a href="https://www.statmethods.net/index.html">Quick-R</a>（181108）《R语言实战》作者的教程网站，很早以前看过的，内容应该比较基础。</p></li>
+<li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a>（181108）看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
+<li><p><a href="http://stat545.com/topics.html">stat545</a>（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
+<li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a>（181208）很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
+<li><p><a href="https://datacarpentry.org/R-ecology-lesson/index.html">Data Analysis and Visualization in R for Ecologists</a>（190114）一个简单但实用的R教程网站，跟生态学好像也没啥太多的关系，有一部分数据库的内容还挺适合我的。</p></li>
+</ul>
+</div>
+<div id="data-acquisition" class="section level3">
+<h3>Data Acquisition</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/r-web-scraping-rvest?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Web Scraping in R: rvest Tutorial</a>（190103）爬虫的入门教程，介绍了<code>rvest</code>包，只能爬静态网页。</p></li>
+<li><p><a href="https://velaco.github.io/how-to-scrape-data-from-javascript-websites-with-R/">How to Scrape Data from a JavaScript Website with R</a>（190103）介绍了一种爬取动态网页（？）的方法，要用到<code>rvest</code>和<code>PhantomJS</code>包，我最终没有使用这种方法，因此也没有尝试。</p></li>
+<li><p><a href="https://datascienceplus.com/scraping-javascript-rendered-web-content-using-r/">Scraping Javascript-rendered web content using R</a>（190103）跟上面那个好像差不多，也没有去试。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r">Web Scraping with R and PhantomJS</a>（190103）还是同上。</p></li>
+<li><p><a href="http://ropensci.github.io/RSelenium/articles/basics.html">Basics·RSelenium/</a>（190103）<code>RSelenium</code>包的官方网站，这个包可以用来爬取动态网页，我试了这种方法，成功了，其实就是用来模拟鼠标操作的。</p></li>
+<li><p><a href="https://ikashnitsky.github.io/2017/data-acquisition-one/">Data acquisition in R (1/4)</a>;<a href="https://ikashnitsky.github.io/2017/data-acquisition-two/">Data acquisition in R (2/4)</a>;<a href="https://ikashnitsky.github.io/2017/data-acquisition-three/">Data acquisition in R (3/4)</a>（190114）介绍了一些数据的获取方法，似乎并不会有第四部分了。</p></li>
+<li><p><a href="https://cran.r-project.org/doc/manuals/r-release/R-data.html">R Data Import/Export</a>（190114）介绍数据导入和导出的文档，内容似乎比较旧，而且很多也用不上，需要的时候可以参考一下。</p></li>
+</ul>
+</div>
 <div id="machine-learning" class="section level3">
 <h3>Machine Learning</h3>
 <ul>
@@ -162,6 +187,14 @@ datafile[order(-datafile$zscore),]</code></pre>
 <li><p><a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a>（181112）两年前的书，部分内容已经过时了，但帮我补充了很多诸如<strong>Vectorized Operations</strong>，<strong>Lazy Evaluation</strong>，<strong>Scoping Rules</strong>的知识，另外也让我找到了之前想了很久都没想起来的<code>dput</code>函数。</p></li>
 <li><p><a href="https://bookdown.org/rdpeng/exdata/">Exploratory Data Analysis with R</a>（181130）跟上面那本书是同一个作者，部分内容有重叠，虽然主要以<code>Base</code>绘图为主，但也介绍了<code>ggplot2</code>的一些内容，值得一看；另外，还有几章介绍了层次聚类、K均值聚类以及降维，基本上是没看懂。</p></li>
 <li><p><a href="https://livebook.datascienceheroes.com/">Data Science Live Book</a>（181218）一个R包的文档扩展成的书，排班有点乱，不推荐看。</p></li>
+<li><p><a href="https://bookdown.org/yihui/bookdown/">bookdown: Authoring Books and Technical Documents with R Markdown</a>（190128）<code>bookdown</code>的文档，我应该是用不上，随便看看。</p></li>
+<li><p><a href="https://bookdown.org/">bookdown: Authoring Books and Technical Documents with R Markdown</a>（190128）用<code>bookdown</code>写的书都会发布在这里，这一模块的大部分书都能在这里找到。</p></li>
+</ul>
+</div>
+<div id="program" class="section level3">
+<h3>Program</h3>
+<ul>
+<li><a href="https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r">A Tutorial on Loops in R - Usage and Alternatives</a>（190128）介绍了<code>R</code>中的几种循环，包括<code>for</code>循环、<code>while</code>循环以及<code>repeat</code>循环，这也是头一次知道<code>R</code>里还有个<code>repeat</code>循环。</li>
 </ul>
 </div>
 <div id="tidyverse" class="section level3">
@@ -170,25 +203,7 @@ datafile[order(-datafile$zscore),]</code></pre>
 <li><p><a href="https://www.datacamp.com/community/tutorials/tidyverse-tutorial-r">Getting Started with the Tidyverse: Tutorial</a>（181108）简单介绍了一下<code>tidyverse</code>包中的几个主要函数，没啥难度，部分内容需要翻墙才能看到。</p></li>
 <li><p><a href="https://www.datacamp.com/community/tutorials/pipe-r-tutorial#notuse">Pipes in R Tutorial For Beginners</a>（181108）介绍了几种常见的管道函数（其实一种就够了），像我一样喜欢把代码都串起来的应该好好学学这个。</p></li>
 <li><p><a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Data Wrangling Part 1: Basic to Advanced Ways to Select Columns</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-2/">Data Wrangling Part 2: Transforming your columns into the right shape</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-3/">Data Wrangling Part 3: Basic and more advanced ways to filter rows</a>；<a href="https://suzan.rbind.io/2018/04/dplyr-tutorial-4/">Data Wrangling Part 4: Summarizing and slicing your data</a>（181108）系统介绍<code>dplyr</code>包的系列文章，非常值得一看。</p></li>
-</ul>
-</div>
-<div id="website" class="section level3">
-<h3>Website</h3>
-<ul>
-<li><p><a href="https://www.statmethods.net/index.html">Quick-R</a>（181108）《R语言实战》作者的教程网站，很早以前看过的，内容应该比较基础。</p></li>
-<li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a>（181108）看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
-<li><p><a href="http://stat545.com/topics.html">stat545</a>（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
-<li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a>（181208）很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
-</ul>
-</div>
-<div id="web-scraping" class="section level3">
-<h3>Web Scraping</h3>
-<ul>
-<li><p><a href="https://www.datacamp.com/community/tutorials/r-web-scraping-rvest?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Web Scraping in R: rvest Tutorial</a>（190103）爬虫的入门教程，介绍了<code>rvest</code>包，只能爬静态网页。</p></li>
-<li><p><a href="https://velaco.github.io/how-to-scrape-data-from-javascript-websites-with-R/">How to Scrape Data from a JavaScript Website with R</a>（190103）介绍了一种爬取动态网页（？）的方法，要用到<code>rvest</code>和<code>PhantomJS</code>包，我最终没有使用这种方法，因此也没有尝试。</p></li>
-<li><p><a href="https://datascienceplus.com/scraping-javascript-rendered-web-content-using-r/">Scraping Javascript-rendered web content using R</a>（190103）跟上面那个好像差不多，也没有去试。</p></li>
-<li><p><a href="https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r">Web Scraping with R and PhantomJS</a>（190103）还是同上。</p></li>
-<li><p><a href="http://ropensci.github.io/RSelenium/articles/basics.html">Basics·RSelenium/</a>（190103）<code>RSelenium</code>包的官方网站，这个包可以用来爬取动态网页，我试了这种方法，成功了，其实就是用来模拟鼠标操作的。</p></li>
+<li><p><a href="https://statbandit.wordpress.com/2018/05/08/tidying-messy-excel-data-tidyxl/">TIDYING MESSY EXCEL DATA (TIDYXL)</a>（190128）介绍了几种清洗excel数据表格的包。</p></li>
 </ul>
 </div>
 </div>
