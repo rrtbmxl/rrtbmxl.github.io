@@ -1,0 +1,856 @@
+---
+title: 11年-19年读书记录分析
+author: ''
+date: '2019-02-16'
+slug: reading-records-analysis
+categories:
+  - R
+tags:
+  - 自我分析
+keywords:
+  - tech
+---
+
+
+
+<p>大概在10年前后，镇上给村里弄了个农村书屋，其他办公室都没地方，就把书连书柜都放我办公室里了。当时统计了下，一共有1500多本书，后来又给了一批，最终达到1800多本。这些书中的大部分质量和内容都很一般，但还是有几本好书的。反正工作也挺闲的，每天就靠看书打发点时间。时过境迁，工作已经换了几个，但看书的习惯还一直保持着。</p>
+<p>我从12年开始记日记，所以从那一年起，哪段时间看了哪本书都有记录。前几年把读书的记录整理过一次，但信息不全；今年过年前后，花了几天的时间又整理了一遍，添加了一些书籍相关的信息，就想着要不要也分析下（其实只是统计，并没有分析），算是对这些年自己读书的一个总结。有点遗憾的是，11年的记录只找到10月份到12月份的一部分，10月份以前的则完全没有记录，就没法统计进来了。</p>
+<p>但在分析之前，还得说明一下，有些书我没有进行统计，这些书包括以下四种：</p>
+<ol style="list-style-type: decimal">
+<li><p>国产教材。比如为考研而看的《普通心理学》《心理学导论》之类的，但国外的教材，如《心理学与生活》等，不在此列。</p></li>
+<li><p>技术类的书。如跟R相关的书，有实体的，也有在线的，都没有被统计进来。</p></li>
+<li><p>电子书。不论是在手机上，kindle上，还是在更早的汉王上看的电子书，都没有统计进来。在看书这方面，我还是比较传统的，现在基本上只看实体书。</p></li>
+<li><p>太low的书。如，有套书名叫《卑鄙的圣人：曹操》，老爹看见了，非要买一套，当时只出了5本，就都买了下来。我是家里有的书就要看完的（大概就是看完这套书后改了这个“毛病”），就硬着头皮把这几本书看了一遍。听说这套书让作者赚了一百多万的版税，但这也无法掩盖作者文笔一般、词汇匮乏的事实。印象最深的是，曹操笑起来是“噗嗤”，袁绍笑起来也“噗嗤”，连曹操的老子曹嵩笑起来也“噗嗤”，这到底是一群大老爷们，还是一群小丫头片子啊（当然，用在曹嵩身上也许是合适的）？总之，这类书就不进行统计了。</p></li>
+</ol>
+<p>去掉以上四类书之后，剩下的书（共计465本次），就是要进行分析的了。</p>
+<p>首先还是载入分析需要用到的包：</p>
+<pre class="r"><code>library(tidyverse)
+library(readxl)
+library(knitr)</code></pre>
+<p>然后把数据导入并进行清洗。由于数据已经在excel里整理好了，所以也没啥好清洗的，只是对每本书的字数进行了校正：</p>
+<pre class="r"><code>book &lt;- read_xlsx(&#39;读书记录.xlsx&#39;) %&gt;% 
+  select(year = 2, name = 4, publisher = 6, author = 7, 
+         country = 8, dynasty = 9, classification = 10, language = 11, 
+         price = 12, page = 13, words = 14, manner = 15) %&gt;% 
+  mutate(words = case_when(language %in% c(&#39;古汉&#39;, &#39;英汉&#39;) ~ words*1.3,
+                           language %in% c(&#39;古语&#39;, &#39;英语&#39;) ~ words*2,
+                           TRUE ~ words),
+         words = ifelse(manner == &#39;书内&#39;, words*.8, words*.6),
+         words = round(words, 0), 
+         price = as.numeric(price) %&gt;% round(1)) %&gt;% 
+  select(-manner)</code></pre>
+<p>清洗后的数据是这样的，随机显示了10本（这里本来想用<code>DT</code>包来生成全部内容的，但我用的<code>blogdown</code>主题似乎并不支持）：</p>
+<pre class="r"><code>set.seed(20190216)
+book %&gt;% sample_n(10) %&gt;% 
+  arrange(year) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">year</th>
+<th align="left">name</th>
+<th align="left">publisher</th>
+<th align="left">author</th>
+<th align="left">country</th>
+<th align="left">dynasty</th>
+<th align="left">classification</th>
+<th align="left">language</th>
+<th align="right">price</th>
+<th align="right">page</th>
+<th align="right">words</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2012</td>
+<td align="left">爱弥儿（下）</td>
+<td align="left">中华书局</td>
+<td align="left">卢梭</td>
+<td align="left">法国</td>
+<td align="left">/</td>
+<td align="left">教育</td>
+<td align="left">汉语</td>
+<td align="right">24.0</td>
+<td align="right">440</td>
+<td align="right">199056</td>
+</tr>
+<tr class="even">
+<td align="left">2012</td>
+<td align="left">教育漫话</td>
+<td align="left">教育科学出版社</td>
+<td align="left">洛克</td>
+<td align="left">英国</td>
+<td align="left">/</td>
+<td align="left">教育</td>
+<td align="left">汉语</td>
+<td align="right">15.0</td>
+<td align="right">193</td>
+<td align="right">120000</td>
+</tr>
+<tr class="odd">
+<td align="left">2012</td>
+<td align="left">徐志摩散文精选</td>
+<td align="left">长江文艺出版社</td>
+<td align="left">徐志摩</td>
+<td align="left">中国</td>
+<td align="left">现代</td>
+<td align="left">文学</td>
+<td align="left">汉语</td>
+<td align="right">22.0</td>
+<td align="right">301</td>
+<td align="right">121363</td>
+</tr>
+<tr class="even">
+<td align="left">2012</td>
+<td align="left">小城三月</td>
+<td align="left">长江文艺出版社</td>
+<td align="left">萧红</td>
+<td align="left">中国</td>
+<td align="left">现代</td>
+<td align="left">小说</td>
+<td align="left">汉语</td>
+<td align="right">17.0</td>
+<td align="right">268</td>
+<td align="right">108058</td>
+</tr>
+<tr class="odd">
+<td align="left">2014</td>
+<td align="left">心理学与生活</td>
+<td align="left">人民邮电出版社</td>
+<td align="left">格里格/津巴多</td>
+<td align="left">美国</td>
+<td align="left">/</td>
+<td align="left">心理学</td>
+<td align="left">汉语</td>
+<td align="right">88.0</td>
+<td align="right">621</td>
+<td align="right">1012800</td>
+</tr>
+<tr class="even">
+<td align="left">2014</td>
+<td align="left">谈美书简</td>
+<td align="left">中华书局</td>
+<td align="left">朱光潜</td>
+<td align="left">中国</td>
+<td align="left">现代</td>
+<td align="left">艺术</td>
+<td align="left">汉语</td>
+<td align="right">13.0</td>
+<td align="right">136</td>
+<td align="right">72000</td>
+</tr>
+<tr class="odd">
+<td align="left">2015</td>
+<td align="left">现代心理学史</td>
+<td align="left">中国轻工业出版社</td>
+<td align="left">杜安·P·舒尔茨/悉妮·埃伦·舒尔茨</td>
+<td align="left">美国</td>
+<td align="left">/</td>
+<td align="left">心理学</td>
+<td align="left">汉语</td>
+<td align="right">75.0</td>
+<td align="right">513</td>
+<td align="right">334400</td>
+</tr>
+<tr class="even">
+<td align="left">2016</td>
+<td align="left">卡夫卡小说全集 Ⅲ</td>
+<td align="left">人民文学出版社</td>
+<td align="left">卡夫卡</td>
+<td align="left">奥匈帝国</td>
+<td align="left">/</td>
+<td align="left">小说</td>
+<td align="left">汉语</td>
+<td align="right">29.3</td>
+<td align="right">326</td>
+<td align="right">240210</td>
+</tr>
+<tr class="odd">
+<td align="left">2016</td>
+<td align="left">庄子今注今译（下）</td>
+<td align="left">中华书局</td>
+<td align="left">陈鼓应</td>
+<td align="left">中国</td>
+<td align="left">当代</td>
+<td align="left">哲学</td>
+<td align="left">古汉</td>
+<td align="right">32.0</td>
+<td align="right">335</td>
+<td align="right">187017</td>
+</tr>
+<tr class="even">
+<td align="left">2017</td>
+<td align="left">八十天环游地球</td>
+<td align="left">安徽教育出版社</td>
+<td align="left">儒勒·凡尔纳</td>
+<td align="left">法国</td>
+<td align="left">/</td>
+<td align="left">小说</td>
+<td align="left">汉语</td>
+<td align="right">22.0</td>
+<td align="right">259</td>
+<td align="right">168000</td>
+</tr>
+</tbody>
+</table>
+<p>下面依次进行分析：</p>
+<div class="section level3">
+<h3>年份</h3>
+<pre class="r"><code>book %&gt;% group_by(year) %&gt;% 
+  count(sort = TRUE) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">year</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2014</td>
+<td align="right">87</td>
+</tr>
+<tr class="even">
+<td align="left">2012</td>
+<td align="right">82</td>
+</tr>
+<tr class="odd">
+<td align="left">2016</td>
+<td align="right">78</td>
+</tr>
+<tr class="even">
+<td align="left">2013</td>
+<td align="right">76</td>
+</tr>
+<tr class="odd">
+<td align="left">2015</td>
+<td align="right">56</td>
+</tr>
+<tr class="even">
+<td align="left">2017</td>
+<td align="right">47</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="right">18</td>
+</tr>
+<tr class="even">
+<td align="left">2011</td>
+<td align="right">15</td>
+</tr>
+<tr class="odd">
+<td align="left">2019</td>
+<td align="right">6</td>
+</tr>
+</tbody>
+</table>
+<p>可以看到，看书最多的年份是2014年，其次是12年和16年。14年我正在准备考研，这一年大概是我一生中最充实的一年了，算上考研教材的话，那年我应该看了120本书。除去11年和19年，看书最少的是去年。去年上半年在忙着毕业和找工作，而下半年则在忙着适应工作，没能空出太多的时间看书，不过以后应该不会了。</p>
+<p>再算个平均数，这里把11年和19年排除在外：</p>
+<pre class="r"><code>book %&gt;% filter(!year %in% c(2011, 2019)) %&gt;% 
+  summarise(mean = nrow(.)/n_distinct(year)) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">mean</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">63.42857</td>
+</tr>
+</tbody>
+</table>
+<p>平均起来，我每年能看63本书，也就是说，我基本上能保证每月5本书。</p>
+</div>
+<div class="section level3">
+<h3>出版社</h3>
+<pre class="r"><code>book %&gt;% group_by(publisher) %&gt;% 
+  count(sort = TRUE) %&gt;% 
+  filter(n &gt; 10) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">publisher</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">中华书局</td>
+<td align="right">101</td>
+</tr>
+<tr class="even">
+<td align="left">人民文学出版社</td>
+<td align="right">68</td>
+</tr>
+<tr class="odd">
+<td align="left">商务印书馆</td>
+<td align="right">41</td>
+</tr>
+<tr class="even">
+<td align="left">人民邮电出版社</td>
+<td align="right">26</td>
+</tr>
+<tr class="odd">
+<td align="left">译林出版社</td>
+<td align="right">23</td>
+</tr>
+<tr class="even">
+<td align="left">天津古籍出版社</td>
+<td align="right">16</td>
+</tr>
+<tr class="odd">
+<td align="left">中央编译出版社</td>
+<td align="right">15</td>
+</tr>
+<tr class="even">
+<td align="left">安徽教育出版社</td>
+<td align="right">11</td>
+</tr>
+<tr class="odd">
+<td align="left">上海译文出版社</td>
+<td align="right">11</td>
+</tr>
+</tbody>
+</table>
+<p>前五个出版社的书占了大概一半，我尤其喜欢中华书局的书啊！</p>
+</div>
+<div class="section level3">
+<h3>作者</h3>
+<pre class="r"><code>book %&gt;% group_by(author) %&gt;% 
+  count(sort = TRUE) %&gt;% 
+  filter(n &gt; 4) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">author</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">司马迁</td>
+<td align="right">22</td>
+</tr>
+<tr class="even">
+<td align="left">鲁迅</td>
+<td align="right">17</td>
+</tr>
+<tr class="odd">
+<td align="left">陈鼓应</td>
+<td align="right">13</td>
+</tr>
+<tr class="even">
+<td align="left">儒勒·凡尔纳</td>
+<td align="right">13</td>
+</tr>
+<tr class="odd">
+<td align="left">莎士比亚</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
+<td align="left">蒙台梭利</td>
+<td align="right">9</td>
+</tr>
+<tr class="odd">
+<td align="left">柏拉图</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">不详</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">李伯钦/李肇祥</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">George R.R.Martin</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="left">J.K.Rowling</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">卢梭</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">蒙田</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="left">亚里士多德</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">王弼</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<p>太史公最多，因为看过两个版本的《史记》，一个是文白对照的版本，九大本，看了两遍，另一个是文言版本，四大本，看了一遍，然而内容实在太多，大部分看过就忘了。鲁迅第二，因为看了一遍《鲁迅全集》，希望以后能有时间，打乱卷次的顺序，从日记、书信和作品三个方面按着时间的推进再看一遍。后面是陈鼓应和凡尔纳，陈鼓应和《老子注译及评介》和《庄子今注今译》是我最喜欢的几本书，而凡尔纳的小说全集，也粗略地看过一遍。</p>
+</div>
+<div class="section level3">
+<h3>国别</h3>
+<pre class="r"><code>book %&gt;% group_by(country) %&gt;% 
+  count(sort = TRUE) %&gt;% 
+  filter(n &gt; 4) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">country</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">中国</td>
+<td align="right">158</td>
+</tr>
+<tr class="even">
+<td align="left">美国</td>
+<td align="right">85</td>
+</tr>
+<tr class="odd">
+<td align="left">英国</td>
+<td align="right">65</td>
+</tr>
+<tr class="even">
+<td align="left">法国</td>
+<td align="right">48</td>
+</tr>
+<tr class="odd">
+<td align="left">古希腊</td>
+<td align="right">19</td>
+</tr>
+<tr class="even">
+<td align="left">意大利</td>
+<td align="right">19</td>
+</tr>
+<tr class="odd">
+<td align="left">德国</td>
+<td align="right">17</td>
+</tr>
+<tr class="even">
+<td align="left">日本</td>
+<td align="right">9</td>
+</tr>
+<tr class="odd">
+<td align="left">古罗马</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">奥地利</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="left">西班牙</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<p>自然是中国的最多，不过跟英语国家加起来进行对比的话，也没有多多少。</p>
+</div>
+<div class="section level3">
+<h3>朝代</h3>
+<pre class="r"><code>book %&gt;% group_by(dynasty) %&gt;% 
+  count(sort = TRUE) %&gt;% 
+  filter(dynasty != &#39;/&#39;, n &gt; 2) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">dynasty</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">当代</td>
+<td align="right">46</td>
+</tr>
+<tr class="even">
+<td align="left">现代</td>
+<td align="right">44</td>
+</tr>
+<tr class="odd">
+<td align="left">汉朝</td>
+<td align="right">23</td>
+</tr>
+<tr class="even">
+<td align="left">先秦</td>
+<td align="right">22</td>
+</tr>
+<tr class="odd">
+<td align="left">魏朝</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="left">明朝</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">清朝</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">宋朝</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">唐朝</td>
+<td align="right">3</td>
+</tr>
+</tbody>
+</table>
+<p>画出来折线图的话，会是U形的。2000年前和最近100年的，看的比较多，以后似乎也应该多看看两个时间段之间的。</p>
+</div>
+<div class="section level3">
+<h3>分类</h3>
+<pre class="r"><code>book %&gt;% group_by(classification) %&gt;% 
+  count(sort = TRUE) %&gt;% 
+  filter(n &gt; 4) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">classification</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">小说</td>
+<td align="right">123</td>
+</tr>
+<tr class="even">
+<td align="left">哲学</td>
+<td align="right">96</td>
+</tr>
+<tr class="odd">
+<td align="left">文学</td>
+<td align="right">91</td>
+</tr>
+<tr class="even">
+<td align="left">历史</td>
+<td align="right">55</td>
+</tr>
+<tr class="odd">
+<td align="left">心理学</td>
+<td align="right">49</td>
+</tr>
+<tr class="even">
+<td align="left">教育</td>
+<td align="right">24</td>
+</tr>
+<tr class="odd">
+<td align="left">社会科学</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="left">方法论</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="left">自然科学</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<p>我看的书主要集中在文史哲三大类上，其中小说数量最多，就把它从文学中拿了出来，自成一类。另外，因为我没有记录国产的心理学教材，所以心理学书籍的数量相对较少，实际上应该是比历史类的书多的。</p>
+</div>
+<div class="section level3">
+<h3>语言</h3>
+<pre class="r"><code>book %&gt;% group_by(language) %&gt;% 
+  count(sort = TRUE) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">language</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">汉语</td>
+<td align="right">350</td>
+</tr>
+<tr class="even">
+<td align="left">古汉</td>
+<td align="right">55</td>
+</tr>
+<tr class="odd">
+<td align="left">英语</td>
+<td align="right">28</td>
+</tr>
+<tr class="even">
+<td align="left">古语</td>
+<td align="right">21</td>
+</tr>
+<tr class="odd">
+<td align="left">英汉</td>
+<td align="right">11</td>
+</tr>
+</tbody>
+</table>
+<p>古语是指纯文言的，古汉是指文白参照的，英语和英汉的也是这样，不过看的最多的自然还是现代汉语的。另外，在对字数进行统计时，我根据语言进行了校正，具体就是古汉和英汉的在原有字数基础上乘以1.3，而古语和英语的在原有字数基础上乘以2。</p>
+</div>
+<div class="section level3">
+<h3>价格</h3>
+<pre class="r"><code>book %&gt;% mutate(price = as.numeric(price)) %&gt;% 
+  summarise(total = sum(price), avg = mean(price)) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">total</th>
+<th align="right">avg</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">16601</td>
+<td align="right">35.70108</td>
+</tr>
+</tbody>
+</table>
+<p>这些书的总价格大概是一万六千多，平均起来，每本35块7，但除了很少的几本书是在新华书店按原价买的，其余的书基本上都是打折的，而且折扣也都很大，所以实际上，这些年我也就看了一万块钱左右的书。</p>
+<pre class="r"><code>book %&gt;% mutate(price = as.numeric(price)) %&gt;% 
+  group_by(year) %&gt;% 
+  summarise(total = sum(price)) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">year</th>
+<th align="right">total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2011</td>
+<td align="right">364.8</td>
+</tr>
+<tr class="even">
+<td align="left">2012</td>
+<td align="right">1933.9</td>
+</tr>
+<tr class="odd">
+<td align="left">2013</td>
+<td align="right">1932.1</td>
+</tr>
+<tr class="even">
+<td align="left">2014</td>
+<td align="right">3586.8</td>
+</tr>
+<tr class="odd">
+<td align="left">2015</td>
+<td align="right">2816.3</td>
+</tr>
+<tr class="even">
+<td align="left">2016</td>
+<td align="right">3221.3</td>
+</tr>
+<tr class="odd">
+<td align="left">2017</td>
+<td align="right">1636.2</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="right">942.6</td>
+</tr>
+<tr class="odd">
+<td align="left">2019</td>
+<td align="right">167.0</td>
+</tr>
+</tbody>
+</table>
+<p>按年份平均一下，14年最多，看了3000多块钱的书。不得不说，看书真是一个极其便宜的消遣。</p>
+</div>
+<div class="section level3">
+<h3>页数</h3>
+<pre class="r"><code>book %&gt;% mutate(page = as.numeric(page)) %&gt;% 
+  summarise(total = sum(page), avg = mean(page)) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">total</th>
+<th align="right">avg</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">185511</td>
+<td align="right">398.9484</td>
+</tr>
+</tbody>
+</table>
+<p>这些书一共十八万多页，平均每本数400页左右。</p>
+<pre class="r"><code>book %&gt;% mutate(page = as.numeric(page)) %&gt;% 
+  group_by(year) %&gt;% 
+  summarise(total = sum(page)) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">year</th>
+<th align="right">total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2011</td>
+<td align="right">5059</td>
+</tr>
+<tr class="even">
+<td align="left">2012</td>
+<td align="right">26909</td>
+</tr>
+<tr class="odd">
+<td align="left">2013</td>
+<td align="right">25012</td>
+</tr>
+<tr class="even">
+<td align="left">2014</td>
+<td align="right">38407</td>
+</tr>
+<tr class="odd">
+<td align="left">2015</td>
+<td align="right">27053</td>
+</tr>
+<tr class="even">
+<td align="left">2016</td>
+<td align="right">35503</td>
+</tr>
+<tr class="odd">
+<td align="left">2017</td>
+<td align="right">17242</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="right">8144</td>
+</tr>
+<tr class="odd">
+<td align="left">2019</td>
+<td align="right">2182</td>
+</tr>
+</tbody>
+</table>
+<p>看的页数最多的一年也是14年，看了快四万页，平均起来，每天都要看100多页。</p>
+</div>
+<div class="section level3">
+<h3>字数</h3>
+<pre class="r"><code>book %&gt;% mutate(words = as.numeric(words)) %&gt;% 
+  summarise(total = sum(words), avg = mean(words)) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">total</th>
+<th align="right">avg</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">136291256</td>
+<td align="right">293099.5</td>
+</tr>
+</tbody>
+</table>
+<p>字数是比较难统计的，所以进行了一些校正。除了前面提到的，我还进行了另外一步校正。如果书内标明了字数，那我就按书内的字数进行第一步校正，然后再乘以0.8；如果书内没有标明字数，我就随机找一页，算一算这一页大概有多少字，然后乘以总页数，这时得出的字数进行第一步校正，最后再乘以0.6。经过这样的校正之后，我这些年一共看了一亿三千六百万字的书，平均起来，每本书大概有三十万字。之前在Medium上看了一篇文章，作者讲怎样才能在一年之内看完200书，然后她把书定义为五万字。如果一本书只有五万字的话，那一年看200本真的没啥难的。我觉得还是把一本书定义为三十万字，可能更合适一点。</p>
+<pre class="r"><code>book %&gt;% mutate(words = as.numeric(words)) %&gt;% 
+  group_by(year) %&gt;% 
+  summarise(total = sum(words)) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">year</th>
+<th align="right">total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2011</td>
+<td align="right">2531263</td>
+</tr>
+<tr class="even">
+<td align="left">2012</td>
+<td align="right">16750566</td>
+</tr>
+<tr class="odd">
+<td align="left">2013</td>
+<td align="right">15884629</td>
+</tr>
+<tr class="even">
+<td align="left">2014</td>
+<td align="right">28676764</td>
+</tr>
+<tr class="odd">
+<td align="left">2015</td>
+<td align="right">23470332</td>
+</tr>
+<tr class="even">
+<td align="left">2016</td>
+<td align="right">30016723</td>
+</tr>
+<tr class="odd">
+<td align="left">2017</td>
+<td align="right">11393177</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="right">5929402</td>
+</tr>
+<tr class="odd">
+<td align="left">2019</td>
+<td align="right">1638400</td>
+</tr>
+</tbody>
+</table>
+<p>按年份来看字数，最多的倒不是14年，而是16年了，可能那一年看了更多的大部头。</p>
+<pre class="r"><code>book %&gt;% mutate(words = as.numeric(words)) %&gt;% 
+  group_by(language) %&gt;% 
+  summarise(total = sum(words)) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">language</th>
+<th align="right">total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">古汉</td>
+<td align="right">20965668</td>
+</tr>
+<tr class="even">
+<td align="left">古语</td>
+<td align="right">11856219</td>
+</tr>
+<tr class="odd">
+<td align="left">汉语</td>
+<td align="right">82277559</td>
+</tr>
+<tr class="even">
+<td align="left">英汉</td>
+<td align="right">2162988</td>
+</tr>
+<tr class="odd">
+<td align="left">英语</td>
+<td align="right">19028822</td>
+</tr>
+</tbody>
+</table>
+<p>最后再按语言分类看一下，看得最多的自然是现代汉语的，但纯文言文和纯英文的书，我也看了及几百万字甚至上千万字（这里在把2除回去）。</p>
+<p>我其实是reading for reading’s sake的，并没指望通过读书得到其他什么东西。给自己定一个量化的目标，而后每天按着计划执行一点，总不至于让自己陷入无所事事的境地。几年前，我给自己定的这个数量是3000，目前看来，虽然有难度，但也不是不可能完成的任务，所以，继续一页一页的看吧。</p>
+</div>

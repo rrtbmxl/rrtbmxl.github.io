@@ -6,10 +6,29 @@
     <description>Recent content in R on RPG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 28 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 16 Feb 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>11年-19年读书记录分析</title>
+      <link>/2019/02/reading-records-analysis/</link>
+      <pubDate>Sat, 16 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/02/reading-records-analysis/</guid>
+      <description>大概在10年前后，镇上给村里弄了个农村书屋，其他办公室都没地方，就把书连书柜都放我办公室里了。当时统计了下，一共有1500多本书，后来又给了一批，最终达到1800多本。这些书中的大部分质量和内容都很一般，但还是有几本好书的。反正工作也挺闲的，每天就靠看书打发点时间。时过境迁，工作已经换了几个，但看书的习惯还一直保持着。
+我从12年开始记日记，所以从那一年起，哪段时间看了哪本书都有记录。前几年把读书的记录整理过一次，但信息不全；今年过年前后，花了几天的时间又整理了一遍，添加了一些书籍相关的信息，就想着要不要也分析下（其实只是统计，并没有分析），算是对这些年自己读书的一个总结。有点遗憾的是，11年的记录只找到10月份到12月份的一部分，10月份以前的则完全没有记录，就没法统计进来了。
+但在分析之前，还得说明一下，有些书我没有进行统计，这些书包括以下四种：
+国产教材。比如为考研而看的《普通心理学》《心理学导论》之类的，但国外的教材，如《心理学与生活》等，不在此列。
+技术类的书。如跟R相关的书，有实体的，也有在线的，都没有被统计进来。
+电子书。不论是在手机上，kindle上，还是在更早的汉王上看的电子书，都没有统计进来。在看书这方面，我还是比较传统的，现在基本上只看实体书。
+太low的书。如，有套书名叫《卑鄙的圣人：曹操》，老爹看见了，非要买一套，当时只出了5本，就都买了下来。我是家里有的书就要看完的（大概就是看完这套书后改了这个“毛病”），就硬着头皮把这几本书看了一遍。听说这套书让作者赚了一百多万的版税，但这也无法掩盖作者文笔一般、词汇匮乏的事实。印象最深的是，曹操笑起来是“噗嗤”，袁绍笑起来也“噗嗤”，连曹操的老子曹嵩笑起来也“噗嗤”，这到底是一群大老爷们，还是一群小丫头片子啊（当然，用在曹嵩身上也许是合适的）？总之，这类书就不进行统计了。
+去掉以上四类书之后，剩下的书（共计465本次），就是要进行分析的了。
+首先还是载入分析需要用到的包：
+library(tidyverse)library(readxl)library(knitr)然后把数据导入并进行清洗。由于数据已经在excel里整理好了，所以也没啥好清洗的，只是对每本书的字数进行了校正：
+book &amp;lt;- read_xlsx(&amp;#39;读书记录.xlsx&amp;#39;) %&amp;gt;% select(year = 2, name = 4, publisher = 6, author = 7, country = 8, dynasty = 9, classification = 10, language = 11, price = 12, page = 13, words = 14, manner = 15) %&amp;gt;% mutate(words = case_when(language %in% c(&amp;#39;古汉&amp;#39;, &amp;#39;英汉&amp;#39;) ~ words*1.3,language %in% c(&amp;#39;古语&amp;#39;, &amp;#39;英语&amp;#39;) ~ words*2,TRUE ~ words),words = ifelse(manner == &amp;#39;书内&amp;#39;, words*.</description>
+    </item>
     
     <item>
       <title>R语言学习资源总结</title>

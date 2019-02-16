@@ -225,6 +225,70 @@
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
+        <a class="link-unstyled" href="/2019/02/reading-records-analysis/">
+          11年-19年读书记录分析
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-02-16T00:00:00Z">
+        
+  February 16, 2019
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt" itemprop="articleBody">
+      大概在10年前后，镇上给村里弄了个农村书屋，其他办公室都没地方，就把书连书柜都放我办公室里了。当时统计了下，一共有1500多本书，后来又给了一批，最终达到1800多本。这些书中的大部分质量和内容都很一般，但还是有几本好书的。反正工作也挺闲的，每天就靠看书打发点时间。时过境迁，工作已经换了几个，但看书的习惯还一直保持着。
+我从12年开始记日记，所以从那一年起，哪段时间看了哪本书都有记录。前几年把读书的记录整理过一次，但信息不全；今年过年前后，花了几天的时间又整理了一遍，添加了一些书籍相关的信息，就想着要不要也分析下（其实只是统计，并没有分析），算是对这些年自己读书的一个总结。有点遗憾的是，11年的记录只找到10月份到12月份的一部分，10月份以前的则完全没有记录，就没法统计进来了。
+但在分析之前，还得说明一下，有些书我没有进行统计，这些书包括以下四种：
+国产教材。比如为考研而看的《普通心理学》《心理学导论》之类的，但国外的教材，如《心理学与生活》等，不在此列。
+技术类的书。如跟R相关的书，有实体的，也有在线的，都没有被统计进来。
+电子书。不论是在手机上，kindle上，还是在更早的汉王上看的电子书，都没有统计进来。在看书这方面，我还是比较传统的，现在基本上只看实体书。
+太low的书。如，有套书名叫《卑鄙的圣人：曹操》，老爹看见了，非要买一套，当时只出了5本，就都买了下来。我是家里有的书就要看完的（大概就是看完这套书后改了这个“毛病”），就硬着头皮把这几本书看了一遍。听说这套书让作者赚了一百多万的版税，但这也无法掩盖作者文笔一般、词汇匮乏的事实。印象最深的是，曹操笑起来是“噗嗤”，袁绍笑起来也“噗嗤”，连曹操的老子曹嵩笑起来也“噗嗤”，这到底是一群大老爷们，还是一群小丫头片子啊（当然，用在曹嵩身上也许是合适的）？总之，这类书就不进行统计了。
+去掉以上四类书之后，剩下的书（共计465本次），就是要进行分析的了。
+首先还是载入分析需要用到的包：
+library(tidyverse)library(readxl)library(knitr)然后把数据导入并进行清洗。由于数据已经在excel里整理好了，所以也没啥好清洗的，只是对每本书的字数进行了校正：
+book &lt;- read_xlsx(&#39;读书记录.xlsx&#39;) %&gt;% select(year = 2, name = 4, publisher = 6, author = 7, country = 8, dynasty = 9, classification = 10, language = 11, price = 12, page = 13, words = 14, manner = 15) %&gt;% mutate(words = case_when(language %in% c(&#39;古汉&#39;, &#39;英汉&#39;) ~ words*1.3,language %in% c(&#39;古语&#39;, &#39;英语&#39;) ~ words*2,TRUE ~ words),words = ifelse(manner == &#39;书内&#39;, words*.
+      <p>
+        <a href="/2019/02/reading-records-analysis/" class="postShorten-excerpt_link link">Continue reading</a>
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+          
+            
+  
+    
+      
+        
+      
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title" itemprop="headline">
         <a class="link-unstyled" href="/2019/01/r-source-collection/">
           R语言学习资源总结
         </a>
@@ -560,65 +624,6 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
 </article>
 
           
-            
-  
-    
-      
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="/2018/10/%E6%97%A5%E8%AE%B0%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">
-          日记文本分析：第一部分
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2018-10-07T00:00:00Z">
-        
-  October 7, 2018
-
-      </time>
-    
-    
-  
-  
-    <span>in</span>
-    
-      <a class="category-link" href="/categories/r">R</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      据说希腊的德尔菲神庙上刻着几条箴言，其中一条告诫我们要“认识你自己”。这条箴言刻起来容易，做起来却很难，甚至可能是人生最困难的事情之一。要想认识自己，大概有四种方法，一是客观内容的客观描述，如测量人的身高、体重等各种身体特征，这些特征在一定的时间内不会有太大幅度的变化，用来测量这些特征的工具也具有极高的信度和效度，因此不论从要了解的内容和用于了解该内容的方式，都是很客观的；二是客观内容的主观描述，如使用问卷量表测量人的各种能力，人的能力应该也是比较恒定的，但用于测量这些特征的工具，无论是编制过程还是施用过程，都避免不了与人为因素有关的干扰，即便硬要说它是客观的，也是“主观”的客观。三是主观内容的主观描述，如各种投射测验，对于这些测验，我没有实际接触过，但从书本上来看，难免不让我认为这种测验从内容到方式都不是那么客观；最后一种就显而易见了，即对主观内容的客观描述，如对推特的文本分析，我要进行的日记文本分析，也是这一范围之内的。日记本身是主观的产物，但这里我要对这些主观的内容进行客观的数据分析，进而从这一角度来加深对自己的了解，不过这个方法的局限性也很大，毕竟不是每个人都有几十万字的日记文本可以用来分析。另外再加一句，上面这段话，也可以说是对客观内容的主观描述。
-这篇文章分为三部分，首先是对我每天记日记的时间进行一个简单的分析，然后对文本进行分词，针对词频进行分析，最后是一个初步的情感分析。下面先载入需要用到的包。
-导入需要的包library(tidyverse)library(readxl)library(jiebaR)library(ggthemes)一般情况下，我的第一行代码都是library(tidyverse)，这次主要用到了其中dplyr、tidyr、stringr以及ggplot2四个包；readxl包用来读入.xlsx格式的文件；jiebarR用来分词；ggthemes用来添加我最喜欢的tufte主题。
-时间分析首先要把日记中与时间有关的内容提取出来，我记录时间的格式很固定，都是20XX年X月X日 周X XX：XX的形式，通过以下代码，可以把这部分内容提取出来：
-time &lt;- read_lines(&#39;dairy.txt&#39;) %&gt;% as.tibble() %&gt;% filter(str_detect(value, &#39;.*年.*月.*日.*周&#39;)) %&gt;% mutate(num = row_number()) %&gt;% select(2, time = 1)处理后是这个样子的：
-numtime12012年1月13日 周五 21：4022012年1月14日 周六 21：4132012年1月15日 周日 21：5342012年1月16日 周一 21：5852012年1月17日 周二 21：4562012年1月18日 周三 21：5172012年1月19日 周四 22：0182012年1月20日 周五 21：4392012年1月21日 周六 21：35102012年1月22日 周日 21：53所有的时间都放在一起是没法分析的，接下来我就把各部分时间分离开，并转化成了整数型，这一步代码如下：
-      <p>
-        <a href="/2018/10/%E6%97%A5%E8%AE%B0%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" class="postShorten-excerpt_link link">Continue reading</a>
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-          
           
   <div class="pagination-bar">
     <ul class="pagination">
@@ -683,6 +688,33 @@ time &lt;- read_lines(&#39;dairy.txt&#39;) %&gt;% as.tibble() %&gt;% filter(str_
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2019/02/reading-records-analysis/">
+                <h3 class="media-heading">11年-19年读书记录分析</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Feb 2, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">大概在10年前后，镇上给村里弄了个农村书屋，其他办公室都没地方，就把书连书柜都放我办公室里了。当时统计了下，一共有1500多本书，后来又给了一批，最终达到1800多本。这些书中的大部分质量和内容都很一般，但还是有几本好书的。反正工作也挺闲的，每天就靠看书打发点时间。时过境迁，工作已经换了几个，但看书的习惯还一直保持着。
+我从12年开始记日记，所以从那一年起，哪段时间看了哪本书都有记录。前几年把读书的记录整理过一次，但信息不全；今年过年前后，花了几天的时间又整理了一遍，添加了一些书籍相关的信息，就想着要不要也分析下（其实只是统计，并没有分析），算是对这些年自己读书的一个总结。有点遗憾的是，11年的记录只找到10月份到12月份的一部分，10月份以前的则完全没有记录，就没法统计进来了。
+但在分析之前，还得说明一下，有些书我没有进行统计，这些书包括以下四种：
+国产教材。比如为考研而看的《普通心理学》《心理学导论》之类的，但国外的教材，如《心理学与生活》等，不在此列。
+技术类的书。如跟R相关的书，有实体的，也有在线的，都没有被统计进来。
+电子书。不论是在手机上，kindle上，还是在更早的汉王上看的电子书，都没有统计进来。在看书这方面，我还是比较传统的，现在基本上只看实体书。
+太low的书。如，有套书名叫《卑鄙的圣人：曹操》，老爹看见了，非要买一套，当时只出了5本，就都买了下来。我是家里有的书就要看完的（大概就是看完这套书后改了这个“毛病”），就硬着头皮把这几本书看了一遍。听说这套书让作者赚了一百多万的版税，但这也无法掩盖作者文笔一般、词汇匮乏的事实。印象最深的是，曹操笑起来是“噗嗤”，袁绍笑起来也“噗嗤”，连曹操的老子曹嵩笑起来也“噗嗤”，这到底是一群大老爷们，还是一群小丫头片子啊（当然，用在曹嵩身上也许是合适的）？总之，这类书就不进行统计了。
+去掉以上四类书之后，剩下的书（共计465本次），就是要进行分析的了。
+首先还是载入分析需要用到的包：
+library(tidyverse)library(readxl)library(knitr)然后把数据导入并进行清洗。由于数据已经在excel里整理好了，所以也没啥好清洗的，只是对每本书的字数进行了校正：
+book &lt;- read_xlsx(&#39;读书记录.xlsx&#39;) %&gt;% select(year = 2, name = 4, publisher = 6, author = 7, country = 8, dynasty = 9, classification = 10, language = 11, price = 12, page = 13, words = 14, manner = 15) %&gt;% mutate(words = case_when(language %in% c(&#39;古汉&#39;, &#39;英汉&#39;) ~ words*1.3,language %in% c(&#39;古语&#39;, &#39;英语&#39;) ~ words*2,TRUE ~ words),words = ifelse(manner == &#39;书内&#39;, words*.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -897,7 +929,7 @@ douban &lt;- read_csv(&#39;douban.csv&#39;)## Parsed with column specification:
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         9 posts found
+         10 posts found
       </p>
     </div>
   </div>
