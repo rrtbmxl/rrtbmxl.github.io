@@ -1,7 +1,7 @@
 ---
 title: R语言学习资源总结
 author: ''
-date: '2019-01-28'
+date: '2019-02-21'
 categories:
   - R
 tags:
@@ -27,13 +27,18 @@ output:
 <li><a href="#shiny">Shiny</a></li>
 <li><a href="#word">Word</a></li>
 </ul></li>
+<li><a href="#program">Program</a><ul>
+<li><a href="#evaluation">Evaluation</a></li>
+<li><a href="#function">Function</a></li>
+<li><a href="#loop">Loop</a></li>
+<li><a href="#pipe">Pipe</a></li>
+</ul></li>
 <li><a href="#tutorial">Tutorial</a><ul>
-<li><a href="#website">Website</a></li>
 <li><a href="#data-acquisition">Data Acquisition</a></li>
 <li><a href="#machine-learning">Machine Learning</a></li>
 <li><a href="#onlinebook">Onlinebook</a></li>
-<li><a href="#program">Program</a></li>
 <li><a href="#tidyverse">Tidyverse</a></li>
+<li><a href="#website">Website</a></li>
 </ul></li>
 <li><a href="#visualization">Visualization</a><ul>
 <li><a href="#adjustment">Adjustment</a></li>
@@ -136,19 +141,43 @@ datafile[order(-datafile$zscore),]</code></pre>
 </ul>
 </div>
 </div>
+<div id="program" class="section level1">
+<h1>Program</h1>
+<p>这一部分包括自编函数、循环、管道以及Non-standard evaluation相关的内容，对于最后这项内容，我目前（19年2月21日）只能说是理解了一点点，要是能实际应用一下，自己写几个robust的函数出来，也许就能理解了。</p>
+<div id="evaluation" class="section level3">
+<h3>Evaluation</h3>
+<ul>
+<li><p><a href="http://rpubs.com/hadley/157957">Non-standard evaluation</a>（190221）Hadley大神介绍Non-standard evaluation的文章，看不太懂。</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html">Programming with dplyr</a>（190221）<code>dplyr</code>使用起来虽然很方便，但有时也会遇到一些问题，就这些问题，Hadley大神提供了解决方案，不过，同上，还是看不大懂。</p></li>
+<li><p><a href="https://edwinth.github.io/blog/dplyr-recipes/">Tidy evaluation, most common actions</a>（190221）;<a href="https://edwinth.github.io/blog/nse/">Non-standard evaluation, how tidy eval builds on base R</a>（190221）另一作者对上面文章做的总结和解读。</p></li>
+<li><p><a href="https://blog.revolutionanalytics.com/2017/12/introduction-to-seplyr.html">An introduction to seplyr</a>（190221）介绍了<code>seplyr</code>包，这个包实际上就是<code>dplyr</code>包的standard evaluation版本。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/r-formula-tutorial">Formulas in R Tutorial</a>（190221）系统介绍R中公式使用的文章，也涉及到了evaluation，就放到了这一标题下。</p></li>
+</ul>
+</div>
+<div id="function" class="section level3">
+<h3>Function</h3>
+<ul>
+<li><a href="https://ibecav.github.io/betterfunctions/">Writing better R functions part one</a>（190221）；<a href="https://ibecav.github.io/betterfunctions2/">Writing better R functions part two</a>（190221）；<a href="https://ibecav.github.io/betterfunctions3/">Writing better R functions part three</a>（190221）；<a href="https://ibecav.github.io/betterfunctions4/">Writing better R functions part four</a>（190221）通过一个实例，介绍了创建函数和完善函数的完整过程。看到第二部分就有点跟不上了，还是要通过自己的史记操作来掌握这些内容。</li>
+</ul>
+</div>
+<div id="loop" class="section level3">
+<h3>Loop</h3>
+<ul>
+<li><a href="https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r">A Tutorial on Loops in R - Usage and Alternatives</a>（190128）介绍了<code>R</code>中的几种循环，包括<code>for</code>循环、<code>while</code>循环以及<code>repeat</code>循环，这也是头一次知道<code>R</code>里还有个<code>repeat</code>循环。</li>
+</ul>
+</div>
+<div id="pipe" class="section level3">
+<h3>Pipe</h3>
+<ul>
+<li><p><a href="http://adolfoalvarez.cl/plumbers-chains-and-famous-painters-the-history-of-the-pipe-operator-in-r/">Plumbers, chains, and famous painters: The history of the pipe operator in R</a>（190221）介绍了管道函数的历史。</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/show-me-your-pipe/">Show me your pipe!</a>（190221）关于管道函数的，但时间久了，忘了内容具体写的啥了。</p></li>
+<li><p><a href="https://drdoane.com/writing-pipe-friendly-functions/">WRITING PIPE-FRIENDLY FUNCTIONS</a>（190221）如何写出对管道函数更友好的函数，同上，也忘了内容写的啥了。</p></li>
+</ul>
+</div>
+</div>
 <div id="tutorial" class="section level1">
 <h1>Tutorial</h1>
 <p>这一部分主要包括Onlinebook、<code>Tidyverse</code>以及与学习R相关的Website三部分，19年之后加入了Data Acquisition和Machine Learning两部分，这两项内容是我一直都很想学的，但也一直都处于连入门都算不上的水平，1月底又加入了Program部分。</p>
-<div id="website" class="section level3">
-<h3>Website</h3>
-<ul>
-<li><p><a href="https://www.statmethods.net/index.html">Quick-R</a>（181108）《R语言实战》作者的教程网站，很早以前看过的，内容应该比较基础。</p></li>
-<li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a>（181108）看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
-<li><p><a href="http://stat545.com/topics.html">stat545</a>（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
-<li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a>（181208）很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
-<li><p><a href="https://datacarpentry.org/R-ecology-lesson/index.html">Data Analysis and Visualization in R for Ecologists</a>（190114）一个简单但实用的R教程网站，跟生态学好像也没啥太多的关系，有一部分数据库的内容还挺适合我的。</p></li>
-</ul>
-</div>
 <div id="data-acquisition" class="section level3">
 <h3>Data Acquisition</h3>
 <ul>
@@ -189,12 +218,7 @@ datafile[order(-datafile$zscore),]</code></pre>
 <li><p><a href="https://livebook.datascienceheroes.com/">Data Science Live Book</a>（181218）一个R包的文档扩展成的书，排班有点乱，不推荐看。</p></li>
 <li><p><a href="https://bookdown.org/yihui/bookdown/">bookdown: Authoring Books and Technical Documents with R Markdown</a>（190128）<code>bookdown</code>的文档，我应该是用不上，随便看看。</p></li>
 <li><p><a href="https://bookdown.org/">bookdown: Authoring Books and Technical Documents with R Markdown</a>（190128）用<code>bookdown</code>写的书都会发布在这里，这一模块的大部分书都能在这里找到。</p></li>
-</ul>
-</div>
-<div id="program" class="section level3">
-<h3>Program</h3>
-<ul>
-<li><a href="https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r">A Tutorial on Loops in R - Usage and Alternatives</a>（190128）介绍了<code>R</code>中的几种循环，包括<code>for</code>循环、<code>while</code>循环以及<code>repeat</code>循环，这也是头一次知道<code>R</code>里还有个<code>repeat</code>循环。</li>
+<li><p><a href="https://www.manning.com/books/r-in-action-second-edition?a_bid=5c2b1e1d&amp;a_aid=RiA2ed">R in Action, Second Edition</a>（1902221）《R语言实战》英文第二版的在线版，可以免费看。</p></li>
 </ul>
 </div>
 <div id="tidyverse" class="section level3">
@@ -204,6 +228,16 @@ datafile[order(-datafile$zscore),]</code></pre>
 <li><p><a href="https://www.datacamp.com/community/tutorials/pipe-r-tutorial#notuse">Pipes in R Tutorial For Beginners</a>（181108）介绍了几种常见的管道函数（其实一种就够了），像我一样喜欢把代码都串起来的应该好好学学这个。</p></li>
 <li><p><a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Data Wrangling Part 1: Basic to Advanced Ways to Select Columns</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-2/">Data Wrangling Part 2: Transforming your columns into the right shape</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-3/">Data Wrangling Part 3: Basic and more advanced ways to filter rows</a>；<a href="https://suzan.rbind.io/2018/04/dplyr-tutorial-4/">Data Wrangling Part 4: Summarizing and slicing your data</a>（181108）系统介绍<code>dplyr</code>包的系列文章，非常值得一看。</p></li>
 <li><p><a href="https://statbandit.wordpress.com/2018/05/08/tidying-messy-excel-data-tidyxl/">TIDYING MESSY EXCEL DATA (TIDYXL)</a>（190128）介绍了几种清洗excel数据表格的包。</p></li>
+</ul>
+</div>
+<div id="website" class="section level3">
+<h3>Website</h3>
+<ul>
+<li><p><a href="https://www.statmethods.net/index.html">Quick-R</a>（181108）《R语言实战》作者的教程网站，很早以前看过的，内容应该比较基础。</p></li>
+<li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a>（181108）看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
+<li><p><a href="http://stat545.com/topics.html">stat545</a>（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
+<li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a>（181208）很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
+<li><p><a href="https://datacarpentry.org/R-ecology-lesson/index.html">Data Analysis and Visualization in R for Ecologists</a>（190114）一个简单但实用的R教程网站，跟生态学好像也没啥太多的关系，有一部分数据库的内容还挺适合我的。</p></li>
 </ul>
 </div>
 </div>

@@ -22,7 +22,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
-    <title>看图写代码：瑞克与莫蒂剧集评分热力图</title>
+    <title>R语言学习资源总结</title>
     <meta name="author" content="孟祥良">
     <meta name="keywords" content="">
 
@@ -30,30 +30,30 @@
     
 
     
-    <meta name="description" content="大概是去年的这个时间，我在一个名叫Data Is Beautiful的reddit论坛上看到了一张Rick and Morty的分集评分热力图，就想用R把它重复出来。当时水平还不怎么样，只能画个大概出来，很多细节都不知道该如何呈现；前几个月，又重新尝试了下，大部分细节都知道该如何实现了，但还是差一点；这里再尝试一下，看看能不能完全重复出来，毕竟这张图应该就是用R画的。
-图是这样的：
-首先，还是先把需要用到的包载入：
-library(tidyverse)然后载入数据：
-rm &lt;- read_csv(&quot;rick &amp; morty.csv&quot;) %&gt;% mutate_at(vars(Episode, Season), as.factor)载入数据的时候，为方便后面的绘图，顺便把集数和季数两个变量改成了因子型。具体的数据是这样的：
-rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt;dbl&gt;## 1 1 1 8.1## 2 2 1 8.7## 3 3 1 8.4## 4 4 1 8.6## 5 5 1 8.9## 6 6 1 9 ## 7 7 1 8.">
-    <meta property="og:description" content="大概是去年的这个时间，我在一个名叫Data Is Beautiful的reddit论坛上看到了一张Rick and Morty的分集评分热力图，就想用R把它重复出来。当时水平还不怎么样，只能画个大概出来，很多细节都不知道该如何呈现；前几个月，又重新尝试了下，大部分细节都知道该如何实现了，但还是差一点；这里再尝试一下，看看能不能完全重复出来，毕竟这张图应该就是用R画的。
-图是这样的：
-首先，还是先把需要用到的包载入：
-library(tidyverse)然后载入数据：
-rm &lt;- read_csv(&quot;rick &amp; morty.csv&quot;) %&gt;% mutate_at(vars(Episode, Season), as.factor)载入数据的时候，为方便后面的绘图，顺便把集数和季数两个变量改成了因子型。具体的数据是这样的：
-rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt;dbl&gt;## 1 1 1 8.1## 2 2 1 8.7## 3 3 1 8.4## 4 4 1 8.6## 5 5 1 8.9## 6 6 1 9 ## 7 7 1 8.">
+    <meta name="description" content="ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordProgramEvaluationFunctionLoopPipeTutorialData AcquisitionMachine LearningOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicColorExtensionHistogramLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
+Article这里罗列了一些关于R语言的文章，主要包括R的优势、R的一些概念、R的历史以及如何学习R。
+AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语言的一些优点，作者是从R开始接触编程语言的，观点可能有失偏颇；我也差不多是从R开始接触编程语言的，所以是不是真的偏颇了，我也看不出来。
+6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。
+ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。">
+    <meta property="og:description" content="ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordProgramEvaluationFunctionLoopPipeTutorialData AcquisitionMachine LearningOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicColorExtensionHistogramLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
+Article这里罗列了一些关于R语言的文章，主要包括R的优势、R的一些概念、R的历史以及如何学习R。
+AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语言的一些优点，作者是从R开始接触编程语言的，观点可能有失偏颇；我也差不多是从R开始接触编程语言的，所以是不是真的偏颇了，我也看不出来。
+6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。
+ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="看图写代码：瑞克与莫蒂剧集评分热力图">
-    <meta property="og:url" content="/2018/10/rick-and-morty-heatmap/">
+    <meta property="og:title" content="R语言学习资源总结">
+    <meta property="og:url" content="/2019/02/r-source-collection/">
     <meta property="og:site_name" content="RPG">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="RPG">
-    <meta name="twitter:description" content="大概是去年的这个时间，我在一个名叫Data Is Beautiful的reddit论坛上看到了一张Rick and Morty的分集评分热力图，就想用R把它重复出来。当时水平还不怎么样，只能画个大概出来，很多细节都不知道该如何呈现；前几个月，又重新尝试了下，大部分细节都知道该如何实现了，但还是差一点；这里再尝试一下，看看能不能完全重复出来，毕竟这张图应该就是用R画的。
-图是这样的：
-首先，还是先把需要用到的包载入：
-library(tidyverse)然后载入数据：
-rm &lt;- read_csv(&quot;rick &amp; morty.csv&quot;) %&gt;% mutate_at(vars(Episode, Season), as.factor)载入数据的时候，为方便后面的绘图，顺便把集数和季数两个变量改成了因子型。具体的数据是这样的：
-rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt;dbl&gt;## 1 1 1 8.1## 2 2 1 8.7## 3 3 1 8.4## 4 4 1 8.6## 5 5 1 8.9## 6 6 1 9 ## 7 7 1 8.">
+    <meta name="twitter:description" content="ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordProgramEvaluationFunctionLoopPipeTutorialData AcquisitionMachine LearningOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicColorExtensionHistogramLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
+Article这里罗列了一些关于R语言的文章，主要包括R的优势、R的一些概念、R的历史以及如何学习R。
+AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语言的一些优点，作者是从R开始接触编程语言的，观点可能有失偏颇；我也差不多是从R开始接触编程语言的，所以是不是真的偏颇了，我也看不出来。
+6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。
+ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。">
     
     
 
@@ -228,15 +228,15 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      看图写代码：瑞克与莫蒂剧集评分热力图
+      R语言学习资源总结
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2018-10-28T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-02-21T00:00:00Z">
         
-  October 28, 2018
+  February 21, 2019
 
       </time>
     
@@ -255,204 +255,312 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>大概是去年的这个时间，我在一个名叫<a href="https://www.reddit.com/r/dataisbeautiful/comments/7645xj/rick_and_morty_ratings_heatmap_oc/">Data Is Beautiful</a>的reddit论坛上看到了一张<a href="https://www.imdb.com/title/tt2861424/?ref_=nv_sr_1">Rick and Morty</a>的分集评分热力图，就想用R把它重复出来。当时水平还不怎么样，只能画个大概出来，很多细节都不知道该如何呈现；前几个月，又重新尝试了下，大部分细节都知道该如何实现了，但还是差一点；这里再尝试一下，看看能不能完全重复出来，毕竟这张图应该就是用R画的。</p>
-<p>图是这样的：</p>
-<div class="figure">
-<img src="/img/rick%20and%20morty%20heatmap.png" />
-
+              <div id="TOC">
+<ul>
+<li><a href="#article">Article</a><ul>
+<li><a href="#advantage">Advantage</a></li>
+<li><a href="#concept">Concept</a></li>
+<li><a href="#history">History</a></li>
+<li><a href="#learning">Learning</a></li>
+</ul></li>
+<li><a href="#communication">Communication</a><ul>
+<li><a href="#blogdown">Blogdown</a></li>
+<li><a href="#report">Report</a></li>
+<li><a href="#shiny">Shiny</a></li>
+<li><a href="#word">Word</a></li>
+</ul></li>
+<li><a href="#program">Program</a><ul>
+<li><a href="#evaluation">Evaluation</a></li>
+<li><a href="#function">Function</a></li>
+<li><a href="#loop">Loop</a></li>
+<li><a href="#pipe">Pipe</a></li>
+</ul></li>
+<li><a href="#tutorial">Tutorial</a><ul>
+<li><a href="#data-acquisition">Data Acquisition</a></li>
+<li><a href="#machine-learning">Machine Learning</a></li>
+<li><a href="#onlinebook">Onlinebook</a></li>
+<li><a href="#tidyverse">Tidyverse</a></li>
+<li><a href="#website">Website</a></li>
+</ul></li>
+<li><a href="#visualization">Visualization</a><ul>
+<li><a href="#adjustment">Adjustment</a></li>
+<li><a href="#basic">Basic</a></li>
+<li><a href="#color">Color</a></li>
+<li><a href="#extension">Extension</a></li>
+<li><a href="#histogram">Histogram</a></li>
+<li><a href="#line-chart">Line Chart</a></li>
+<li><a href="#map">Map</a></li>
+<li><a href="#scatter-plot">Scatter Plot</a></li>
+<li><a href="#theory">Theory</a></li>
+</ul></li>
+</ul>
 </div>
-<p>首先，还是先把需要用到的包载入：</p>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<p>然后载入数据：</p>
-<pre class="r"><code>rm &lt;- read_csv(&quot;rick &amp; morty.csv&quot;) %&gt;% 
-  mutate_at(vars(Episode, Season), as.factor)</code></pre>
-<p>载入数据的时候，为方便后面的绘图，顺便把集数和季数两个变量改成了因子型。具体的数据是这样的：</p>
-<pre class="r"><code>rm</code></pre>
-<pre><code>## # A tibble: 31 x 3
-##    Episode Season Rating
-##    &lt;fct&gt;   &lt;fct&gt;   &lt;dbl&gt;
-##  1 1       1         8.1
-##  2 2       1         8.7
-##  3 3       1         8.4
-##  4 4       1         8.6
-##  5 5       1         8.9
-##  6 6       1         9  
-##  7 7       1         8.1
-##  8 8       1         8.7
-##  9 9       1         8.5
-## 10 10      1         9.2
-## # ... with 21 more rows</code></pre>
-<p>数据很简单，<code>Episode</code>变量指第几集，<code>Season</code>变量指第几季，<code>rating</code>变量指该集的评分。</p>
-<p>接下来先把最基本的框架画出来，然后再一点一点的完善。这个框架，三行代码就足够了：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, Episode, fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating))</code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<p>这里，将<code>Season</code>变量映射到了X轴上，同时将<code>Episode</code>变量映射到了Y轴上，并将<code>Rating</code>变量映射到了<code>fill</code>（填充色）上；然后通过<code>geom_tile</code>函数，将几何形状设置为<strong>瓦片图</strong>；最后再通过<code>geom_text</code>函数将评分的具体数字映射到相应的位置上。</p>
-<p>图是画出来了，但跟原图差距还挺大的。首先，从Y轴来看，原图从上到下是递增的，而我这里是递减的。解决这个问题，不需要再多加一行代码，只需要稍作修改：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating)) </code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>使用<code>forcats</code>包里的<code>fct_rev</code>函数，可以颠倒因子水平的顺序，不过这也改变了Y轴的名称。下面统一把坐标轴、标题以及图例的名称更改掉：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating)) +
-  labs(title = &quot;Rick &amp; Morty Heatmap&quot;, y = &#39;Episode&#39;, fill = &#39;Episode Rating&#39;) </code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p><code>labs</code>函数可以用来修改各种名称，值得注意的是，如果前面用了<code>fill</code>，这里也要用<code>fill</code>；前面用了<code>color</code>，这里也要用<code>color</code>。提起颜色，我这里的颜色跟原图的颜色显然不一样，而且原图是分数越高颜色越深，而我正好相反。我试着以原图图例中8分的颜色为起始色，8.8分的颜色为中间色，9.9分的颜色为终点色来重复原图使用的颜色，这次用上了<code>scale_fill_gradient2</code>函数：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating)) +
-  labs(title = &quot;Rick &amp; Morty Heatmap&quot;, y = &#39;Episode&#39;, fill = &#39;Episode Rating&#39;) +
-    scale_fill_gradient2(low = &#39;#ECF7B1&#39;, mid = &#39;#3FB4C4&#39;, high = &#39;#081D58&#39;,
-                        midpoint = 8.8, breaks = seq(10, 8, -.4))</code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>呃，不是完全一样，花了好多时间也没试出来完全符合原图的颜色，就先这样了。下面处理一下评分文本的颜色。原图中，深色瓦片上的文字是白色的，这一点很容易做到：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating), 
-            color = ifelse(rm$Rating &gt; 8.7, &#39;white&#39;, &#39;black&#39;)) +
-  labs(title = &quot;Rick &amp; Morty Heatmap&quot;, y = &#39;Episode&#39;, fill = &#39;Episode Rating&#39;) +
-    scale_fill_gradient2(low = &#39;#ECF7B1&#39;, mid = &#39;#3FB4C4&#39;, high = &#39;#081D58&#39;,
-                        midpoint = 8.8, breaks = seq(10, 8, -.4))</code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>在<code>geom_text</code>函数中，使用<code>ifelse</code>函数指定分数大于8.7就呈现为白色，不超过8.7就呈现为黑色。</p>
-<p>继续。原图中Y轴的刻度是紧挨着瓦片的，加一行代码就可以实现：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating), 
-            color = ifelse(rm$Rating &gt; 8.7, &#39;white&#39;, &#39;black&#39;)) +
-  labs(title = &quot;Rick &amp; Morty Heatmap&quot;, y = &#39;Episode&#39;, fill = &#39;Episode Rating&#39;) +
-    scale_fill_gradient2(low = &#39;#ECF7B1&#39;, mid = &#39;#3FB4C4&#39;, high = &#39;#081D58&#39;,
-                        midpoint = 8.8, breaks = seq(10, 8, -.4)) + 
-  scale_x_discrete(expand = c(0, 0))</code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p><code>scale_x_discrete</code>函数可以针对离散型的X轴进行调整，然后通过其中的<code>expand</code>参数，可以调整刻度与瓦片之间的距离。</p>
-<p>然后将这张图的标题居中，这需要通过<code>theme</code>函数实现：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating), 
-            color = ifelse(rm$Rating &gt; 8.7, &#39;white&#39;, &#39;black&#39;)) +
-  labs(title = &quot;Rick &amp; Morty Heatmap&quot;, y = &#39;Episode&#39;, fill = &#39;Episode Rating&#39;) +
-    scale_fill_gradient2(low = &#39;#ECF7B1&#39;, mid = &#39;#3FB4C4&#39;, high = &#39;#081D58&#39;,
-                        midpoint = 8.8, breaks = seq(10, 8, -.4)) + 
-  scale_x_discrete(expand = c(0, 0)) + 
-  theme(plot.title = element_text(hjust = 0.5))</code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p><code>plot.title</code>参数自然就是指图的标题，随后的<code>element_text</code>参数指对该部分的文本进行操作，其中的<code>hjust</code>参数用来调节水平位置，0是左对齐，1是右对齐，默认是左对齐。</p>
-<p>在<code>theme</code>函数中，可以针对很多细节进行调节，下面继续对Y轴刻度值的角度进行调整：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating), 
-            color = ifelse(rm$Rating &gt; 8.7, &#39;white&#39;, &#39;black&#39;)) +
-  labs(title = &quot;Rick &amp; Morty Heatmap&quot;, y = &#39;Episode&#39;, fill = &#39;Episode Rating&#39;) +
-    scale_fill_gradient2(low = &#39;#ECF7B1&#39;, mid = &#39;#3FB4C4&#39;, high = &#39;#081D58&#39;,
-                        midpoint = 8.8, breaks = seq(10, 8, -.4)) + 
-  scale_x_discrete(expand = c(0, 0)) + 
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.text.y = element_text(angle = 90, hjust = .5))</code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<p><code>axis.text.y</code>参数是用来针对Y轴文本进行操作的，随后，在<code>element_text</code>中，使用<code>angle</code>调整角度，并再一次使用<code>hjust</code>将文本居中。</p>
-<p>下面针对图片的背景进行调整。原图底层是一片空白，而<code>ggplot2</code>默认的背景是淡灰色加上白色的线条，这里可以用<code>rect</code>参数进行修改：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating), 
-            color = ifelse(rm$Rating &gt; 8.7, &#39;white&#39;, &#39;black&#39;)) +
-  labs(title = &quot;Rick &amp; Morty Heatmap&quot;, y = &#39;Episode&#39;, fill = &#39;Episode Rating&#39;) +
-    scale_fill_gradient2(low = &#39;#ECF7B1&#39;, mid = &#39;#3FB4C4&#39;, high = &#39;#081D58&#39;,
-                        midpoint = 8.8, breaks = seq(10, 8, -.4)) + 
-  scale_x_discrete(expand = c(0, 0)) + 
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.text.y = element_text(angle = 90, hjust = .5),
-        rect = element_blank())</code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<p><code>element_blank</code>就是什么都不画。</p>
-<p>剩下的细节问题主要就是图例方面的了，图例应该更长一点，图例的标题应该在右侧，图例的刻度应该在图例条的外侧，且只需要右侧的一条。下面先把图例拉长：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating), 
-            color = ifelse(rm$Rating &gt; 8.7, &#39;white&#39;, &#39;black&#39;)) +
-  labs(title = &quot;Rick &amp; Morty Heatmap&quot;, y = &#39;Episode&#39;, fill = &#39;Episode Rating&#39;) +
-  scale_fill_gradient2(low = &#39;#ECF7B1&#39;, mid = &#39;#3FB4C4&#39;, high = &#39;#081D58&#39;,
-                       midpoint = 8.8, breaks = seq(10, 8, -.4)) + 
-  scale_x_discrete(expand = c(0, 0)) + 
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.text.y = element_text(angle = 90, hjust = .5),
-        rect = element_blank(),
-        legend.key.height = unit(4.1,&quot;line&quot;))</code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-<p><code>theme</code>里的参数名都是很直白的，<code>legend.key.height</code>用来调整图例的长度，然后用<code>unit</code>函数来指定具体的长度，这里我用了4.1个<code>line</code>的长度，但<code>line</code>究竟代表了什么，我也没搞懂。其实有很多单位的，感兴趣的可以用<code>?unit</code>查看一下。</p>
-<p>下面调整图例名的位置，这时仅在<code>theme</code>函数里操作就不行了，还要用到<code>guide_colorbar</code>函数：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating), 
-            color = ifelse(rm$Rating &gt; 8.7, &#39;white&#39;, &#39;black&#39;)) +
-  labs(title = &quot;Rick &amp; Morty Heatmap&quot;, y = &#39;Episode&#39;, fill = &#39;Episode Rating&#39;) +
-  scale_fill_gradient2(low = &#39;#ECF7B1&#39;, mid = &#39;#3FB4C4&#39;, high = &#39;#081D58&#39;,
-                       midpoint = 8.8, breaks = seq(10, 8, -.4)) + 
-  scale_x_discrete(expand = c(0, 0)) + 
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.text.y = element_text(angle = 90, hjust = .5),
-        rect = element_blank(),
-        legend.key.height = unit(4.1,&quot;line&quot;),
-        legend.title = element_text(angle = 90)) + 
-  guides(fill = guide_colorbar(title.position = &#39;right&#39;, title.hjust = .5))</code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<p>先使用<code>legend.title</code>参数，将图例名的角度旋转90度，然后在<code>guide_colorbar</code>中将其位置调整到图例条的右侧，并居中。最后就是图例上的刻度线了。虽然在之前更新的最新版<code>ggplot2</code>中，增加了一些针对图例的刻度的调整参数，但仅限于刻度的颜色和宽度，位置方面的调整可能还要等以后的更新，或者我去把<code>ggplot2</code>的内核搞懂（which is impossible）。这里，我暂且先把刻度去掉，于是下面就是最终的代码了：</p>
-<pre class="r"><code>ggplot(rm, aes(Season, fct_rev(Episode), fill = Rating)) + 
-  geom_tile() + 
-  geom_text(aes(label = Rating), 
-            color = ifelse(rm$Rating &gt; 8.7, &#39;white&#39;, &#39;black&#39;)) +
-  labs(title = &quot;Rick &amp; Morty Heatmap&quot;, y = &#39;Episode&#39;, fill = &#39;Episode Rating&#39;) +
-  scale_fill_gradient2(low = &#39;#ECF7B1&#39;, mid = &#39;#3FB4C4&#39;, high = &#39;#081D58&#39;,
-                       midpoint = 8.8, breaks = seq(10, 8, -.4)) + 
-  scale_x_discrete(expand = c(0, 0)) + 
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.text.y = element_text(angle = 90, hjust = .5),
-        rect = element_blank(),
-        legend.key.height = unit(4.1,&quot;line&quot;),
-        legend.title = element_text(angle = 90)) + 
-  guides(fill = guide_colorbar(title.position = &#39;right&#39;, title.hjust = .5,
-                               ticks = FALSE))</code></pre>
-<p><img src="/post/2018-10-19-rick-and-morty-heatmap_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<p>就像小学时的看图写话一样，看图写代码是一种很好的练习方式，以后有时间再找些图练一练吧，这次就先到这了。</p>
-<pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.5.1 (2018-07-02)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 7 x64 (build 7601) Service Pack 1
-## 
-## Matrix products: default
-## 
-## locale:
-## [1] LC_COLLATE=Chinese (Simplified)_People&#39;s Republic of China.936 
-## [2] LC_CTYPE=Chinese (Simplified)_People&#39;s Republic of China.936   
-## [3] LC_MONETARY=Chinese (Simplified)_People&#39;s Republic of China.936
-## [4] LC_NUMERIC=C                                                   
-## [5] LC_TIME=Chinese (Simplified)_People&#39;s Republic of China.936    
-## 
-## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
-## 
-## other attached packages:
-##  [1] bindrcpp_0.2.2  forcats_0.3.0   stringr_1.3.1   dplyr_0.7.6    
-##  [5] purrr_0.2.5     readr_1.1.1     tidyr_0.8.1     tibble_1.4.2   
-##  [9] ggplot2_3.0.0   tidyverse_1.2.1
-## 
-## loaded via a namespace (and not attached):
-##  [1] tidyselect_0.2.5 xfun_0.3         haven_1.1.2      lattice_0.20-35 
-##  [5] colorspace_1.3-2 htmltools_0.3.6  yaml_2.2.0       utf8_1.1.4      
-##  [9] rlang_0.2.2      pillar_1.3.0     glue_1.3.0       withr_2.1.2     
-## [13] modelr_0.1.2     readxl_1.1.0     bindr_0.1.1      plyr_1.8.4      
-## [17] munsell_0.5.0    blogdown_0.8     gtable_0.2.0     cellranger_1.1.0
-## [21] rvest_0.3.2      evaluate_0.12    labeling_0.3     knitr_1.20      
-## [25] fansi_0.4.0      broom_0.5.0      Rcpp_0.12.19     scales_1.0.0    
-## [29] backports_1.1.2  jsonlite_1.5     hms_0.4.2        digest_0.6.18   
-## [33] stringi_1.1.7    bookdown_0.7     grid_3.5.1       rprojroot_1.3-2 
-## [37] cli_1.0.1        tools_3.5.1      magrittr_1.5     lazyeval_0.2.1  
-## [41] crayon_1.3.4     pkgconfig_2.0.2  xml2_1.2.0       lubridate_1.7.4 
-## [45] assertthat_0.2.0 rmarkdown_1.10   httr_1.3.1       rstudioapi_0.8  
-## [49] R6_2.3.0         nlme_3.1-137     compiler_3.5.1</code></pre>
+
+<p>总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。</p>
+<p>还要吐槽一下，不论是<code>tidyverse</code>还是<code>Rmarkdown</code>，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。</p>
+<div id="article" class="section level1">
+<h1>Article</h1>
+<p>这里罗列了一些关于R语言的文章，主要包括R的优势、R的一些概念、R的历史以及如何学习R。</p>
+<div id="advantage" class="section level3">
+<h3>Advantage</h3>
+<ul>
+<li><p><a href="https://shirinsplayground.netlify.com/2017/09/ode_to_r/">Why I use R for Data Science - An Ode to R</a>（181110）介绍了R语言的一些优点，作者是从R开始接触编程语言的，观点可能有失偏颇；我也差不多是从R开始接触编程语言的，所以是不是真的偏颇了，我也看不出来。</p></li>
+<li><p><a href="https://www.business-science.io/business/2017/12/27/six-reasons-to-use-R-for-business.html">6 REASONS TO LEARN R FOR BUSINESS</a>（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。</p></li>
+</ul>
+</div>
+<div id="concept" class="section level3">
+<h3>Concept</h3>
+<ul>
+<li><p><a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/window-functions.html">Window functions</a>（181110）介绍了什么是<strong>window function</strong>，感觉我目前还没有把这个概念完全吃透，但后面有一些<code>dplyr</code>包的使用技巧，值得一看。</p></li>
+<li><p><a href="https://simplystatistics.org/2016/02/17/non-tidy-data/">Non-tidy data</a>（181110）有<strong>tidy data</strong>就是相应的<strong>non-tidy data</strong>，不过文章具体写的啥，我已经忘啦。</p></li>
+<li><p><a href="https://colinfay.me/explain-environments-eli5/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Explain R environments like I’m five</a>（181110）介绍什么是R语言的环境，真的非常简单易懂。</p></li>
+<li><p><a href="https://digitheadslabnotebook.blogspot.com/2011/06/environments-in-r.html">Environments in R</a>（190128）介绍了R中的环境和一些相关的内容，并没有看太明白。</p></li>
+</ul>
+</div>
+<div id="history" class="section level3">
+<h3>History</h3>
+<ul>
+<li><p><a href="https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1740-9713.2018.01169.x">R generation</a>（181110）详细介绍了R语言的历史。前段时间才看过，不知道为什么现在只剩一个摘要了，暂时先留着这个链接。</p></li>
+<li><p><a href="https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/">stringsAsFactors: An unauthorized biography</a>（181110）据说<code>stringsAsFactors</code>参数问题，是R语言历史上争论最激烈的问题。</p></li>
+<li><p><a href="https://colinfay.me/r-assignment/">Why do we use arrow as an assignment operator?</a>（181110）为什么用箭头作赋值符，了解一下？</p></li>
+<li><p><a href="https://jozefhajnala.gitlab.io/r/r908-10-year-old-code/">Here’s why 2019 is a great year to start with R: A story of 10 year old R code then and now</a>（190114）作者通过回顾自己时间前的代码，简单介绍了以下R的历史。</p></li>
+</ul>
+</div>
+<div id="learning" class="section level3">
+<h3>Learning</h3>
+<ul>
+<li><a href="http://varianceexplained.org/r/teach_ggplot2_to_beginners/">Don’t teach built-in plotting to beginners (teach ggplot2)</a>；<a href="http://varianceexplained.org/r/teach-tidyverse/#fnref:widyr">Teach the tidyverse to beginners</a>；<a href="http://varianceexplained.org/r/teach-hard-way/">Don’t teach students the hard way first</a>（181110）我接触R语言也有三年多了，但真正决定要认真学习它，还只是从去年夏天开始，其原因主要就是看了<a href="http://varianceexplained.org/">David Robinson</a>的这几篇文章。我个人认为，会用R和会用<code>tidyverse</code>，其实是两个完全不同的概念，如果没有<code>tidyverse</code>的话，我可能是不会想学R的。恰好有一个比较极端的例子来对比R的<code>base</code>包和<code>tidyverse</code>包的区别，放在这里。</li>
+</ul>
+<p>研究生最后一个学期曾帮助<del>mj同学</del>修改代码，<del>mj同学</del>是一个非常聪明的同学（这一点可以通过我编写的matlab实验程序证明，无论在反应速度还是在工作记忆能力方面，<del>mj同学</del>都是参与过我实验的300多人当中的佼佼者）。当时她写了下面的代码：</p>
+<pre class="r"><code>mean.matrix = tapply(datafile$depvar0, list(datafile$pp, datafile$condition), mean, na.rm = T)
+sd.matrix = tapply(datafile$depvar0, list(datafile$pp, datafile$condition), sd, na.rm = T)
+for(i in 1: nrow(datafile)){
+  datafile$zscore[i] = (datafile$depvar0[i] - mean.matrix[datafile$pp[i],datafile$condition[i]]) / sd.matrix[datafile$pp[i],datafile$condition[i]] 
+  }
+datafile &lt;- datafile[abs(datafile$zscore) &lt; 3,]
+datafile &lt;- na.omit(datafile)
+datafile[order(-datafile$zscore),]</code></pre>
+<p>这部分代码把我看傻了，看了好久也没看懂，在搞明白她到底要干什么之后（按某两个变量删超过3个标准差的数据），我改成了下面的代码（当然，只是管道中的一部分）：</p>
+<pre class="r"><code>  group_by(pp, condition) %&gt;% 
+  filter(near(depvar0, mean(depvar0), sd(depvar0) * 3)) %&gt;% 
+  ungroup()</code></pre>
+<p>所以，学R的话，直接学<code>tidyverse</code>就好了。</p>
+<ul>
+<li><p><a href="https://edwinth.github.io/blog-new-things/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Blog about something you just learned</a>（181110）我之所以也想写博客的原因所在。</p></li>
+<li><p><a href="https://www.analyticsvidhya.com/learning-paths-data-science-business-analytics-business-intelligence-big-data/learning-path-r-data-science/">LeaRning Path on R – Step by Step Guide to Learn Data Science on R</a>（181110）系统总结了学习R的路径。</p></li>
+<li><p><a href="http://r4stats.com/articles/why-r-is-hard-to-learn/">Why R is Hard to Learn</a>（181110）总结了一些R学习者的抱怨，内容我忘了，但看小标题，这文章是不是说反话呢？</p></li>
+<li><p><a href="http://r4stats.com/2017/03/23/the-tidyverse-curse/#comments">The Tidyverse Curse</a>（181110）上面那篇文章的后续，拿<code>dplyr</code>包对比了一下<code>tidyverse</code>和<code>base</code>的差异。同样，内容我忘了，所以不知道作者到底支持哪边了（不过既然我收藏了，应该还是支持<code>tidyverse</code>吧）。</p></li>
+<li><p><a href="https://www.business-science.io/learning-r/2018/03/03/how_to_learn_R_pt1.html">HOW TO LEARN R, PART 1: LEARN FROM A MASTER DATA SCIENTIST’S CODE</a>（181110）通过分析<strong>David Robinson</strong>博客中的代码，来探索该如何学习R。话说我最近正想把他的博客全都看一遍呢。</p></li>
+<li><p><a href="https://r-posts.com/advice-to-young-and-old-programmers-a-conversation-with-hadley-wickham/">Advice to Young (and Old) Programmers: A Conversation with Hadley Wickham</a>（181110）与大神<strong>Hadley Wickham</strong>的对话，内容不记得了，但肯定值得一读。</p></li>
+</ul>
+</div>
+</div>
+<div id="communication" class="section level1">
+<h1>Communication</h1>
+<p>这一部分包括与报告相关的内容，以及与<code>blogdown</code>和<code>shiny</code>相关的内容。</p>
+<div id="blogdown" class="section level3">
+<h3>Blogdown</h3>
+<ul>
+<li><a href="https://talesofr.wordpress.com/2017/08/18/starting-a-rmarkdown-blog-with-bookdown-hugo-github/">Starting a Rmarkdown Blog with Blogdown + Hugo + Github</a>（181110）看了好几篇介绍用<code>blogdown</code>搭建博客的文章，只有这一篇文章介绍的方法让我成功了。</li>
+</ul>
+</div>
+<div id="report" class="section level3">
+<h3>Report</h3>
+<ul>
+<li><a href="https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html">Create Multiple Reports with RMarkdown</a>（181129）介绍了如何用<code>Rmarkdown</code>批量生成报告，真的是非常实用了。</li>
+</ul>
+</div>
+<div id="shiny" class="section level3">
+<h3>Shiny</h3>
+<ul>
+<li><a href="http://shiny.rstudio.com/">Shiny</a>（181202）Shiny的官网，简单地看了下其中一个教程。</li>
+</ul>
+</div>
+<div id="word" class="section level3">
+<h3>Word</h3>
+<ul>
+<li><a href="https://rmarkdown.rstudio.com/articles_docx.html">Happy collaboration with Rmd to docx</a>（181110）因为工作中要写的报告基本上都是word文档，而写报告其实主要是在已有框架的基础上修改大量的短语和数字，很让人烦躁，于是就研究了下如何生成（至少半）自动化的word文档。</li>
+</ul>
+</div>
+</div>
+<div id="program" class="section level1">
+<h1>Program</h1>
+<p>这一部分包括自编函数、循环、管道以及Non-standard evaluation相关的内容，对于最后这项内容，我目前（19年2月21日）只能说是理解了一点点，要是能实际应用一下，自己写几个robust的函数出来，也许就能理解了。</p>
+<div id="evaluation" class="section level3">
+<h3>Evaluation</h3>
+<ul>
+<li><p><a href="http://rpubs.com/hadley/157957">Non-standard evaluation</a>（190221）Hadley大神介绍Non-standard evaluation的文章，看不太懂。</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html">Programming with dplyr</a>（190221）<code>dplyr</code>使用起来虽然很方便，但有时也会遇到一些问题，就这些问题，Hadley大神提供了解决方案，不过，同上，还是看不大懂。</p></li>
+<li><p><a href="https://edwinth.github.io/blog/dplyr-recipes/">Tidy evaluation, most common actions</a>（190221）;<a href="https://edwinth.github.io/blog/nse/">Non-standard evaluation, how tidy eval builds on base R</a>（190221）另一作者对上面文章做的总结和解读。</p></li>
+<li><p><a href="https://blog.revolutionanalytics.com/2017/12/introduction-to-seplyr.html">An introduction to seplyr</a>（190221）介绍了<code>seplyr</code>包，这个包实际上就是<code>dplyr</code>包的standard evaluation版本。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/r-formula-tutorial">Formulas in R Tutorial</a>（190221）系统介绍R中公式使用的文章，也涉及到了evaluation，就放到了这一标题下。</p></li>
+</ul>
+</div>
+<div id="function" class="section level3">
+<h3>Function</h3>
+<ul>
+<li><a href="https://ibecav.github.io/betterfunctions/">Writing better R functions part one</a>（190221）；<a href="https://ibecav.github.io/betterfunctions2/">Writing better R functions part two</a>（190221）；<a href="https://ibecav.github.io/betterfunctions3/">Writing better R functions part three</a>（190221）；<a href="https://ibecav.github.io/betterfunctions4/">Writing better R functions part four</a>（190221）通过一个实例，介绍了创建函数和完善函数的完整过程。看到第二部分就有点跟不上了，还是要通过自己的史记操作来掌握这些内容。</li>
+</ul>
+</div>
+<div id="loop" class="section level3">
+<h3>Loop</h3>
+<ul>
+<li><a href="https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r">A Tutorial on Loops in R - Usage and Alternatives</a>（190128）介绍了<code>R</code>中的几种循环，包括<code>for</code>循环、<code>while</code>循环以及<code>repeat</code>循环，这也是头一次知道<code>R</code>里还有个<code>repeat</code>循环。</li>
+</ul>
+</div>
+<div id="pipe" class="section level3">
+<h3>Pipe</h3>
+<ul>
+<li><p><a href="http://adolfoalvarez.cl/plumbers-chains-and-famous-painters-the-history-of-the-pipe-operator-in-r/">Plumbers, chains, and famous painters: The history of the pipe operator in R</a>（190221）介绍了管道函数的历史。</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/show-me-your-pipe/">Show me your pipe!</a>（190221）关于管道函数的，但时间久了，忘了内容具体写的啥了。</p></li>
+<li><p><a href="https://drdoane.com/writing-pipe-friendly-functions/">WRITING PIPE-FRIENDLY FUNCTIONS</a>（190221）如何写出对管道函数更友好的函数，同上，也忘了内容写的啥了。</p></li>
+</ul>
+</div>
+</div>
+<div id="tutorial" class="section level1">
+<h1>Tutorial</h1>
+<p>这一部分主要包括Onlinebook、<code>Tidyverse</code>以及与学习R相关的Website三部分，19年之后加入了Data Acquisition和Machine Learning两部分，这两项内容是我一直都很想学的，但也一直都处于连入门都算不上的水平，1月底又加入了Program部分。</p>
+<div id="data-acquisition" class="section level3">
+<h3>Data Acquisition</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/r-web-scraping-rvest?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Web Scraping in R: rvest Tutorial</a>（190103）爬虫的入门教程，介绍了<code>rvest</code>包，只能爬静态网页。</p></li>
+<li><p><a href="https://velaco.github.io/how-to-scrape-data-from-javascript-websites-with-R/">How to Scrape Data from a JavaScript Website with R</a>（190103）介绍了一种爬取动态网页（？）的方法，要用到<code>rvest</code>和<code>PhantomJS</code>包，我最终没有使用这种方法，因此也没有尝试。</p></li>
+<li><p><a href="https://datascienceplus.com/scraping-javascript-rendered-web-content-using-r/">Scraping Javascript-rendered web content using R</a>（190103）跟上面那个好像差不多，也没有去试。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r">Web Scraping with R and PhantomJS</a>（190103）还是同上。</p></li>
+<li><p><a href="http://ropensci.github.io/RSelenium/articles/basics.html">Basics·RSelenium/</a>（190103）<code>RSelenium</code>包的官方网站，这个包可以用来爬取动态网页，我试了这种方法，成功了，其实就是用来模拟鼠标操作的。</p></li>
+<li><p><a href="https://ikashnitsky.github.io/2017/data-acquisition-one/">Data acquisition in R (1/4)</a>;<a href="https://ikashnitsky.github.io/2017/data-acquisition-two/">Data acquisition in R (2/4)</a>;<a href="https://ikashnitsky.github.io/2017/data-acquisition-three/">Data acquisition in R (3/4)</a>（190114）介绍了一些数据的获取方法，似乎并不会有第四部分了。</p></li>
+<li><p><a href="https://cran.r-project.org/doc/manuals/r-release/R-data.html">R Data Import/Export</a>（190114）介绍数据导入和导出的文档，内容似乎比较旧，而且很多也用不上，需要的时候可以参考一下。</p></li>
+</ul>
+</div>
+<div id="machine-learning" class="section level3">
+<h3>Machine Learning</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/machine-learning-in-r">Machine Learning in R for beginners</a>（190103）用KNN算法介绍了机器学习，这种难度的教程比较适合我，哈哈。</p></li>
+<li><p><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/?from=%40&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">A visual introduction to machine learning</a>（190103）另一个介绍机器学习的文章，跟R没啥关系，但网页做得很酷炫。</p></li>
+<li><p><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-2/?from=%40&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Model Tuning and the Bias-Variance Tradeoff</a>（190103）上面那篇文章的后续，说是还有第三部分，但目前还没。</p></li>
+<li><p><a href="https://blog.datascienceheroes.com/introduction-to-machine-learning-for-non-developers/">Introduction to Machine Learning for non-developers</a>（190103）另一个介绍机器学习的教程，这次用的是随机森林算法。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/k-means-clustering-r?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">K-Means Clustering in R Tutorial</a>（190103）如题目所示，这篇介绍了K均值聚类。</p></li>
+<li><p><a href="http://www.blopig.com/blog/2017/04/a-very-basic-introduction-to-random-forests-using-r/">A very basic introduction to Random Forests using R</a>（190103）另一个介绍随机森林算法的文章。</p></li>
+</ul>
+</div>
+<div id="onlinebook" class="section level3">
+<h3>Onlinebook</h3>
+<ul>
+<li><p><a href="https://r4ds.had.co.nz/">R for Data Science</a>（181107）这本书应该是目前关于R语言数据分析的最好的一本书了，看过两遍，除了太偏向计算机专业和统计学专业的内容，都还好，虽然不建议从这本入门，但真正想学好R，肯定不能错过这本书。</p></li>
+<li><p><a href="https://style.tidyverse.org/">The tidyverse style guide</a>（181107）跟上面的书配套的书，介绍了<code>tidyverse</code>的代码风格，是在<a href="https://google.github.io/styleguide/Rguide.xml">Google’s R Style Guide</a>的基础之上逐渐演变出来了，可以使代码看起来更美观，更有可读性。</p></li>
+<li><p><a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The Definitive Guide</a>（181107）系统介绍<code>Rmarkdown</code>的书，主要是作为参考书，有选择性的阅读某些章节即可（然而我还是完整看了一遍）</p></li>
+<li><p><a href="http://www.gastonsanchez.com/r4strings/">Handling Strings with R</a>（181108） 介绍字符串处理的书，内容不多，也比较简单。</p></li>
+<li><p><a href="https://www.tidytextmining.com/">Text Mining with R</a>（181108）介绍了几种文本分析的技术以及几个案例，我个人比较喜欢的一本书，喜欢文本挖掘的可以看看。</p></li>
+<li><p><a href="https://bookdown.org/yihui/blogdown/">blogdown: Creating Websites with R Markdown</a>（181108）介绍如何用<code>blogdown</code>包搭建博客的书，然而我并没有通过这本书真正学会怎么搭博客，只是了解到了自己的知识有多么匮乏。</p></li>
+<li><p><a href="https://moderndive.com/index.html">An Introduction to Statistical and Data Sciences via R</a>（181108）介绍了一些统计和<code>tidyverse</code>包的基本知识，非常简单，适合入门，但目前这本书还没有完成。</p></li>
+<li><p><a href="https://rkabacoff.github.io/datavis/">Data Visualization with R</a>（181108）介绍了很多种图形的绘制方法，非常实用，如果早看到这本书，很多地方都不用我自己去研究了，强烈推荐。</p></li>
+<li><p><a href="http://socviz.co/">Data Visualization: A practical introduction</a>（181108） 挺久以前看的了，当时还没有完成，而且以前似乎不是叫现在这个名字。感觉没有上面那本书好，但有一章介绍了一些绘图的理论，值得一看。</p></li>
+<li><p><a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a>（181112）两年前的书，部分内容已经过时了，但帮我补充了很多诸如<strong>Vectorized Operations</strong>，<strong>Lazy Evaluation</strong>，<strong>Scoping Rules</strong>的知识，另外也让我找到了之前想了很久都没想起来的<code>dput</code>函数。</p></li>
+<li><p><a href="https://bookdown.org/rdpeng/exdata/">Exploratory Data Analysis with R</a>（181130）跟上面那本书是同一个作者，部分内容有重叠，虽然主要以<code>Base</code>绘图为主，但也介绍了<code>ggplot2</code>的一些内容，值得一看；另外，还有几章介绍了层次聚类、K均值聚类以及降维，基本上是没看懂。</p></li>
+<li><p><a href="https://livebook.datascienceheroes.com/">Data Science Live Book</a>（181218）一个R包的文档扩展成的书，排班有点乱，不推荐看。</p></li>
+<li><p><a href="https://bookdown.org/yihui/bookdown/">bookdown: Authoring Books and Technical Documents with R Markdown</a>（190128）<code>bookdown</code>的文档，我应该是用不上，随便看看。</p></li>
+<li><p><a href="https://bookdown.org/">bookdown: Authoring Books and Technical Documents with R Markdown</a>（190128）用<code>bookdown</code>写的书都会发布在这里，这一模块的大部分书都能在这里找到。</p></li>
+<li><p><a href="https://www.manning.com/books/r-in-action-second-edition?a_bid=5c2b1e1d&amp;a_aid=RiA2ed">R in Action, Second Edition</a>（1902221）《R语言实战》英文第二版的在线版，可以免费看。</p></li>
+</ul>
+</div>
+<div id="tidyverse" class="section level3">
+<h3>Tidyverse</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/tidyverse-tutorial-r">Getting Started with the Tidyverse: Tutorial</a>（181108）简单介绍了一下<code>tidyverse</code>包中的几个主要函数，没啥难度，部分内容需要翻墙才能看到。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/pipe-r-tutorial#notuse">Pipes in R Tutorial For Beginners</a>（181108）介绍了几种常见的管道函数（其实一种就够了），像我一样喜欢把代码都串起来的应该好好学学这个。</p></li>
+<li><p><a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Data Wrangling Part 1: Basic to Advanced Ways to Select Columns</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-2/">Data Wrangling Part 2: Transforming your columns into the right shape</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-3/">Data Wrangling Part 3: Basic and more advanced ways to filter rows</a>；<a href="https://suzan.rbind.io/2018/04/dplyr-tutorial-4/">Data Wrangling Part 4: Summarizing and slicing your data</a>（181108）系统介绍<code>dplyr</code>包的系列文章，非常值得一看。</p></li>
+<li><p><a href="https://statbandit.wordpress.com/2018/05/08/tidying-messy-excel-data-tidyxl/">TIDYING MESSY EXCEL DATA (TIDYXL)</a>（190128）介绍了几种清洗excel数据表格的包。</p></li>
+</ul>
+</div>
+<div id="website" class="section level3">
+<h3>Website</h3>
+<ul>
+<li><p><a href="https://www.statmethods.net/index.html">Quick-R</a>（181108）《R语言实战》作者的教程网站，很早以前看过的，内容应该比较基础。</p></li>
+<li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a>（181108）看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
+<li><p><a href="http://stat545.com/topics.html">stat545</a>（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
+<li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a>（181208）很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
+<li><p><a href="https://datacarpentry.org/R-ecology-lesson/index.html">Data Analysis and Visualization in R for Ecologists</a>（190114）一个简单但实用的R教程网站，跟生态学好像也没啥太多的关系，有一部分数据库的内容还挺适合我的。</p></li>
+</ul>
+</div>
+</div>
+<div id="visualization" class="section level1">
+<h1>Visualization</h1>
+<p>虽然这一部分叫可视化，但主要是与<code>ggplot2</code>相关的内容。</p>
+<div id="adjustment" class="section level3">
+<h3>Adjustment</h3>
+<ul>
+<li><p><a href="https://drsimonj.svbtle.com/ordering-categories-within-ggplot2-facets">Ordering categories within ggplot2 facets</a>（181110）解决了分面后的柱形图的排序问题。</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/customizing-time-and-date-scales-in-ggplot2/">Customizing time and date scales in ggplot2</a>（181110）涉及到时间和日期的标度调整，其实也可以迁移到其他类型。</p></li>
+<li><p><a href="https://shirinsplayground.netlify.com/2017/11/combine_point_boxplot_ggplot/">How to combine point and boxplots in timeline charts with ggplot2 facets</a>（181113）利用分面呈现了折线图+散点图与箱型图，非常有创意！</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/using-themes-in-ggplot2/">Using themes in ggplot2</a>（181115）简单介绍了下<code>ggplot2</code>的主题设置。</p></li>
+</ul>
+</div>
+<div id="basic" class="section level3">
+<h3>Basic</h3>
+<ul>
+<li><p><a href="https://www.r-graph-gallery.com/">the R Graph Gallery</a>（181114）汇总了很多可以用基础绘图工具和<code>ggplot2</code>绘制的图，附有相应的代码，可以说是非常棒的一个网站了。</p></li>
+<li><p><a href="https://ggplot2.tidyverse.org/index.html">Create Elegant Data Visualisations Using the Grammar of Graphics • ggplot2</a>（181113）<code>ggplot2</code>的官网。</p></li>
+<li><p><a href="https://academy.vertabelo.com/blog/introduction-to-ggplot2/">Introduction to ggplot2</a>（181110）<code>ggplot2</code>的简单介绍，用了<strong>Game of Thrones</strong>的数据。</p></li>
+<li><p><a href="http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/">Beautiful plotting in R: A ggplot2 cheatsheet</a>（181110）非常不错的一个<code>ggplot2</code>基础教程，如果有不知道该如何实现的地方，可以来这篇文章查一查。</p></li>
+<li><p><a href="http://zevross.com/blog/2014/11/20/under-the-hood-of-ggplot2-graphics-in-r/">Under the hood of ggplot2 graphics in R</a>（181110）上面那篇文章的作者的另一篇文章，没怎能看懂，先放着吧。</p></li>
+<li><p><a href="https://methodmatters.blogspot.com/2018/01/anscombes-quartet-1980s-edition.html">Anscombe’s Quartet: 1980’s Edition</a>（181113）复古风格的Anscombe’s quartet。</p></li>
+</ul>
+</div>
+<div id="color" class="section level3">
+<h3>Color</h3>
+<ul>
+<li><p><a href="https://rtask.thinkr.fr/blog/ggplot2-welcome-viridis/">Welcome viridis !</a>（181110）<code>ggplot2</code>更新到3.0.0时把viridis系列的Palette加了进去，这篇文章详细介绍了一下。</p></li>
+<li><p><a href="https://drsimonj.svbtle.com/creating-corporate-colour-palettes-for-ggplot2">Creating corporate colour palettes for ggplot2</a>（181110）自建palette。</p></li>
+<li><p><a href="https://ropensci.org/blog/2017/11/21/ochre/">ochRe - Australia themed colour palettes</a>（181114）介绍了<code>ochRe</code>包，这个包包括用澳大利亚的景色和艺术品等为基础设计的16个<code>palette</code>。</p></li>
+<li><p><a href="http://colorbrewer2.org/#type=sequential&amp;scheme=BuGn&amp;n=3">COLORBREWER 2.0</a>（181114）提供了一些可用于绘制地图的颜色。</p></li>
+</ul>
+</div>
+<div id="extension" class="section level3">
+<h3>Extension</h3>
+<ul>
+<li><p><a href="http://www.ggplot2-exts.org/">ggplot2 extensions</a>（181113）介绍了基于<code>ggplot2</code>的一些扩展包。</p></li>
+<li><p><a href="http://gallery.htmlwidgets.org/">htmlwidgets for R</a>（181113）R的一些可视化方面（也不全是）的扩展包。</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/googleVis/vignettes/googleVis_examples.html">googleVis examples</a>（181114）<code>gppgleVis</code>包的例子介绍，这些图都好漂亮了，有时间一定要研究一下这个包。</p></li>
+<li><p><a href="https://guangchuangyu.github.io/2018/04/setting-ggplot2-background-with-ggbackground/">setting ggplot2 background with ggbackground</a>（181110）给<code>ggplot2</code>作的图加个背景。不过我用这个技术来干其他事情了。</p></li>
+<li><p><a href="http://www.win-vector.com/blog/2018/10/faceted-graphs-with-cdata-and-ggplot2/">Faceted Graphs with cdata and ggplot2</a>（181110）介绍了<code>cdata</code>包与<code>ggplot2</code>分面的结合。</p></li>
+<li><p><a href="https://www.mango-solutions.com/blog/putting-the-cat-in-scatterplot">PUTTING THE CAT IN SCATTERPLOT</a>（181113）把猫的图片放进了散点图里，挺有意思。</p></li>
+<li><p><a href="https://www.data-imaginist.com/2017/i-made-a-3d-movie/">I made a 3D movie with ggplot2 once - here’s how I did it</a>（181113）没有标题说的那么夸张，只是做了个3D动图（然而也很厉害了）。</p></li>
+<li><p><a href="http://www.questionflow.org/2018/03/06/tao-of-tidygraph/">Tao of Tidygraph</a>（181114）使用<code>tidygraph</code>包对一本名为<strong>Tao Te Programming</strong>的书进行了<strong>network analysis</strong>，可惜这本书并不能免费获得。</p></li>
+</ul>
+</div>
+<div id="histogram" class="section level3">
+<h3>Histogram</h3>
+<ul>
+<li><a href="https://drsimonj.svbtle.com/pretty-histograms-with-ggplot2">Pretty histograms with ggplot2</a>（181113）一个简单的直方图。</li>
+</ul>
+</div>
+<div id="line-chart" class="section level3">
+<h3>Line Chart</h3>
+<ul>
+<li><p><a href="https://dominikkoch.github.io/Bump-Chart/">Bump Chart</a>（181110）介绍了如何画<strong>Bump Chart</strong>，我不知道中文名叫什么，但这肯定是一种折线图。</p></li>
+<li><p><a href="https://drsimonj.svbtle.com/label-line-ends-in-time-series-with-ggplot2">Label line ends in time series with ggplot2</a>（181110）给折线图的终点处贴标签，不用他的方法也可以实现。</p></li>
+</ul>
+</div>
+<div id="map" class="section level3">
+<h3>Map</h3>
+<ul>
+<li><a href="https://rud.is/b/2018/01/18/bitcoin-world-map-bubbles/">Bitcoin (World Map) Bubbles</a>（181114）一张关于比特币网络的非常漂亮的地图。</li>
+</ul>
+</div>
+<div id="scatter-plot" class="section level3">
+<h3>Scatter Plot</h3>
+<ul>
+<li><a href="https://drsimonj.svbtle.com/pretty-scatter-plots-with-ggplot2">Pretty scatter plots with ggplot2</a>（181113）隐藏了两个比较高端的技巧。</li>
+</ul>
+</div>
+<div id="theory" class="section level3">
+<h3>Theory</h3>
+<ul>
+<li><p><a href="https://www.stoltzmaniac.com/data-visualization-part-1/">Introduction to Data Visualization – Theory, R &amp; ggplot2</a>（181113）给出了好图、坏图和丑图的标准。</p></li>
+<li><p><a href="https://blog.revolutionanalytics.com/2009/01/10-tips-for-making-your-r-graphics-look-their-best.html">10 tips for making your R graphics look their best</a>（181113）很老的文章了，但有几条tips还值得一看。</p></li>
+</ul>
+</div>
+</div>
 
               
             </div>
@@ -465,8 +573,6 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="/tags/%E5%8F%AF%E8%A7%86%E5%8C%96/">可视化</a>
-
   <a class="tag tag--primary tag--small" href="/tags/%E6%95%99%E7%A8%8B/">教程</a>
 
                   </div>
@@ -480,7 +586,7 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/text-analysis-for-tianlong/" data-tooltip="利用文本分析对比两版本天龙八部">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -488,7 +594,7 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/10/%E6%97%A5%E8%AE%B0%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" data-tooltip="日记文本分析：第一部分">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/reading-records-analysis/" data-tooltip="11年-19年读书记录分析">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -506,19 +612,19 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2018/10/rick-and-morty-heatmap/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2019/02/r-source-collection/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2018/10/rick-and-morty-heatmap/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2019/02/r-source-collection/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2018/10/rick-and-morty-heatmap/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2019/02/r-source-collection/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -566,7 +672,7 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/text-analysis-for-tianlong/" data-tooltip="利用文本分析对比两版本天龙八部">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -574,7 +680,7 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/10/%E6%97%A5%E8%AE%B0%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" data-tooltip="日记文本分析：第一部分">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/reading-records-analysis/" data-tooltip="11年-19年读书记录分析">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -592,19 +698,19 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2018/10/rick-and-morty-heatmap/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2019/02/r-source-collection/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2018/10/rick-and-morty-heatmap/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2019/02/r-source-collection/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2018/10/rick-and-morty-heatmap/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2019/02/r-source-collection/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -634,19 +740,19 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2018%2F10%2Frick-and-morty-heatmap%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2019%2F02%2Fr-source-collection%2F">
           <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2018%2F10%2Frick-and-morty-heatmap%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2019%2F02%2Fr-source-collection%2F">
           <i class="fa fa-twitter"></i><span>Share on Twitter</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2018%2F10%2Frick-and-morty-heatmap%2F">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2019%2F02%2Fr-source-collection%2F">
           <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
         </a>
       </li>
@@ -973,9 +1079,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = '\/2018\/10\/rick-and-morty-heatmap\/';
+          this.page.url = '\/2019\/02\/r-source-collection\/';
           
-            this.page.identifier = '\/2018\/10\/rick-and-morty-heatmap\/'
+            this.page.identifier = '\/2019\/02\/r-source-collection\/'
           
         };
         (function() {
