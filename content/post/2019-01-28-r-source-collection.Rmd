@@ -95,7 +95,9 @@ datafile[order(-datafile$zscore),]
  
 ### Report
 
- - [Create Multiple Reports with RMarkdown](https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html)（181129）介绍了如何用`Rmarkdown`批量生成报告，真的是非常实用了。
+ - [Create Multiple Reports with RMarkdown](https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html)（181129）使用`Rmarkdown`批量生成报告，非常实用。
+ 
+ - [Adding GIF animations](https://blogdown-demo.rbind.io/2018/01/31/gif-animations/)（190228）于`Rmarkdown`中添加动图和生成动图。
  
 ### Shiny
 
@@ -242,6 +244,8 @@ the Bias-Variance Tradeoff](http://www.r2d3.us/visual-intro-to-machine-learning-
  - [How to combine point and boxplots in timeline charts with ggplot2 facets](https://shirinsplayground.netlify.com/2017/11/combine_point_boxplot_ggplot/)（181113）利用分面呈现了折线图+散点图与箱型图，非常有创意！
  
  - [Using themes in ggplot2](https://www.statworx.com/de/blog/using-themes-in-ggplot2/)（181115）简单介绍了下`ggplot2`的主题设置。
+ 
+ - [Custom themes in ggplot2](https://www.statworx.com/de/blog/custom-themes-in-ggplot2/)（190228）接着上篇，介绍了一个定制`theme`的例子。
 
 ### Basic
 
@@ -276,8 +280,6 @@ the Bias-Variance Tradeoff](http://www.r2d3.us/visual-intro-to-machine-learning-
  - [googleVis examples](https://cran.r-project.org/web/packages/googleVis/vignettes/googleVis_examples.html)（181114）`gppgleVis`包的例子介绍，这些图都好漂亮了，有时间一定要研究一下这个包。
 
  - [setting ggplot2 background with ggbackground](https://guangchuangyu.github.io/2018/04/setting-ggplot2-background-with-ggbackground/)（181110）给`ggplot2`作的图加个背景。不过我用这个技术来干其他事情了。
- 
- - [Faceted Graphs with cdata and ggplot2](http://www.win-vector.com/blog/2018/10/faceted-graphs-with-cdata-and-ggplot2/)（181110）介绍了`cdata`包与`ggplot2`分面的结合。
  
  - [PUTTING THE CAT IN SCATTERPLOT](https://www.mango-solutions.com/blog/putting-the-cat-in-scatterplot)（181113）把猫的图片放进了散点图里，挺有意思。
 
