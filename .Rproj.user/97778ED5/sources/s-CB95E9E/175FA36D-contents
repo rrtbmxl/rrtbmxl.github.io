@@ -6,7 +6,7 @@ categories:
   - R
 tags:
   - 教程
-slug: r-source-collection
+slug: r-resources-collection
 output:
   blogdown::html_page:
     toc: yes

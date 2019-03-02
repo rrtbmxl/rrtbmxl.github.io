@@ -21,7 +21,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
+    <meta name="generator" content="Hugo 0.54.0 with theme Tranquilpeak 0.4.3-BETA">
     <title>日记文本分析：第一部分</title>
     <meta name="author" content="孟祥良">
     <meta name="keywords" content="">
@@ -255,7 +255,10 @@ time &lt;- read_lines(&#39;dairy.txt&#39;) %&gt;% as.tibble() %&gt;% filter(str_
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>据说希腊的德尔菲神庙上刻着几条箴言，其中一条告诫我们要“认识你自己”。这条箴言刻起来容易，做起来却很难，甚至可能是人生最困难的事情之一。要想认识自己，大概有四种方法，一是客观内容的客观描述，如测量人的身高、体重等各种身体特征，这些特征在一定的时间内不会有太大幅度的变化，用来测量这些特征的工具也具有极高的信度和效度，因此不论从要了解的内容和用于了解该内容的方式，都是很客观的；二是客观内容的主观描述，如使用问卷量表测量人的各种能力，人的能力应该也是比较恒定的，但用于测量这些特征的工具，无论是编制过程还是施用过程，都避免不了与人为因素有关的干扰，即便硬要说它是客观的，也是“主观”的客观。三是主观内容的主观描述，如各种投射测验，对于这些测验，我没有实际接触过，但从书本上来看，难免不让我认为这种测验从内容到方式都不是那么客观；最后一种就显而易见了，即对主观内容的客观描述，如对推特的文本分析，我要进行的日记文本分析，也是这一范围之内的。日记本身是主观的产物，但这里我要对这些主观的内容进行客观的数据分析，进而从这一角度来加深对自己的了解，不过这个方法的局限性也很大，毕竟不是每个人都有几十万字的日记文本可以用来分析。另外再加一句，上面这段话，也可以说是对客观内容的主观描述。</p>
+              
+
+
+<p>据说希腊的德尔菲神庙上刻着几条箴言，其中一条告诫我们要“认识你自己”。这条箴言刻起来容易，做起来却很难，甚至可能是人生最困难的事情之一。要想认识自己，大概有四种方法，一是客观内容的客观描述，如测量人的身高、体重等各种身体特征，这些特征在一定的时间内不会有太大幅度的变化，用来测量这些特征的工具也具有极高的信度和效度，因此不论从要了解的内容和用于了解该内容的方式，都是很客观的；二是客观内容的主观描述，如使用问卷量表测量人的各种能力，人的能力应该也是比较恒定的，但用于测量这些特征的工具，无论是编制过程还是施用过程，都避免不了与人为因素有关的干扰，即便硬要说它是客观的，也是“主观”的客观。三是主观内容的主观描述，如各种投射测验，对于这些测验，我没有实际接触过，但从书本上来看，难免不让我认为这种测验从内容到方式都不是那么客观；最后一种就显而易见了，即对主观内容的客观描述，如对推特的文本分析，我要进行的日记文本分析，也是这一范围之内的。日记本身是主观的产物，但这里我要对这些主观的内容进行客观的数据分析，进而从这一角度来加深对自己的了解，不过这个方法的局限性也很大，毕竟不是每个人都有几十万字的日记文本可以用来分析。另外再加一句，上面这段话，也可以说是对客观内容的主观描述。</p>
 <p>这篇文章分为三部分，首先是对我每天记日记的时间进行一个简单的分析，然后对文本进行分词，针对词频进行分析，最后是一个初步的情感分析。下面先载入需要用到的包。</p>
 <div class="section level2">
 <h2>导入需要的包</h2>
@@ -969,7 +972,7 @@ dairy_month_word_sort &lt;- dairy_month_word_temp %&gt;%
           <div class="media">
             
             <div class="media-body">
-              <a class="link-unstyled" href="/2019/02/r-source-collection/">
+              <a class="link-unstyled" href="/2019/02/r-resources-collection/">
                 <h3 class="media-heading">R语言学习资源总结</h3>
               </a>
               <span class="media-meta">
@@ -981,8 +984,7 @@ dairy_month_word_sort &lt;- dairy_month_word_temp %&gt;%
 还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
 Article这里罗列了一些关于R语言的文章，主要包括R的优势、R的一些概念、R的历史以及如何学习R。
 AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语言的一些优点，作者是从R开始接触编程语言的，观点可能有失偏颇；我也差不多是从R开始接触编程语言的，所以是不是真的偏颇了，我也看不出来。
-6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。
-ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。</div>
+6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -1054,7 +1056,7 @@ rd$navigate(&#39;https://movie.douban.com/subject/25716096/comments?start=0&amp;
 money &lt;- 200people &lt;- 10给每个人安排一个随机数：
 set.seed(181209)rand_number &lt;- sample(1:10000, people, replace = TRUE)rand_number## [1] 4188 591 2386 4520 3692 979 8170 3728 7121 4408随后用每个随机数除以所有随机数的总和得到一个比值，乘以总钱数，进而得到每个人的钱数：
 rand_money &lt;- rand_number/sum(rand_number)*moneyrand_money## [1] 21.054219 2.971118 11.995073 22.723274 18.560692 4.921700 41.072820## [8] 18.741674 35.799211 22.160219然后就可以知道具体每个人得到多少钱了：
-paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.05元，红包剩余178.95元。&quot;paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[2], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:2]), 2), &#39;元。&#39;)## [1] &quot;ptdpj得到了2.</div>
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.</div>
             </div>
             <div style="clear:both;"></div>
             <hr>

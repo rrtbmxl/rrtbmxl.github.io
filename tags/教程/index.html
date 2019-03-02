@@ -17,7 +17,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="Hugo 0.31.1 with theme Tranquilpeak 0.4.3-BETA">
+    <meta name="generator" content="Hugo 0.54.0 with theme Tranquilpeak 0.4.3-BETA">
     <title>教程</title>
     <meta name="author" content="孟祥良">
     <meta name="keywords" content="">
@@ -228,7 +228,7 @@
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="/2019/02/r-source-collection/">
+        <a class="link-unstyled" href="/2019/02/r-resources-collection/">
           R语言学习资源总结
         </a>
       </h1>
@@ -259,9 +259,8 @@
 Article这里罗列了一些关于R语言的文章，主要包括R的优势、R的一些概念、R的历史以及如何学习R。
 AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语言的一些优点，作者是从R开始接触编程语言的，观点可能有失偏颇；我也差不多是从R开始接触编程语言的，所以是不是真的偏颇了，我也看不出来。
 6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。
-ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。
       <p>
-        <a href="/2019/02/r-source-collection/" class="postShorten-excerpt_link link">Continue reading</a>
+        <a href="/2019/02/r-resources-collection/" class="postShorten-excerpt_link link">Continue reading</a>
         
       </p>
     </div>
@@ -318,7 +317,7 @@ AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语�
 money &lt;- 200people &lt;- 10给每个人安排一个随机数：
 set.seed(181209)rand_number &lt;- sample(1:10000, people, replace = TRUE)rand_number## [1] 4188 591 2386 4520 3692 979 8170 3728 7121 4408随后用每个随机数除以所有随机数的总和得到一个比值，乘以总钱数，进而得到每个人的钱数：
 rand_money &lt;- rand_number/sum(rand_number)*moneyrand_money## [1] 21.054219 2.971118 11.995073 22.723274 18.560692 4.921700 41.072820## [8] 18.741674 35.799211 22.160219然后就可以知道具体每个人得到多少钱了：
-paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.05元，红包剩余178.95元。&quot;paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[2], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:2]), 2), &#39;元。&#39;)## [1] &quot;ptdpj得到了2.
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.
       <p>
         <a href="/2018/12/red-envelope/" class="postShorten-excerpt_link link">Continue reading</a>
         
@@ -497,7 +496,7 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
           <div class="media">
             
             <div class="media-body">
-              <a class="link-unstyled" href="/2019/02/r-source-collection/">
+              <a class="link-unstyled" href="/2019/02/r-resources-collection/">
                 <h3 class="media-heading">R语言学习资源总结</h3>
               </a>
               <span class="media-meta">
@@ -509,8 +508,7 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
 还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
 Article这里罗列了一些关于R语言的文章，主要包括R的优势、R的一些概念、R的历史以及如何学习R。
 AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语言的一些优点，作者是从R开始接触编程语言的，观点可能有失偏颇；我也差不多是从R开始接触编程语言的，所以是不是真的偏颇了，我也看不出来。
-6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。
-ConceptWindow functions（181110）介绍了什么是window function，感觉我目前还没有把这个概念完全吃透，但后面有一些dplyr包的使用技巧，值得一看。</div>
+6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -582,7 +580,7 @@ rd$navigate(&#39;https://movie.douban.com/subject/25716096/comments?start=0&amp;
 money &lt;- 200people &lt;- 10给每个人安排一个随机数：
 set.seed(181209)rand_number &lt;- sample(1:10000, people, replace = TRUE)rand_number## [1] 4188 591 2386 4520 3692 979 8170 3728 7121 4408随后用每个随机数除以所有随机数的总和得到一个比值，乘以总钱数，进而得到每个人的钱数：
 rand_money &lt;- rand_number/sum(rand_number)*moneyrand_money## [1] 21.054219 2.971118 11.995073 22.723274 18.560692 4.921700 41.072820## [8] 18.741674 35.799211 22.160219然后就可以知道具体每个人得到多少钱了：
-paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.05元，红包剩余178.95元。&quot;paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[2], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:2]), 2), &#39;元。&#39;)## [1] &quot;ptdpj得到了2.</div>
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
