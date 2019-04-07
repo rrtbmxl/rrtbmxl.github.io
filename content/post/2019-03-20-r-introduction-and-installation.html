@@ -1,0 +1,79 @@
+---
+title: R的介绍和安装
+author: ''
+date: '2019-03-20'
+categories:
+  - R
+tags:
+  - 教程
+slug: r-introduction-and-installation
+output:
+  blogdown::html_page:
+    toc: yes
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#r">R的介绍</a><ul>
+<li><a href="#r">R的简介</a></li>
+<li><a href="#r">R的优势</a></li>
+</ul></li>
+<li><a href="#r">R的安装</a></li>
+<li><a href="#rstudio">RStudio的安装</a></li>
+<li><a href="#rstudio">RStudio的设置</a><ul>
+<li><a href="#rstudio">RStudio的布局</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>190320</p>
+<div id="r" class="section level1">
+<h1>R的介绍</h1>
+<div id="r" class="section level3">
+<h3>R的简介</h3>
+<p><a href="https://en.wikipedia.org/wiki/R_(programming_language)">R</a>是一种编程语言，是可以用来进行统计计算和绘图的免费软件。</p>
+</div>
+<div id="r" class="section level3">
+<h3>R的优势</h3>
+<ul>
+<li><p>免费。虽然很多付费软件也并没有真的付费去用，但用R至少不用承受负罪感了。</p></li>
+<li><p>跨平台，Windows、linux和Mac都可以用。不过我只用过Windows，所以后面的安装教程也可能仅适用于Windows。</p></li>
+<li><p>有近14000个包（这是19年3月20日的数量。如果没记错的话，《R语言实战》第一版上这个数量是4000，这几年增加了将近10000个包）。</p></li>
+<li><p>有非常高端的绘图功能。这里主要指的是<code>ggplot2</code>包及其扩展。</p></li>
+<li><p>有非常强大的社区支持。遇到问题可以去<a href="https://stackoverflow.com/">StackOverflow</a>，<a href="https://community.rstudio.com/">RStudio Community</a>等地方寻找，不过像我这么内向的人，一般就打几个关键词，然后必应一下，基本上就能找到解决办法了。</p></li>
+<li><p>有<a href="https://www.rstudio.com/">RStudio</a>这个非常好用的IDE（Integrated Development Environment，集成开发环境）</p></li>
+</ul>
+</div>
+</div>
+<div id="r" class="section level1">
+<h1>R的安装</h1>
+<ul>
+<li><p>进入<a href="https://cran.r-project.org/">CRAN</a>;</p></li>
+<li><p>点左上角图标下的镜像，也就是<strong>Mirrors</strong>；</p></li>
+<li><p>寻找离自己近的镜像，我一般就用<strong>China</strong>下的第一个，清华的；</p></li>
+<li><p>根据自己的电脑系统点击不同的<strong>Download R for xxxxxx</strong>；</p></li>
+<li><p>点击<strong>install R for the first time</strong>，然后就会开始下载了；</p></li>
+<li><p>把下载好的安装包装上，所有选项都选默认吧。（换了新电脑后，只有一个C盘了，不存在想把程序装到别处的问题了）</p></li>
+<li><p>R已经装完了，但想要用的舒服还需要把RStudio装上。</p></li>
+</ul>
+</div>
+<div id="rstudio" class="section level1">
+<h1>RStudio的安装</h1>
+<ul>
+<li><p>点<a href="https://www.rstudio.com/products/rstudio/download/#download">这个链接</a>；</p></li>
+<li><p>点适合自己电脑系统的安装包，然后就会开始下载了；</p></li>
+<li><p>把安装包装上，同样，还是都选默认选项吧。最好把安装路径记下来，因为RStudio似乎不会自动生成桌面的快捷方式，需要你自己去把快捷方式弄到桌面上。</p></li>
+<li><p>双击图标进入RStudio，然后就可以愉快地使用R了。</p></li>
+</ul>
+</div>
+<div id="rstudio" class="section level1">
+<h1>RStudio的设置</h1>
+<div id="rstudio" class="section level3">
+<h3>RStudio的布局</h3>
+<ul>
+<li></li>
+<li>左下方是控制台（console）和terminal。控制台中可以输入简单的代码，及显示代码运行的记录，那个大于号叫提示符（prompt）。terminal似乎就是一个cmd，如果在这里输入notepad，就能打开记事本。</li>
+</ul>
+</div>
+</div>

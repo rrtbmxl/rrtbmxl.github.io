@@ -1,0 +1,1236 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+  
+
+
+  
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.54.0 with theme Tranquilpeak 0.4.3-BETA">
+    <title>R语言学习资源总结</title>
+    <meta name="author" content="孟祥良">
+    <meta name="keywords" content="">
+
+    <link rel="icon" href="/favicon.png">
+    
+
+    
+    <meta name="description" content="ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordMachine LearningBasicsClassificationClusteringDeep LearningDimensionality ReductionPredictionProgramEvaluationFunctionLoopPipeTutorialData AcquisitionOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicCommon PlotsColorExtensionLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
+Article这里罗列了一些关于R语言的文章，主要包括R的优势、与R相关的一些概念、R的历史以及如何学习R。
+Advantage这一部分收集了一些介绍R语言优势的文章。
+Why I use R for Data Science - An Ode to R (181110; 190306)">
+    <meta property="og:description" content="ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordMachine LearningBasicsClassificationClusteringDeep LearningDimensionality ReductionPredictionProgramEvaluationFunctionLoopPipeTutorialData AcquisitionOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicCommon PlotsColorExtensionLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
+Article这里罗列了一些关于R语言的文章，主要包括R的优势、与R相关的一些概念、R的历史以及如何学习R。
+Advantage这一部分收集了一些介绍R语言优势的文章。
+Why I use R for Data Science - An Ode to R (181110; 190306)">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="R语言学习资源总结">
+    <meta property="og:url" content="/2019/04/r-resources-collection/">
+    <meta property="og:site_name" content="RPG">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="RPG">
+    <meta name="twitter:description" content="ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordMachine LearningBasicsClassificationClusteringDeep LearningDimensionality ReductionPredictionProgramEvaluationFunctionLoopPipeTutorialData AcquisitionOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicCommon PlotsColorExtensionLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
+Article这里罗列了一些关于R语言的文章，主要包括R的优势、与R相关的一些概念、R的历史以及如何学习R。
+Advantage这一部分收集了一些介绍R语言优势的文章。
+Why I use R for Data Science - An Ode to R (181110; 190306)">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=640">
+    
+
+    
+    
+    
+
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="/css/style-jsjn0006wyhpyzivf6yceb31gvpjatbcs3qzjvlumobfnugccvobqwxnnaj8.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/">RPG</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about">
+          <img class="sidebar-profile-picture" src="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">孟祥良</h4>
+        
+          <h5 class="sidebar-profile-bio">R语言爱好者, 心理学专业硕士 &amp; FGO休闲玩家</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/rrtbmxl/rrtbmxl.github.io">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      
+      
+      <span class="sidebar-button-desc"></span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      
+      
+      <span class="sidebar-button-desc"></span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      R语言学习资源总结
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-04-07T00:00:00Z">
+        
+  April 7, 2019
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+<div id="TOC">
+<ul>
+<li><a href="#article">Article</a><ul>
+<li><a href="#advantage">Advantage</a></li>
+<li><a href="#concept">Concept</a></li>
+<li><a href="#history">History</a></li>
+<li><a href="#learning">Learning</a></li>
+</ul></li>
+<li><a href="#communication">Communication</a><ul>
+<li><a href="#blogdown">Blogdown</a></li>
+<li><a href="#report">Report</a></li>
+<li><a href="#shiny">Shiny</a></li>
+<li><a href="#word">Word</a></li>
+</ul></li>
+<li><a href="#machine-learning">Machine Learning</a><ul>
+<li><a href="#basics">Basics</a></li>
+<li><a href="#classification">Classification</a></li>
+<li><a href="#clustering">Clustering</a></li>
+<li><a href="#deep-learning">Deep Learning</a></li>
+<li><a href="#dimensionality-reduction">Dimensionality Reduction</a></li>
+<li><a href="#prediction">Prediction</a></li>
+</ul></li>
+<li><a href="#program">Program</a><ul>
+<li><a href="#evaluation">Evaluation</a></li>
+<li><a href="#function">Function</a></li>
+<li><a href="#loop">Loop</a></li>
+<li><a href="#pipe">Pipe</a></li>
+</ul></li>
+<li><a href="#tutorial">Tutorial</a><ul>
+<li><a href="#data-acquisition">Data Acquisition</a></li>
+<li><a href="#onlinebook">Onlinebook</a></li>
+<li><a href="#tidyverse">Tidyverse</a></li>
+<li><a href="#website">Website</a></li>
+</ul></li>
+<li><a href="#visualization">Visualization</a><ul>
+<li><a href="#adjustment">Adjustment</a></li>
+<li><a href="#basic">Basic</a></li>
+<li><a href="#common-plots">Common Plots</a></li>
+<li><a href="#color">Color</a></li>
+<li><a href="#extension">Extension</a></li>
+<li><a href="#line-chart">Line Chart</a></li>
+<li><a href="#map">Map</a></li>
+<li><a href="#scatter-plot">Scatter Plot</a></li>
+<li><a href="#theory">Theory</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。</p>
+<p>还要吐槽一下，不论是<code>tidyverse</code>还是<code>Rmarkdown</code>，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。</p>
+<div id="article" class="section level1">
+<h1>Article</h1>
+<p>这里罗列了一些关于R语言的文章，主要包括R的优势、与R相关的一些概念、R的历史以及如何学习R。</p>
+<div id="advantage" class="section level3">
+<h3>Advantage</h3>
+<p>这一部分收集了一些介绍R语言优势的文章。</p>
+<ul>
+<li><p><a href="https://shirinsplayground.netlify.com/2017/09/ode_to_r/">Why I use R for Data Science - An Ode to R</a> (181110; 190306)<br />
+以一个“grown up” with R的使用者视角，介绍了R语言的一些优点，包括：开源且跨平台；有众多用于解决各种问题的高质量包；绘图能力强大；统一且功能多样的IDE（Rstudio）；完善的社区支持。</p></li>
+<li><p><a href="https://www.business-science.io/business/2017/12/27/six-reasons-to-use-R-for-business.html">6 REASONS TO LEARN R FOR BUSINESS</a> (181110; 190306)<br />
+从商业的视角，以数据为基础，论证R语言的优势，包括：综合质量高；为非计算机科学家设计；因<code>tidyverse</code>的存在而易学；有大脑、有肌肉、有心脏；适合商业领域使用；完善的社区支持。</p></li>
+</ul>
+</div>
+<div id="concept" class="section level3">
+<h3>Concept</h3>
+<ul>
+<li><p><a href="https://colinfay.me/explain-environments-eli5/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Explain R environments like I’m five</a> (181110; 190307)<br />
+介绍什么是R语言的环境，非常简单易懂。</p></li>
+<li><p><a href="https://digitheadslabnotebook.blogspot.com/2011/06/environments-in-r.html">Environments in R</a>（190128）介绍了R中的环境和一些相关的内容，并没有看太明白。</p></li>
+</ul>
+</div>
+<div id="history" class="section level3">
+<h3>History</h3>
+<ul>
+<li><p><a href="https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1740-9713.2018.01169.x">R generation</a>（181110）详细介绍了R语言的历史。前段时间才看过，不知道为什么现在只剩一个摘要了，暂时先留着这个链接。</p></li>
+<li><p><a href="https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/">stringsAsFactors: An unauthorized biography</a>（181110）据说<code>stringsAsFactors</code>参数问题，是R语言历史上争论最激烈的问题。</p></li>
+<li><p><a href="https://colinfay.me/r-assignment/">Why do we use arrow as an assignment operator?</a>（181110）为什么用箭头作赋值符，了解一下？</p></li>
+<li><p><a href="https://jozefhajnala.gitlab.io/r/r908-10-year-old-code/">Here’s why 2019 is a great year to start with R: A story of 10 year old R code then and now</a>（190114）作者通过回顾自己十年前的代码，简单介绍了一下R的历史。</p></li>
+</ul>
+</div>
+<div id="learning" class="section level3">
+<h3>Learning</h3>
+<ul>
+<li><a href="http://varianceexplained.org/r/teach_ggplot2_to_beginners/">Don’t teach built-in plotting to beginners (teach ggplot2)</a>；<a href="http://varianceexplained.org/r/teach-tidyverse/#fnref:widyr">Teach the tidyverse to beginners</a>；<a href="http://varianceexplained.org/r/teach-hard-way/">Don’t teach students the hard way first</a>（181110）我接触R语言也有三年多了，但真正决定要认真学习它，还只是从去年夏天开始，其原因主要就是看了<a href="http://varianceexplained.org/">David Robinson</a>的这几篇文章。我个人认为，会用R和会用<code>tidyverse</code>，其实是两个完全不同的概念，如果没有<code>tidyverse</code>的话，我可能是不会想学R的。恰好有一个比较极端的例子来对比R的<code>base</code>包和<code>tidyverse</code>包的区别，放在这里。</li>
+</ul>
+<p>研究生最后一个学期曾帮助<del>mj同学</del>修改代码，<del>mj同学</del>是一个非常聪明的同学（这一点可以通过我编写的matlab实验程序证明，无论在反应速度还是在工作记忆能力方面，<del>mj同学</del>都是参与过我实验的300多人当中的佼佼者）。当时她写了下面的代码：</p>
+<pre class="r"><code>mean.matrix = tapply(datafile$depvar0, list(datafile$pp, datafile$condition), mean, na.rm = T)
+sd.matrix = tapply(datafile$depvar0, list(datafile$pp, datafile$condition), sd, na.rm = T)
+for(i in 1: nrow(datafile)){
+  datafile$zscore[i] = (datafile$depvar0[i] - mean.matrix[datafile$pp[i],datafile$condition[i]]) / sd.matrix[datafile$pp[i],datafile$condition[i]] 
+  }
+datafile &lt;- datafile[abs(datafile$zscore) &lt; 3,]
+datafile &lt;- na.omit(datafile)
+datafile[order(-datafile$zscore),]</code></pre>
+<p>这部分代码把我看傻了，看了好久也没看懂，在搞明白她到底要干什么之后（按某两个变量删超过3个标准差的数据），我改成了下面的代码（当然，只是管道中的一部分）：</p>
+<pre class="r"><code>  group_by(pp, condition) %&gt;% 
+  filter(near(depvar0, mean(depvar0), sd(depvar0) * 3)) %&gt;% 
+  ungroup()</code></pre>
+<p>所以，学R的话，直接学<code>tidyverse</code>就好了。</p>
+<ul>
+<li><p><a href="https://edwinth.github.io/blog-new-things/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Blog about something you just learned</a>（181110）我之所以也想写博客的原因所在。</p></li>
+<li><p><a href="https://www.analyticsvidhya.com/learning-paths-data-science-business-analytics-business-intelligence-big-data/learning-path-r-data-science/">LeaRning Path on R – Step by Step Guide to Learn Data Science on R</a>（181110）系统总结了学习R的路径。</p></li>
+<li><p><a href="http://r4stats.com/articles/why-r-is-hard-to-learn/">Why R is Hard to Learn</a>（181110）总结了一些R学习者的抱怨，内容我忘了，但看小标题，这文章是不是说反话呢？</p></li>
+<li><p><a href="http://r4stats.com/2017/03/23/the-tidyverse-curse/#comments">The Tidyverse Curse</a>（181110）上面那篇文章的后续，拿<code>dplyr</code>包对比了一下<code>tidyverse</code>和<code>base</code>的差异。同样，内容我忘了，所以不知道作者到底支持哪边了（不过既然我收藏了，应该还是支持<code>tidyverse</code>吧）。</p></li>
+<li><p><a href="https://www.business-science.io/learning-r/2018/03/03/how_to_learn_R_pt1.html">HOW TO LEARN R, PART 1: LEARN FROM A MASTER DATA SCIENTIST’S CODE</a>（181110）通过分析<strong>David Robinson</strong>博客中的代码，来探索该如何学习R。话说我最近正想把他的博客全都看一遍呢。</p></li>
+<li><p><a href="https://r-posts.com/advice-to-young-and-old-programmers-a-conversation-with-hadley-wickham/">Advice to Young (and Old) Programmers: A Conversation with Hadley Wickham</a>（181110）与大神<strong>Hadley Wickham</strong>的对话，内容不记得了，但肯定值得一读。</p></li>
+</ul>
+</div>
+</div>
+<div id="communication" class="section level1">
+<h1>Communication</h1>
+<p>这一部分包括与报告相关的内容，以及与<code>blogdown</code>和<code>shiny</code>相关的内容。</p>
+<div id="blogdown" class="section level3">
+<h3>Blogdown</h3>
+<ul>
+<li><p><a href="https://talesofr.wordpress.com/2017/08/18/starting-a-rmarkdown-blog-with-bookdown-hugo-github/">Starting a Rmarkdown Blog with Blogdown + Hugo + Github</a>（181110）看了好几篇介绍用<code>blogdown</code>搭建博客的文章，只有这一篇文章介绍的方法让我成功了。</p></li>
+<li><p><a href="https://blogdown-demo.rbind.io/2018/01/31/gif-animations/">Adding GIF animations</a> (190228; 190311)<br />
+介绍了在<code>blogdown</code>中添加动图和生成动图的方法。</p></li>
+</ul>
+</div>
+<div id="report" class="section level3">
+<h3>Report</h3>
+<p>这里的文章是关于使用<code>Rmarkdown</code>生成报告的。</p>
+<ul>
+<li><p><a href="https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html">Create Multiple Reports with RMarkdown</a> (181129; 190311)<br />
+使用<code>Rmarkdown</code>批量生成报告的教程，测试有效，非常实用。</p></li>
+<li><p><a href="https://scottishsnow.wordpress.com/2018/08/17/many-reports-from-1-rmarkdown-file/">MANY REPORTS FROM 1 RMARKDOWN FILE</a> (190311)<br />
+另一篇使用<code>Rmarkdown</code>批量生成报告的教程，没有实际测试，但应该没问题。</p></li>
+</ul>
+</div>
+<div id="shiny" class="section level3">
+<h3>Shiny</h3>
+<ul>
+<li><a href="http://shiny.rstudio.com/">Shiny</a>（181202）Shiny的官网，简单地看了下其中一个教程。</li>
+</ul>
+</div>
+<div id="word" class="section level3">
+<h3>Word</h3>
+<ul>
+<li><a href="https://rmarkdown.rstudio.com/articles_docx.html">Happy collaboration with Rmd to docx</a>（181110）因为工作中要写的报告基本上都是word文档，而写报告其实主要是在已有框架的基础上修改大量的短语和数字，很让人烦躁，于是就研究了下如何生成（至少半）自动化的word文档。</li>
+</ul>
+</div>
+</div>
+<div id="machine-learning" class="section level1">
+<h1>Machine Learning</h1>
+<p>这一部分收集了跟机器学习相关的文章和教程，虽然对这个领域很感兴趣，但目前还没有达到入门水平，希望哪天能有机会用到，而不是仅仅局限在看教程的阶段。</p>
+<div id="basics" class="section level3">
+<h3>Basics</h3>
+<ul>
+<li><p><a href="https://www.quantinsti.com/blog/machine-learning-basics?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Machine Learning Basics</a> (190319)<br />
+介绍了机器学习的历史，与深度学习和人工智能的关系，机器学习的原理和基本概念及对未来发展的展望，图文并茂。</p></li>
+<li><p><a href="https://semanti.ca/blog/?how-to-prepare-for-a-machine-learning-interview&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">How to Prepare for a Machine Learning Interview</a> (190313)<br />
+介绍如何应对机器学习的面试，后面列了一堆问题，几乎没有会的，但还是希望将来有一天能用上。</p></li>
+<li><p><a href="https://engmrk.com/feature-engineering-ver2/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Feature Engineering</a> (190325)<br />
+介绍了特征工程中可以采用的四种方法。</p></li>
+<li><p><a href="https://www.analyticsvidhya.com/blog/2017/09/common-machine-learning-algorithms/">Essentials of Machine Learning Algorithms (with Python and R Codes)</a> (190326)<br />
+介绍了一些常见的机器学习算法，和使用python和R跑这些模型的思路，以及相关的学习资源。</p></li>
+<li><p><a href="http://www.visiondummy.com/2014/04/curse-dimensionality-affect-classification/">The Curse of Dimensionality in classification</a> (190326)<br />
+介绍了变量过多时会产生的过度拟合问题，以及解决办法。虽然用了小猫小狗的图片，但还是没法全看懂。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/machine-deep-learning">Differences Between Machine Learning &amp; Deep Learning</a> (190327)<br />
+介绍了机器学习和深度学习相关的算法、应用以及两者之间的差别。</p></li>
+</ul>
+</div>
+<div id="classification" class="section level3">
+<h3>Classification</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/machine-learning-in-r">Machine Learning in R for beginners</a> (190103; 190318)<br />
+以KNN算法介绍了机器学习的整个流程，简单易懂。最后部分还介绍一下了<code>caret</code>包。</p></li>
+<li><p><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/?from=%40&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">A visual introduction to machine learning</a> (190103; 190318);<br />
+<a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-2/?from=%40&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Model Tuning and the Bias-Variance Tradeoff</a> (190103; 190318)<br />
+系列文章，利用决策树算法对机器学习中的一些概念以及bias和variance之间的权衡进行了介绍，网页做得很酷炫，但跟R没有关系。似乎会有第三部分，但目前还没见到。</p></li>
+<li><p><a href="https://blog.datascienceheroes.com/introduction-to-machine-learning-for-non-developers/">Introduction to Machine Learning for non-developers</a> (190103; 190318)<br />
+利用随机森林算法简单介绍了下机器学习，虽然没有用到R，但最后推荐了一下R。</p></li>
+<li><p><a href="http://www.blopig.com/blog/2017/04/a-very-basic-introduction-to-random-forests-using-r/">A very basic introduction to Random Forests using R</a> (190103; 190318)<br />
+针对<code>iris</code>数据集通过R对随机森林算法进行了介绍。</p></li>
+<li><p><a href="https://datascienceplus.com/random-forests-in-r/">Random Forests in R</a> (190318)<br />
+简单介绍了一点随机森林的理论知识，并附了一个R的实例。</p></li>
+<li><p><a href="https://www.analyticsvidhya.com/blog/2015/06/solution-kaggle-competition-bike-sharing-demand/">Kaggle Bike Sharing Demand Prediction – How I got in top 5 percentile of participants?</a> 190326<br />
+介绍了作者在kaggle上参与竞赛的完整流程。</p></li>
+<li><p><a href="https://www.tychobra.com/posts/claims-ml/">Machine Learning for Insurance Claims</a> (190328)<br />
+使用逻辑回归和<code>xgboost</code>对保险索赔分别进行了分类和预测，不懂背景知识，好像预测得不咋样啊，不过有个相关的<code>shiny</code>做的还挺不错的，有时间学习一下。</p></li>
+</ul>
+</div>
+<div id="clustering" class="section level3">
+<h3>Clustering</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/k-means-clustering-r?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">K-Means Clustering in R Tutorial</a> (190103; 190319)<br />
+介绍了一些关于聚类的概念，然后以Uber的一份数据采用K均值聚类算法进行了演示。对无监督学习的理解还不够深入，所以有个别地方没有看明白。</p></li>
+<li><p><a href="https://datascienceplus.com/using-mca-and-variable-clustering-in-r-for-insights-in-customer-attrition/">Using MCA and variable clustering in R for insights in customer attrition</a> (190321)<br />
+使用Multiple correspondence analysis方法和Variable clustering方法对顾客流失的影响因素进行了探索。虽然两种方法都是第一次听说，但看下来，也基本上都能明白，就是最后的代码写的太乱，有时间用tidyverse风格重写一遍看看。</p></li>
+<li><p><a href="https://www.inwt-statistics.com/read-blog/cluster-analysis-introduction.html">Cluster Analysis - Part 1: Introduction</a> (190325);<br />
+<a href="https://www.inwt-statistics.com/read-blog/cluster-analysis-hands-on.html">Cluster Analysis - Part 2: Hands On</a> (190325)<br />
+第一部分介绍了聚类的基本概念，第二部分使用k均值聚类对<code>mtcars</code>数据集进行了聚类分析。</p></li>
+<li><p><a href="https://chichacha.netlify.com/2018/11/12/utilizing-k-means-to-extract-colours-from-your-favourite-images/">UTILIZING K-MEANS TO EXTRACT COLOURS FROM YOUR FAVOURITE IMAGES</a> (190331)<br />
+使用K均值聚类从图片中提取颜色，可以用来做palette，同时也介绍了一些关于处理颜色的方法。</p></li>
+</ul>
+</div>
+<div id="deep-learning" class="section level3">
+<h3>Deep Learning</h3>
+<ul>
+<li><p><a href="https://towardsdatascience.com/a-weird-introduction-to-deep-learning-7828803693b0">A “weird” introduction to Deep Learning</a> (190324)<br />
+介绍了深度学习的一些理论、应用和资源，但愿哪天能用上。</p></li>
+<li><p><a href="http://blog.ephorie.de/understanding-the-magic-of-neural-networks">Understanding the Magic of Neural Networks</a> (190401)<br />
+拿小红帽的故事介绍了神经网络，同时也附有一个真实案例的代码。</p></li>
+<li><p><a href="https://towardsdatascience.com/the-most-intuitive-and-easiest-guide-for-artificial-neural-network-6a3f2bc0eecb">The Most Intuitive and Easiest Guide for Artificial Neural Network</a> (190402)；<br />
+<a href="https://towardsdatascience.com/the-most-intuitive-and-easiest-guide-for-convolutional-neural-network-3607be47480">The Most Intuitive and Easiest Guide for Convolutional Neural Network</a> (190402);<br />
+<a href="https://towardsdatascience.com/the-most-intuitive-and-easiest-guide-for-recurrent-neural-network-873c29da73c7">The Most Intuitive and Easiest Guide for Recurrent Neural Network</a> (190402)<br />
+介绍神经网络的一系列文章，第一篇介绍了人工神经网络，文章下面有上面那篇文章作者的留言；第二篇关于卷积神经网络的，缺一些必要知识，没有完全看懂；第三篇介绍循环神经网络，大部分都没看懂。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/neural-network-models-r">Neural Network Models in R</a> (190403)<br />
+介绍了神经网络的一些基本概念，并带有一个很简单的例子。看过上面的三篇文章后，这篇就很简单的，而且发现上上篇文章的作者，也在这里留言了……</p></li>
+<li><p><a href="https://medium.freecodecamp.org/want-to-know-how-deep-learning-works-heres-a-quick-guide-for-everyone-1aedeca88076">Want to know how Deep Learning works? Here’s a quick guide for everyone.</a> (190403)<br />
+介绍了机器学习和深度学习的一些概念，以及一些学习资源，获得了40K的claps。</p></li>
+</ul>
+</div>
+<div id="dimensionality-reduction" class="section level3">
+<h3>Dimensionality Reduction</h3>
+<ul>
+<li><a href="http://blog.schochastics.net/post/dimensionality-reduction-methods/">DIMENSIONALITY REDUCTION METHODS USING FIFA 18 PLAYER DATA</a> (190329)<br />
+使用游戏FIFA18的球员数据，介绍了PCA、t-SNE和SOM三种降维方法。</li>
+</ul>
+</div>
+<div id="prediction" class="section level3">
+<h3>Prediction</h3>
+<ul>
+<li><p><a href="https://datascienceplus.com/linear-regression-from-scratch-in-r/">Linear Regression from Scratch in R</a> (190311)<br />
+本以为这篇文章是系统介绍线性回归的，实际上只说了多元线性模型中那些β参数的值是怎么算出来的。然而看完我也不知道为什么那个公式能把那些参数算出来，看来还要补一些数学知识。</p></li>
+<li><p><a href="https://www.brodrigues.co/blog/2018-11-25-tidy_cv/">A tutorial on tidy cross-validation with R</a> (190328)<br />
+使用随机森林算法对波士顿的房价进行了预测，介绍了<code>tidymodels</code>的使用以及使用贝叶斯优化超参数的方法。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/tutorial-ridge-lasso-elastic-net">Regularization: Ridge, Lasso and Elastic Net</a> (190404)<br />
+看完ASL的相关章节后看的这篇教程，能看懂一点概念，但数学和代码就看不懂了。</p></li>
+</ul>
+</div>
+</div>
+<div id="program" class="section level1">
+<h1>Program</h1>
+<p>这一部分包括自编函数、循环、管道以及Non-standard evaluation相关的内容，对于最后这项内容，我目前（19年2月21日）只能说是理解了一点点，要是能实际应用一下，自己写几个robust的函数出来，也许就能理解了。</p>
+<div id="evaluation" class="section level3">
+<h3>Evaluation</h3>
+<ul>
+<li><p><a href="http://rpubs.com/hadley/157957">Non-standard evaluation</a>（190221）Hadley大神介绍Non-standard evaluation的文章，看不太懂。</p></li>
+<li><p><a href="https://edwinth.github.io/blog/dplyr-recipes/">Tidy evaluation, most common actions</a>（190221）;<a href="https://edwinth.github.io/blog/nse/">Non-standard evaluation, how tidy eval builds on base R</a>（190221）另一作者对上面文章做的总结和解读。</p></li>
+<li><p><a href="https://blog.revolutionanalytics.com/2017/12/introduction-to-seplyr.html">An introduction to seplyr</a>（190221）介绍了<code>seplyr</code>包，这个包实际上就是<code>dplyr</code>包的standard evaluation版本。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/r-formula-tutorial">Formulas in R Tutorial</a>（190221）系统介绍R中公式使用的文章，也涉及到了evaluation，就放到了这一标题下。</p></li>
+</ul>
+</div>
+<div id="function" class="section level3">
+<h3>Function</h3>
+<ul>
+<li><p><a href="https://ibecav.github.io/betterfunctions/">Writing better R functions part one</a>（190221）；<a href="https://ibecav.github.io/betterfunctions2/">Writing better R functions part two</a>（190221）；<a href="https://ibecav.github.io/betterfunctions3/">Writing better R functions part three</a>（190221）；<a href="https://ibecav.github.io/betterfunctions4/">Writing better R functions part four</a>（190221）通过一个实例，介绍了创建函数和完善函数的完整过程。看到第二部分就有点跟不上了，还是要通过自己的实际操作来掌握这些内容。</p></li>
+<li><p><a href="https://jcarroll.com.au/2018/10/06/adding-strings-in-r/">Adding strings in R</a>（190303）通过编写一个用于连接字符的<code>+</code>函数，引出了很多有意思（而且看不太懂）的话题。</p></li>
+</ul>
+</div>
+<div id="loop" class="section level3">
+<h3>Loop</h3>
+<ul>
+<li><a href="https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r">A Tutorial on Loops in R - Usage and Alternatives</a>（190128）介绍了<code>R</code>中的几种循环，包括<code>for</code>循环、<code>while</code>循环以及<code>repeat</code>循环，这也是头一次知道<code>R</code>里还有个<code>repeat</code>循环。</li>
+</ul>
+</div>
+<div id="pipe" class="section level3">
+<h3>Pipe</h3>
+<ul>
+<li><p><a href="http://adolfoalvarez.cl/plumbers-chains-and-famous-painters-the-history-of-the-pipe-operator-in-r/">Plumbers, chains, and famous painters: The history of the pipe operator in R</a>（190221）介绍了管道函数的历史。</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/show-me-your-pipe/">Show me your pipe!</a>（190221）关于管道函数的，但时间久了，忘了内容具体写的啥了。</p></li>
+<li><p><a href="https://drdoane.com/writing-pipe-friendly-functions/">WRITING PIPE-FRIENDLY FUNCTIONS</a>（190221）如何写出对管道函数更友好的函数，同上，也忘了内容写的啥了。</p></li>
+</ul>
+</div>
+</div>
+<div id="tutorial" class="section level1">
+<h1>Tutorial</h1>
+<p>这一部分主要包括Onlinebook、<code>Tidyverse</code>以及与学习R相关的Website三部分，19年之后加入了Data Acquisition和Machine Learning两部分，这两项内容是我一直都很想学的，但也一直都处于连入门都算不上的水平，1月底又加入了Program部分。</p>
+<div id="data-acquisition" class="section level3">
+<h3>Data Acquisition</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/r-web-scraping-rvest?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Web Scraping in R: rvest Tutorial</a>（190103）爬虫的入门教程，介绍了<code>rvest</code>包，只能爬静态网页。</p></li>
+<li><p><a href="https://velaco.github.io/how-to-scrape-data-from-javascript-websites-with-R/">How to Scrape Data from a JavaScript Website with R</a>（190103）介绍了一种爬取动态网页（？）的方法，要用到<code>rvest</code>和<code>PhantomJS</code>包，我最终没有使用这种方法，因此也没有尝试。</p></li>
+<li><p><a href="https://datascienceplus.com/scraping-javascript-rendered-web-content-using-r/">Scraping Javascript-rendered web content using R</a>（190103）跟上面那个好像差不多，也没有去试。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r">Web Scraping with R and PhantomJS</a>（190103）还是同上。</p></li>
+<li><p><a href="http://ropensci.github.io/RSelenium/articles/basics.html">Basics·RSelenium/</a>（190103）<code>RSelenium</code>包的官方网站，这个包可以用来爬取动态网页，我试了这种方法，成功了，其实就是用来模拟鼠标操作的。</p></li>
+<li><p><a href="https://ikashnitsky.github.io/2017/data-acquisition-one/">Data acquisition in R (1/4)</a>;<a href="https://ikashnitsky.github.io/2017/data-acquisition-two/">Data acquisition in R (2/4)</a>;<a href="https://ikashnitsky.github.io/2017/data-acquisition-three/">Data acquisition in R (3/4)</a>（190114）介绍了一些数据的获取方法，似乎并不会有第四部分了。</p></li>
+<li><p><a href="https://cran.r-project.org/doc/manuals/r-release/R-data.html">R Data Import/Export</a>（190114）介绍数据导入和导出的文档，内容似乎比较旧，而且很多也用不上，需要的时候可以参考一下。</p></li>
+</ul>
+</div>
+<div id="onlinebook" class="section level3">
+<h3>Onlinebook</h3>
+<p>这一模块收集了与R语言相关的在线书籍。通过读书学习，我们至少能又两种收获，一是把已觉知的未知转变为已知，二是把未觉知的未知转变为已觉知的未知，这两种收获在学习中都非常重要。《老子》中说：“为学日益，为道日损”，如果把两种收获分别视为一个分数的分子和分母的话，那为学日益，是增加了分子上的已知，即“有”，而为道日损，则是增加了分母上的未知，即“无”，当“损之又损”，将所有未知都纳入自己的觉知范围之内时，大概就能“无为”了吧。</p>
+<ul>
+<li><p><a href="https://r4ds.had.co.nz/">R for Data Science</a>（181107）这本书应该是目前关于R语言数据分析的最好的一本书了，看过两遍，除了太偏向计算机专业和统计学专业的内容，都还好，虽然不建议从这本入门，但真正想学好R，肯定不能错过这本书。</p></li>
+<li><p><a href="https://style.tidyverse.org/">The tidyverse style guide</a>（181107）跟上面的书配套的书，介绍了<code>tidyverse</code>的代码风格，是在<a href="https://google.github.io/styleguide/Rguide.xml">Google’s R Style Guide</a>的基础之上逐渐演变出来了，可以使代码看起来更美观，更有可读性。</p></li>
+<li><p><a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The Definitive Guide</a>（181107）系统介绍<code>Rmarkdown</code>的书，主要是作为参考书，有选择性的阅读某些章节即可（然而我还是完整看了一遍）</p></li>
+<li><p><a href="http://www.gastonsanchez.com/r4strings/">Handling Strings with R</a>（181108） 介绍字符串处理的书，内容不多，也比较简单。</p></li>
+<li><p><a href="https://www.tidytextmining.com/">Text Mining with R</a>（181108）介绍了几种文本分析的技术以及几个案例，我个人比较喜欢的一本书，喜欢文本挖掘的可以看看。</p></li>
+<li><p><a href="https://bookdown.org/yihui/blogdown/">blogdown: Creating Websites with R Markdown</a>（181108）介绍如何用<code>blogdown</code>包搭建博客的书，然而我并没有通过这本书真正学会怎么搭博客，只是了解到了自己的知识有多么匮乏。</p></li>
+<li><p><a href="https://moderndive.com/index.html">An Introduction to Statistical and Data Sciences via R</a>（181108）介绍了一些统计和<code>tidyverse</code>包的基本知识，非常简单，适合入门，但目前这本书还没有完成。</p></li>
+<li><p><a href="https://rkabacoff.github.io/datavis/">Data Visualization with R</a>（181108）介绍了很多种图形的绘制方法，非常实用，如果早看到这本书，很多地方都不用我自己去研究了，强烈推荐。</p></li>
+<li><p><a href="http://socviz.co/">Data Visualization: A practical introduction</a>（181108） 挺久以前看的了，当时还没有完成，而且以前似乎不是叫现在这个名字。感觉没有上面那本书好，但有一章介绍了一些绘图的理论，值得一看。</p></li>
+<li><p><a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a>（181112）两年前的书，部分内容已经过时了，但帮我补充了很多诸如<strong>Vectorized Operations</strong>，<strong>Lazy Evaluation</strong>，<strong>Scoping Rules</strong>的知识，另外也让我找到了之前想了很久都没想起来的<code>dput</code>函数。</p></li>
+<li><p><a href="https://bookdown.org/rdpeng/exdata/">Exploratory Data Analysis with R</a>（181130）跟上面那本书是同一个作者，部分内容有重叠，虽然主要以<code>Base</code>绘图为主，但也介绍了<code>ggplot2</code>的一些内容，值得一看；另外，还有几章介绍了层次聚类、K均值聚类以及降维，基本上是没看懂。</p></li>
+<li><p><a href="https://livebook.datascienceheroes.com/">Data Science Live Book</a>（181218）一个R包的文档扩展成的书，排版有点乱，不推荐看。</p></li>
+<li><p><a href="https://bookdown.org/yihui/bookdown/">bookdown: Authoring Books and Technical Documents with R Markdown</a>（190128）<code>bookdown</code>的文档，我应该是用不上，随便看看。</p></li>
+<li><p><a href="https://bookdown.org/">bookdown: Authoring Books and Technical Documents with R Markdown</a>（190128）用<code>bookdown</code>写的书都会发布在这里，这一模块的大部分书都能在这里找到。</p></li>
+<li><p><a href="https://www.manning.com/books/r-in-action-second-edition?a_bid=5c2b1e1d&amp;a_aid=RiA2ed">R in Action, Second Edition</a>（190221）《R语言实战》英文第二版的在线版，可以免费看。</p></li>
+<li><p><a href="https://bookdown.org/rdpeng/RProgDA/">Mastering Software Development in R</a> (190313)<br />
+介绍如何使用R进行开发的书，前两章主要讲了使用R编程的相关知识，后面两章分别介绍了如何使用R开发包和制图工具。很有启发性的一本书，之前不知道该如何实现的一些内容，现在有点思路了，但书中的内容很多都是点到即止，深入学习需要看更专门的书。</p></li>
+<li><p><a href="http://adv-r.had.co.nz/">Advanced R</a> (190403)<br />
+鼓起勇气看了一遍，难度时相当大，但也开阔了视角。</p></li>
+</ul>
+</div>
+<div id="tidyverse" class="section level3">
+<h3>Tidyverse</h3>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/tidyverse-tutorial-r">Getting Started with the Tidyverse: Tutorial</a>（181108）简单介绍了一下<code>tidyverse</code>包中的几个主要函数，没啥难度，部分内容需要翻墙才能看到。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/pipe-r-tutorial#notuse">Pipes in R Tutorial For Beginners</a>（181108）介绍了几种常见的管道函数（其实一种就够了），像我一样喜欢把代码都串起来的应该好好学学这个。</p></li>
+<li><p><a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Data Wrangling Part 1: Basic to Advanced Ways to Select Columns</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-2/">Data Wrangling Part 2: Transforming your columns into the right shape</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-3/">Data Wrangling Part 3: Basic and more advanced ways to filter rows</a>；<a href="https://suzan.rbind.io/2018/04/dplyr-tutorial-4/">Data Wrangling Part 4: Summarizing and slicing your data</a>（181108）系统介绍<code>dplyr</code>包的系列文章，非常值得一看。</p></li>
+<li><p><a href="https://statbandit.wordpress.com/2018/05/08/tidying-messy-excel-data-tidyxl/">TIDYING MESSY EXCEL DATA (TIDYXL)</a>（190128）介绍了几种清洗excel数据表格的包。</p></li>
+</ul>
+</div>
+<div id="website" class="section level3">
+<h3>Website</h3>
+<ul>
+<li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a>（181108）看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
+<li><p><a href="http://stat545.com/topics.html">stat545</a>（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
+<li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a>（181208）很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
+<li><p><a href="https://datacarpentry.org/R-ecology-lesson/index.html">Data Analysis and Visualization in R for Ecologists</a>（190114）一个简单但实用的R教程网站，跟生态学好像也没啥太多的关系，有一部分数据库的内容还挺适合我的。</p></li>
+<li><p><a href="https://www.listendata.com/p/r-programming-tutorials.html">100 FREE TUTORIALS FOR LEARNING R</a> (190313)<br />
+罗列的80来篇教程，全看了一遍，内容上有重复，前面44篇介绍了R的基本操作，偶有收获，但大部分比较过时，后面介绍了很多模型的实例，挺详细的，但缺点是排版不好，往往是先讲一大堆理论，再列一大堆代码，没有实际去跑，真跑的话，体验肯定不好。</p></li>
+</ul>
+</div>
+</div>
+<div id="visualization" class="section level1">
+<h1>Visualization</h1>
+<p>与可视化相关的内容，以与<code>ggplot2</code>相关内容为主。</p>
+<div id="adjustment" class="section level3">
+<h3>Adjustment</h3>
+<ul>
+<li><p><a href="https://drsimonj.svbtle.com/ordering-categories-within-ggplot2-facets">Ordering categories within ggplot2 facets</a>（181110）解决了分面后的柱形图的排序问题。</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/customizing-time-and-date-scales-in-ggplot2/">Customizing time and date scales in ggplot2</a>（181110）涉及到时间和日期的标度调整，其实也可以迁移到其他类型。</p></li>
+<li><p><a href="https://shirinsplayground.netlify.com/2017/11/combine_point_boxplot_ggplot/">How to combine point and boxplots in timeline charts with ggplot2 facets</a> (181113; 190306)<br />
+利用分面把折线图+散点图与箱型图同时呈现在一起。</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/using-themes-in-ggplot2/">Using themes in ggplot2</a>（181115）简单介绍了下<code>ggplot2</code>的主题设置。</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/custom-themes-in-ggplot2/">Custom themes in ggplot2</a>（190228）接着上篇，介绍了一个定制<code>theme</code>的例子。</p></li>
+</ul>
+</div>
+<div id="basic" class="section level3">
+<h3>Basic</h3>
+<ul>
+<li><p><a href="https://www.r-graph-gallery.com/">the R Graph Gallery</a>（181114）汇总了很多可以用基础绘图工具和<code>ggplot2</code>绘制的图，附有相应的代码，可以说是非常棒的一个网站了。</p></li>
+<li><p><a href="https://ggplot2.tidyverse.org/index.html">Create Elegant Data Visualisations Using the Grammar of Graphics • ggplot2</a>（181113）<code>ggplot2</code>的官网。</p></li>
+<li><p><a href="https://academy.vertabelo.com/blog/introduction-to-ggplot2/">Introduction to ggplot2</a>（181110）<code>ggplot2</code>的简单介绍，用了<strong>Game of Thrones</strong>的数据。</p></li>
+<li><p><a href="http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/">Beautiful plotting in R: A ggplot2 cheatsheet</a>（181110）非常不错的一个<code>ggplot2</code>基础教程，如果有不知道该如何实现的地方，可以来这篇文章查一查。</p></li>
+<li><p><a href="http://zevross.com/blog/2014/11/20/under-the-hood-of-ggplot2-graphics-in-r/">Under the hood of ggplot2 graphics in R</a>（181110）上面那篇文章的作者的另一篇文章，没怎能看懂，先放着吧。</p></li>
+<li><p><a href="https://methodmatters.blogspot.com/2018/01/anscombes-quartet-1980s-edition.html">Anscombe’s Quartet: 1980’s Edition</a>（181113）复古风格的Anscombe’s quartet。</p></li>
+</ul>
+</div>
+<div id="common-plots" class="section level3">
+<h3>Common Plots</h3>
+<p>这一部分收集了介绍常见统计图绘制方法的教程。</p>
+<ul>
+<li><p><a href="https://drsimonj.svbtle.com/pretty-histograms-with-ggplot2">Pretty histograms with ggplot2</a> (181113; 190306)<br />
+使用<code>ggplot2</code>绘制直方图的一个简单例子，同时介绍了针对连续性变量的颜色使用方法。</p></li>
+<li><p><a href="https://owi.usgs.gov/blog/boxplots/">Exploring ggplot2 boxplots - Defining limits and adjusting style</a> (190306)<br />
+非常详尽的箱线图绘制教程，不仅介绍了如何使用<code>ggplot2</code>绘制箱线图，还提供了很多针对图形进行调整的技术细节，值得仔细钻研一番。</p></li>
+</ul>
+</div>
+<div id="color" class="section level3">
+<h3>Color</h3>
+<ul>
+<li><p><a href="https://rtask.thinkr.fr/blog/ggplot2-welcome-viridis/">Welcome viridis !</a>（181110）<code>ggplot2</code>更新到3.0.0时把viridis系列的Palette加了进去，这篇文章详细介绍了一下。</p></li>
+<li><p><a href="https://drsimonj.svbtle.com/creating-corporate-colour-palettes-for-ggplot2">Creating corporate colour palettes for ggplot2</a>（181110）自建palette。</p></li>
+<li><p><a href="https://ropensci.org/blog/2017/11/21/ochre/">ochRe - Australia themed colour palettes</a>（181114）介绍了<code>ochRe</code>包，这个包包括用澳大利亚的景色和艺术品等为基础设计的16个<code>palette</code>。</p></li>
+<li><p><a href="http://colorbrewer2.org/#type=sequential&amp;scheme=BuGn&amp;n=3">COLORBREWER 2.0</a>（181114）提供了一些可用于绘制地图的颜色。</p></li>
+</ul>
+</div>
+<div id="extension" class="section level3">
+<h3>Extension</h3>
+<ul>
+<li><p><a href="http://www.ggplot2-exts.org/">ggplot2 extensions</a>（181113）介绍了基于<code>ggplot2</code>的一些扩展包。</p></li>
+<li><p><a href="http://gallery.htmlwidgets.org/">htmlwidgets for R</a>（181113）R的一些可视化方面（也不全是）的扩展包。</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/googleVis/vignettes/googleVis_examples.html">googleVis examples</a>（181114）<code>gppgleVis</code>包的例子介绍，这些图都好漂亮了，有时间一定要研究一下这个包。</p></li>
+<li><p><a href="https://guangchuangyu.github.io/2018/04/setting-ggplot2-background-with-ggbackground/">setting ggplot2 background with ggbackground</a>（181110）给<code>ggplot2</code>作的图加个背景。不过我用这个技术来干其他事情了。</p></li>
+<li><p><a href="https://www.mango-solutions.com/blog/putting-the-cat-in-scatterplot">PUTTING THE CAT IN SCATTERPLOT</a>（181113）把猫的图片放进了散点图里，挺有意思。</p></li>
+<li><p><a href="https://www.data-imaginist.com/2017/i-made-a-3d-movie/">I made a 3D movie with ggplot2 once - here’s how I did it</a>（181113）没有标题说的那么夸张，只是做了个3D动图（然而也很厉害了）。</p></li>
+<li><p><a href="http://www.questionflow.org/2018/03/06/tao-of-tidygraph/">Tao of Tidygraph</a>（181114）使用<code>tidygraph</code>包对一本名为<strong>Tao Te Programming</strong>的书进行了<strong>network analysis</strong>，可惜这本书并不能免费获得。</p></li>
+</ul>
+</div>
+<div id="line-chart" class="section level3">
+<h3>Line Chart</h3>
+<ul>
+<li><p><a href="https://dominikkoch.github.io/Bump-Chart/">Bump Chart</a>（181110）介绍了如何画<strong>Bump Chart</strong>，我不知道中文名叫什么，但这肯定是一种折线图。</p></li>
+<li><p><a href="https://drsimonj.svbtle.com/label-line-ends-in-time-series-with-ggplot2">Label line ends in time series with ggplot2</a>（181110）给折线图的终点处贴标签，不用他的方法也可以实现。</p></li>
+</ul>
+</div>
+<div id="map" class="section level3">
+<h3>Map</h3>
+<ul>
+<li><a href="https://rud.is/b/2018/01/18/bitcoin-world-map-bubbles/">Bitcoin (World Map) Bubbles</a>（181114）一张关于比特币网络的非常漂亮的地图。</li>
+</ul>
+</div>
+<div id="scatter-plot" class="section level3">
+<h3>Scatter Plot</h3>
+<ul>
+<li><a href="https://drsimonj.svbtle.com/pretty-scatter-plots-with-ggplot2">Pretty scatter plots with ggplot2</a>（181113）隐藏了两个比较高端的技巧。</li>
+</ul>
+</div>
+<div id="theory" class="section level3">
+<h3>Theory</h3>
+<ul>
+<li><p><a href="https://www.stoltzmaniac.com/data-visualization-part-1/">Introduction to Data Visualization – Theory, R &amp; ggplot2</a>（181113）给出了好图、坏图和丑图的标准。</p></li>
+<li><p><a href="https://blog.revolutionanalytics.com/2009/01/10-tips-for-making-your-r-graphics-look-their-best.html">10 tips for making your R graphics look their best</a>（181113）很老的文章了，但有几条tips还值得一看。</p></li>
+</ul>
+</div>
+</div>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/%E6%95%99%E7%A8%8B/">教程</a>
+
+                  </div>
+                
+              
+            
+            
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/r-notebook-and-plan/" data-tooltip="R学习笔记及学习计划">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2019/04/r-resources-collection/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2019/04/r-resources-collection/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2019/04/r-resources-collection/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2019 孟祥良. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/r-notebook-and-plan/" data-tooltip="R学习笔记及学习计划">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2019/04/r-resources-collection/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2019/04/r-resources-collection/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2019/04/r-resources-collection/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2019%2F04%2Fr-resources-collection%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2019%2F04%2Fr-resources-collection%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2019%2F04%2Fr-resources-collection%2F">
+          <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="//www.gravatar.com/avatar/9a7089fad6e7d2ebee69f9659db0c484?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">孟祥良</h4>
+    
+      <div id="about-card-bio">R语言爱好者, 心理学专业硕士 &amp; FGO休闲玩家</div>
+    
+    
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Search" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">no post found</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2019/04/r-resources-collection/">
+                <h3 class="media-heading">R语言学习资源总结</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordMachine LearningBasicsClassificationClusteringDeep LearningDimensionality ReductionPredictionProgramEvaluationFunctionLoopPipeTutorialData AcquisitionOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicCommon PlotsColorExtensionLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
+Article这里罗列了一些关于R语言的文章，主要包括R的优势、与R相关的一些概念、R的历史以及如何学习R。
+Advantage这一部分收集了一些介绍R语言优势的文章。
+Why I use R for Data Science - An Ode to R (181110; 190306)</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2019/04/r-notebook-and-plan/">
+                <h3 class="media-heading">R学习笔记及学习计划</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">人对事物的认识大概可以分为三个层次，从“未知的未知”到“已知的未知”再到“已知的已知”。如果确实是这样的话，那学习就可以分为两种，一种是把“未知的未知”变为“已知的未知”，如了解到这个世界上存在一种叫做“负数”的东西，但不知道它究竟指什么；另一种是把“已知的未知”变为“已知的已知”，如通过进一步的了解，获知“负数”的确切意义。德尔菲的神谕认为没有人比苏格拉底更聪明，其看重的可能并不在于苏格拉底是否比其他所有人拥有更多“已知的已知”，而是看到他比其他人拥有更多“已知的未知”。我不知道两种学习中哪一种更为重要，但我觉得，在大多数情况下，前一种学习都是后一种学习的先决条件。人的时间是有限的，没法把所有的知识都掌握，所以比较好的学习思路可能是先去获取足够多的“已知的未知”，再决定把哪些“已知的未知”转变为“已知的已知”。
+我接触R已经三年多了，但真正开始学习R，也就一年多的样子。我对R本身其实没有多大的兴趣，但当我把tidyverse变为“已知的未知”时，才对这门语言产生了热情。翻开哲学的入门书，很有可能会发现最开始的章节是以苏格拉底来划分的，如类似“前苏格拉底时代的哲学家们”的说法。在这里，我也想用tidyverse这个词来对我的笔记章节进行划分（当然，tidyverse对应的哲学家更有可能是笛卡尔），具体来说，包括tidyverse之前，用来介绍R的一些基本知识；tidyverse之内，用来介绍tidyverse核心包的使用方法；tidyverse之上，用来介绍建立在tidyverse核心包基础上的一些实用的包；tidyverse之外，用来介绍与tidyverse无关，但很有用的一些包。当然，这些内容中的很大一部分对我来说还是“已知的未知”。
+想弄这么个东西，目的主要有两个：一方面，把自己会的东西以教程的形式写出来，能让自己把“已知的已知”掌握得更牢固；另一方面，也能督促自己不断地去学习新知识，探索“未知的未知”，转化“已知的未知”。因此，内容方面，就包括我目前会的，和我将来想学的，具体内容可以看后面暂定的大纲。另外，我也给自己设定了几个要求：
+术语尽量给出参考资料和对应的英文，不知道该如何翻译的直接用英文，符号给出对应的英文及其读音；
+尽量保证所有的内容都能跟上R本体和所涉及的包的更新；
+暂定的提纲如下：
+tidyverse之前R的介绍及安装
+R的基本概念及操作
+R中的条件与循环
+tidyveRse之内使用readr导入数据
+使用rvest获取网络数据
+dbplyr与数据库
+dplyr包常用操作及管道操作符
+tidyr包常用操作及tidy data
+stringr包常用操作及正则表达式
+forcats常用操作
+lubridate常用操作
+purrr包探索
+组合使用
+tidyverse代码风格
+ggplot2基本统计图的绘制
+ggplot2统计图的调整
+ggplot2统计图的美化
+tidyverse之上使用tidytext进行文本分析
+使用ggvis绘制交互统计图
+使用gganimate绘制动态统计图
+tidyverse之外使用rmarkdown撰写报告
+使用blogdown搭建博客
+使用shiny制作网络应用</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2019/03/r-basic-concept-and-operation/">
+                <h3 class="media-heading">R的基本概念和操作</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">R的基本操作a.计算b.逻辑运算c.赋值R的基本概念a.数据类型b.函数c.包190323
+R的基本操作a.计算R可以作为计算器使用，+、-、*、/、^分别代表加减乘除和乘方：
+2 ^ 2 / 2 - (2 * 2 + 2)## [1] -4%%求余数，%/%求商：
+5 %% 2## [1] 15 %/% 2## [1] 2b.逻辑运算==、!=、&gt;、&gt;=、&lt;、&lt;=分别用来判断相等、不等、大于、大于等于、小于、小于等于的关系，符合逻辑返回TRUE，反之返回FALSE。对于部分字符（英文字母和汉字），似乎是字母顺序排在后面的更大；对于字符型数值，似乎与其数值型数值相等；另外，逻辑型数值中，TRUE等于1，而FALSE等于0：
+TRUE == 1## [1] TRUEFALSE == 0## [1] TRUE&#39;白马&#39; != &#39;马&#39;## [1] TRUE1 == &#39;1&#39;## [1] TRUE&#39;x&#39; &lt; &#39;y&#39;## [1] TRUE&#39;一&#39; &gt; &#39;二&#39;## [1] TRUEc.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2019/03/r-introduction-and-installation/">
+                <h3 class="media-heading">R的介绍和安装</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Mar 3, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">R的介绍R的简介R的优势R的安装RStudio的安装RStudio的设置RStudio的布局190320
+R的介绍R的简介R是一种编程语言，是可以用来进行统计计算和绘图的免费软件。
+R的优势免费。虽然很多付费软件也并没有真的付费去用，但用R至少不用承受负罪感了。
+跨平台，Windows、linux和Mac都可以用。不过我只用过Windows，所以后面的安装教程也可能仅适用于Windows。
+有近14000个包（这是19年3月20日的数量。如果没记错的话，《R语言实战》第一版上这个数量是4000，这几年增加了将近10000个包）。
+有非常高端的绘图功能。这里主要指的是ggplot2包及其扩展。
+有非常强大的社区支持。遇到问题可以去StackOverflow，RStudio Community等地方寻找，不过像我这么内向的人，一般就打几个关键词，然后必应一下，基本上就能找到解决办法了。
+有RStudio这个非常好用的IDE（Integrated Development Environment，集成开发环境）
+R的安装进入CRAN;
+点左上角图标下的镜像，也就是Mirrors；
+寻找离自己近的镜像，我一般就用China下的第一个，清华的；
+根据自己的电脑系统点击不同的Download R for xxxxxx；
+点击install R for the first time，然后就会开始下载了；
+把下载好的安装包装上，所有选项都选默认吧。（换了新电脑后，只有一个C盘了，不存在想把程序装到别处的问题了）
+R已经装完了，但想要用的舒服还需要把RStudio装上。
+RStudio的安装点这个链接；
+点适合自己电脑系统的安装包，然后就会开始下载了；
+把安装包装上，同样，还是都选默认选项吧。最好把安装路径记下来，因为RStudio似乎不会自动生成桌面的快捷方式，需要你自己去把快捷方式弄到桌面上。</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2019/02/reading-records-analysis/">
+                <h3 class="media-heading">11年-19年读书记录分析</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Feb 2, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">大概在10年前后，镇上给村里弄了个农村书屋，其他办公室都没地方，就把书连书柜都放我办公室里了。当时统计了下，一共有1500多本书，后来又给了一批，最终达到1800多本。这些书中的大部分质量和内容都很一般，但还是有几本好书的。反正工作也挺闲的，每天就靠看书打发点时间。时过境迁，工作已经换了几个，但看书的习惯还一直保持着。
+我从12年开始记日记，所以从那一年起，哪段时间看了哪本书都有记录。前几年把读书的记录整理过一次，但信息不全；今年过年前后，花了几天的时间又整理了一遍，添加了一些书籍相关的信息，就想着要不要也分析下（其实只是统计，并没有分析），算是对这些年自己读书的一个总结。有点遗憾的是，11年的记录只找到10月份到12月份的一部分，10月份以前的则完全没有记录，就没法统计进来了。
+但在分析之前，还得说明一下，有些书我没有进行统计，这些书包括以下四种：
+国产教材。比如为考研而看的《普通心理学》《心理学导论》之类的，但国外的教材，如《心理学与生活》等，不在此列。
+技术类的书。如跟R相关的书，有实体的，也有在线的，都没有被统计进来。
+电子书。不论是在手机上，kindle上，还是在更早的汉王上看的电子书，都没有统计进来。在看书这方面，我还是比较传统的，现在基本上只看实体书。
+太low的书。如，有套书名叫《卑鄙的圣人：曹操》，老爹看见了，非要买一套，当时只出了5本，就都买了下来。我是家里有的书就要看完的（大概就是看完这套书后改了这个“毛病”），就硬着头皮把这几本书看了一遍。听说这套书让作者赚了一百多万的版税，但这也无法掩盖作者文笔一般、词汇匮乏的事实。印象最深的是，曹操笑起来是“噗嗤”，袁绍笑起来也“噗嗤”，连曹操的老子曹嵩笑起来也“噗嗤”，这到底是一群大老爷们，还是一群小丫头片子啊（当然，用在曹嵩身上也许是合适的）？总之，这类书就不进行统计了。
+去掉以上四类书之后，剩下的书（共计465本次），就是要进行分析的了。
+首先还是载入分析需要用到的包：
+library(tidyverse)library(readxl)library(knitr)然后把数据导入并进行清洗。由于数据已经在excel里整理好了，所以也没啥好清洗的，只是对每本书的字数进行了校正：
+book &lt;- read_xlsx(&#39;读书记录.xlsx&#39;) %&gt;% select(year = 2, name = 4, publisher = 6, author = 7, country = 8, dynasty = 9, classification = 10, language = 11, price = 12, page = 13, words = 14, manner = 15) %&gt;% mutate(words = case_when(language %in% c(&#39;古汉&#39;, &#39;英汉&#39;) ~ words*1.3,language %in% c(&#39;古语&#39;, &#39;英语&#39;) ~ words*2,TRUE ~ words),words = ifelse(manner == &#39;书内&#39;, words*.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2019/01/pseudo-dynamic-website-scraping/">
+                <h3 class="media-heading">（伪）动态网页爬虫-《狗十三》豆瓣短评爬取</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jan 1, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">这周公司组织了电影赏析，看的电影是《狗十三》。我之前并没有看过这部电影，就想着先去豆瓣上看一下评论。这电影的评论还不少，有好几百条，完全可以全爬下来，分析一下。拉到页面下面，点击后页，url就会跟着变化（start=那里），说明这也不是啥动态网页，完全可以写个循环，用rvest包一页一页的爬。但实际爬取的时候，遇到了问题，就是未登陆的状态下，只能爬前220条评论。我搜索了一下模拟登录的办法，似乎是成功了，但后续该怎么弄，我就不知道了。我在这里卡了一天，没想到解决办法。昨天早上躺在被窝里，突然想到，我之前研究了下用RSelenium爬取动态网页，这里我完全可以先用RSelenium模拟登录，然后把网页当成动态网页爬啊。试了一下，成功了，下面就是相关的操作过程。
+首先还是载入需要用的包，要使用RSelenium包，还要先进行一些配置，具体内容可以看RSelenium包的官方网站（这网站好像需要科学上网）：
+library(tidyverse)library(RSelenium)library(rvest)library(jiebaR)library(wordcloud2)library(knitr)接下来跟Selenium Server进行连接，这里我用的是Chrome浏览器（变量名rd本应该在第一行，不知道为什么跑到下边去了……）：
+ rd &lt;- remoteDriver(remoteServerAddr = &quot;localhost&quot;,port = 4444L,browserName = &quot;chrome&quot;)然后模拟打开豆瓣电影的登录页面，输入用户名和密码，点击登录按键，就可以登录了：
+rd$open()rd$navigate(&#39;https://www.douban.com/accounts/login?source=movie&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;email&quot;]&#39;)we$sendKeysToElement(list(&#39;用户名&#39;))we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;password&quot;]&#39;)we$sendKeysToElement(list(&#39;密码&#39;))we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;lzform&quot;]/div[6]/input&#39;)we$clickElement()如果没接触过爬虫的，看着上面的代码可能有点懵，但实际上没啥太玄奥的东西。RSelenium包中的函数名就明白显示了它是干什么的，而参数中的那些xpath，在Chrome浏览器中都是可以直接复制出来的。
+后面就可以开始爬虫了。我只爬了评价星级、短评时间、有帮助次数和短评文本四项信息。需要说明的是，有些用户虽然写了短评，但不会打分，这种情况下，我认为的将其评价星级定位“无评价”。因为不打分也会影响后面内容的xpath，所以那部分用了一些if条件。另外，虽然不知道会不会用上，在每页的内容爬取完之后，我也会让程序随机休息几秒，省得被轻易地认定为是爬虫程序。
+rd$navigate(&#39;https://movie.douban.com/subject/25716096/comments?start=0&amp;limit=20&amp;sort=new_score&amp;status=P&#39;)dog13 &lt;- tibble()for (i in 1:50) {rank &lt;- character(0)time &lt;- character(0)help &lt;- character(0)text &lt;- character(0)temp &lt;- tibble()for (j in 1:20) {xpath_rank &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[2]&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_rank)rank[j] &lt;- ifelse(str_length(we$getElementAttribute(&#39;title&#39;) %&gt;% unlist()) &gt; 2, &#39;无评价&#39;, we$getElementAttribute(&#39;title&#39;) %&gt;% unlist())if (str_length(we$getElementAttribute(&#39;title&#39;) %&gt;% unlist()) &lt; 3) {xpath_time &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[3]&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_time)time[j] &lt;- we$getElementText() %&gt;% unlist()} else {xpath_time &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[2]&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_time)time[j] &lt;- we$getElementText() %&gt;% unlist()}xpath_help &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[1]/span&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_help)help[j] &lt;- we$getElementText() %&gt;% unlist()xpath_text &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/p/span&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_text)text[j] &lt;- we$getElementText() %&gt;% unlist()df &lt;- tibble(rank, time, help, text)}dog13 &lt;- bind_rows(dog13, df)rest &lt;- sample(1:10, 1)if (i &lt; 2) {we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;paginator&quot;]/a&#39;)we$clickElement()Sys.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/12/red-envelope/">
+                <h3 class="media-heading">使用R语言模拟抢红包</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Dec 12, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">有一次参加了一个特别无聊的讲座，实在是无事可做，就琢磨了一下像微信抢红包那样的机制是如何实现的。自己当时想了一个模拟的方式，出来的结果似乎也可以以假乱真。后来把相关的代码完善了下，用来在自己组织的R语言课上讲for循环和自编函数。现在把这些内容整理出来，权当作一篇小小的教程。
+首先假设，有人发了一个200块钱的红包，分给10个人抢：
+money &lt;- 200people &lt;- 10给每个人安排一个随机数：
+set.seed(181209)rand_number &lt;- sample(1:10000, people, replace = TRUE)rand_number## [1] 4188 591 2386 4520 3692 979 8170 3728 7121 4408随后用每个随机数除以所有随机数的总和得到一个比值，乘以总钱数，进而得到每个人的钱数：
+rand_money &lt;- rand_number/sum(rand_number)*moneyrand_money## [1] 21.054219 2.971118 11.995073 22.723274 18.560692 4.921700 41.072820## [8] 18.741674 35.799211 22.160219然后就可以知道具体每个人得到多少钱了：
+paste0(paste0(sample(letters, 5, replace = TRUE), collapse = &#39;&#39;),&#39;得到了&#39;, round(rand_money[1], 2), &#39;元，红包剩余&#39;, round(money - sum(rand_money[1:1]), 2), &#39;元。&#39;)## [1] &quot;hdprm得到了21.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/11/ggplot2-collection/">
+                <h3 class="media-heading">ggplot2及其扩展包绘图总结</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Nov 11, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Bar PlotBox PlotHeatmapHistgramLine ChartMapPie ChartRadar ChartScatter PlotTreemap像这样的教程应该有很多了，但为了自己查阅起来方便，我决定自己也写一个。这里我会尽量多的用到各种theme和palette，省得每次绘图还要一个一个试，看哪个好看（通过这个过程，我可能体验到了女生出门前挑衣服的感觉）。
+先把需要用到的包载入：
+library(tidyverse)library(ggthemes)Bar Plot直条图应该是最常见的了，在心理学论文中用到直条图时，一般都是把自变量放到x轴上，因变量放到y轴上，然后再添加误差条：
+iris %&gt;% group_by(Species) %&gt;% summarise(avg_sl = mean(Sepal.Length), se = sqrt(sd(Sepal.Length)/n())) %&gt;% ggplot(aes(Species, avg_sl, fill = Species)) + geom_col(width = .5) + geom_errorbar(aes(ymin = avg_sl - se, ymax = avg_sl + se),width = .3) + scale_y_continuous(expand = c(0, 0)) + scale_fill_brewer(palette = &#39;Set2&#39;) + labs(y = &#39;Sepal.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/11/text-analysis-for-tianlong/">
+                <h3 class="media-heading">利用文本分析对比两版本天龙八部</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Nov 11, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。
+首先还是载入相关的包，这次的包有点多：
+library(tidyverse)library(readxl)library(tidytext)library(jiebaR)library(ggthemes)library(widyr)library(igraph)library(ggraph)然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：
+tl_new &lt;- read_lines(&#39;tl_new.txt&#39;)tl_old &lt;- read_lines(&#39;tl_old.txt&#39;)tl_main &lt;- read_lines(&#39;tl_main.txt&#39;) %&gt;% .[-1]因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：
+tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)tl_old_tran &lt;- tl_old %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)上面的替换工作并不全，比如，同样是段郞，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/10/rick-and-morty-heatmap/">
+                <h3 class="media-heading">看图写代码：瑞克与莫蒂剧集评分热力图</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">大概是去年的这个时间，我在一个名叫Data Is Beautiful的reddit论坛上看到了一张Rick and Morty的分集评分热力图，就想用R把它重复出来。当时水平还不怎么样，只能画个大概出来，很多细节都不知道该如何呈现；前几个月，又重新尝试了下，大部分细节都知道该如何实现了，但还是差一点；这里再尝试一下，看看能不能完全重复出来，毕竟这张图应该就是用R画的。
+图是这样的：
+首先，还是先把需要用到的包载入：
+library(tidyverse)然后载入数据：
+rm &lt;- read_csv(&quot;rick &amp; morty.csv&quot;) %&gt;% mutate_at(vars(Episode, Season), as.factor)载入数据的时候，为方便后面的绘图，顺便把集数和季数两个变量改成了因子型。具体的数据是这样的：
+rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt;dbl&gt;## 1 1 1 8.1## 2 2 1 8.7## 3 3 1 8.4## 4 4 1 8.6## 5 5 1 8.9## 6 6 1 9 ## 7 7 1 8.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="no post found"
+         data-message-one="1 post found"
+         data-message-other="{n} posts found">
+         13 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="/js/script-qi9wbxp2ya2j6p7wx1i6tgavftewndznf4v0hy2gvivk1rxgc3lm7njqb6bz.min.js"></script>
+
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = '\/2019\/04\/r-resources-collection\/';
+          
+            this.page.identifier = '\/2019\/04\/r-resources-collection\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+    
+  </body>
+</html>
+

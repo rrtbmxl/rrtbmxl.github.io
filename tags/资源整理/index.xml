@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>资源整理 on RPG</title>
+    <link>/tags/%E8%B5%84%E6%BA%90%E6%95%B4%E7%90%86/</link>
+    <description>Recent content in 资源整理 on RPG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 04 Mar 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/%E8%B5%84%E6%BA%90%E6%95%B4%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>R包总结</title>
+      <link>/2019/03/package-collection/</link>
+      <pubDate>Mon, 04 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/03/package-collection/</guid>
+      <description>dplyr (0.8.0.1)emoGG (0.0.2)整理一下自己电脑上的R包。
+dplyr (0.8.0.1)tidyverse中的核心包，同时也是R中最实用的包之一，用来对数据进行清洗。自带五个文档，分别介绍了基本操作、表格间的拼接、窗口函数、如何用该包进行编程以及兼容性五个方面的内容。
+emoGG (0.0.2)建立在ggplot2之上，可以将表情映射到图上：
+library(tidyverse)library(emoGG)ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +geom_emoji(emoji=&amp;quot;1f606&amp;quot;) + add_emoji(&amp;#39;1f605&amp;#39;)目前似乎还无法把表情映射到color、fill等特征上，但emojifont (0.5.2)包可以做到这一点，可以参看该包自带的文档。
+</description>
+    </item>
+    
+  </channel>
+</rss>

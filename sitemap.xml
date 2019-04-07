@@ -3,8 +3,23 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/2019/02/r-resources-collection/</loc>
-    <lastmod>2019-02-21T00:00:00+00:00</lastmod>
+    <loc>/2019/04/r-resources-collection/</loc>
+    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019/04/r-notebook-and-plan/</loc>
+    <lastmod>2019-04-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019/03/r-basic-concept-and-operation/</loc>
+    <lastmod>2019-03-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019/03/r-introduction-and-installation/</loc>
+    <lastmod>2019-03-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -64,19 +79,19 @@
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2019-02-21T00:00:00+00:00</lastmod>
+    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/categories/r/</loc>
-    <lastmod>2019-02-21T00:00:00+00:00</lastmod>
+    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2019-02-21T00:00:00+00:00</lastmod>
+    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -99,7 +114,7 @@
   
   <url>
     <loc>/tags/%E6%95%99%E7%A8%8B/</loc>
-    <lastmod>2019-02-21T00:00:00+00:00</lastmod>
+    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

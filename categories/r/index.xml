@@ -6,22 +6,98 @@
     <description>Recent content in R on RPG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 21 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 07 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>R语言学习资源总结</title>
-      <link>/2019/02/r-resources-collection/</link>
-      <pubDate>Thu, 21 Feb 2019 00:00:00 +0000</pubDate>
+      <link>/2019/04/r-resources-collection/</link>
+      <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019/02/r-resources-collection/</guid>
-      <description>ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordProgramEvaluationFunctionLoopPipeTutorialData AcquisitionMachine LearningOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicColorExtensionHistogramLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+      <guid>/2019/04/r-resources-collection/</guid>
+      <description>ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordMachine LearningBasicsClassificationClusteringDeep LearningDimensionality ReductionPredictionProgramEvaluationFunctionLoopPipeTutorialData AcquisitionOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicCommon PlotsColorExtensionLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
 还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
-Article这里罗列了一些关于R语言的文章，主要包括R的优势、R的一些概念、R的历史以及如何学习R。
-AdvantageWhy I use R for Data Science - An Ode to R（181110）介绍了R语言的一些优点，作者是从R开始接触编程语言的，观点可能有失偏颇；我也差不多是从R开始接触编程语言的，所以是不是真的偏颇了，我也看不出来。
-6 REASONS TO LEARN R FOR BUSINESS（181110）从商业领域的角度谈为什么要学习R，这个是有数据支持的，比较令人信服。</description>
+Article这里罗列了一些关于R语言的文章，主要包括R的优势、与R相关的一些概念、R的历史以及如何学习R。
+Advantage这一部分收集了一些介绍R语言优势的文章。
+Why I use R for Data Science - An Ode to R (181110; 190306)</description>
+    </item>
+    
+    <item>
+      <title>R学习笔记及学习计划</title>
+      <link>/2019/04/r-notebook-and-plan/</link>
+      <pubDate>Sat, 06 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/04/r-notebook-and-plan/</guid>
+      <description>人对事物的认识大概可以分为三个层次，从“未知的未知”到“已知的未知”再到“已知的已知”。如果确实是这样的话，那学习就可以分为两种，一种是把“未知的未知”变为“已知的未知”，如了解到这个世界上存在一种叫做“负数”的东西，但不知道它究竟指什么；另一种是把“已知的未知”变为“已知的已知”，如通过进一步的了解，获知“负数”的确切意义。德尔菲的神谕认为没有人比苏格拉底更聪明，其看重的可能并不在于苏格拉底是否比其他所有人拥有更多“已知的已知”，而是看到他比其他人拥有更多“已知的未知”。我不知道两种学习中哪一种更为重要，但我觉得，在大多数情况下，前一种学习都是后一种学习的先决条件。人的时间是有限的，没法把所有的知识都掌握，所以比较好的学习思路可能是先去获取足够多的“已知的未知”，再决定把哪些“已知的未知”转变为“已知的已知”。
+我接触R已经三年多了，但真正开始学习R，也就一年多的样子。我对R本身其实没有多大的兴趣，但当我把tidyverse变为“已知的未知”时，才对这门语言产生了热情。翻开哲学的入门书，很有可能会发现最开始的章节是以苏格拉底来划分的，如类似“前苏格拉底时代的哲学家们”的说法。在这里，我也想用tidyverse这个词来对我的笔记章节进行划分（当然，tidyverse对应的哲学家更有可能是笛卡尔），具体来说，包括tidyverse之前，用来介绍R的一些基本知识；tidyverse之内，用来介绍tidyverse核心包的使用方法；tidyverse之上，用来介绍建立在tidyverse核心包基础上的一些实用的包；tidyverse之外，用来介绍与tidyverse无关，但很有用的一些包。当然，这些内容中的很大一部分对我来说还是“已知的未知”。
+想弄这么个东西，目的主要有两个：一方面，把自己会的东西以教程的形式写出来，能让自己把“已知的已知”掌握得更牢固；另一方面，也能督促自己不断地去学习新知识，探索“未知的未知”，转化“已知的未知”。因此，内容方面，就包括我目前会的，和我将来想学的，具体内容可以看后面暂定的大纲。另外，我也给自己设定了几个要求：
+术语尽量给出参考资料和对应的英文，不知道该如何翻译的直接用英文，符号给出对应的英文及其读音；
+尽量保证所有的内容都能跟上R本体和所涉及的包的更新；
+暂定的提纲如下：
+tidyverse之前R的介绍及安装
+R的基本概念及操作
+R中的条件与循环
+tidyveRse之内使用readr导入数据
+使用rvest获取网络数据
+dbplyr与数据库
+dplyr包常用操作及管道操作符
+tidyr包常用操作及tidy data
+stringr包常用操作及正则表达式
+forcats常用操作
+lubridate常用操作
+purrr包探索
+组合使用
+tidyverse代码风格
+ggplot2基本统计图的绘制
+ggplot2统计图的调整
+ggplot2统计图的美化
+tidyverse之上使用tidytext进行文本分析
+使用ggvis绘制交互统计图
+使用gganimate绘制动态统计图
+tidyverse之外使用rmarkdown撰写报告
+使用blogdown搭建博客
+使用shiny制作网络应用</description>
+    </item>
+    
+    <item>
+      <title>R的基本概念和操作</title>
+      <link>/2019/03/r-basic-concept-and-operation/</link>
+      <pubDate>Sat, 23 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/03/r-basic-concept-and-operation/</guid>
+      <description>R的基本操作a.计算b.逻辑运算c.赋值R的基本概念a.数据类型b.函数c.包190323
+R的基本操作a.计算R可以作为计算器使用，+、-、*、/、^分别代表加减乘除和乘方：
+2 ^ 2 / 2 - (2 * 2 + 2)## [1] -4%%求余数，%/%求商：
+5 %% 2## [1] 15 %/% 2## [1] 2b.逻辑运算==、!=、&amp;gt;、&amp;gt;=、&amp;lt;、&amp;lt;=分别用来判断相等、不等、大于、大于等于、小于、小于等于的关系，符合逻辑返回TRUE，反之返回FALSE。对于部分字符（英文字母和汉字），似乎是字母顺序排在后面的更大；对于字符型数值，似乎与其数值型数值相等；另外，逻辑型数值中，TRUE等于1，而FALSE等于0：
+TRUE == 1## [1] TRUEFALSE == 0## [1] TRUE&amp;#39;白马&amp;#39; != &amp;#39;马&amp;#39;## [1] TRUE1 == &amp;#39;1&amp;#39;## [1] TRUE&amp;#39;x&amp;#39; &amp;lt; &amp;#39;y&amp;#39;## [1] TRUE&amp;#39;一&amp;#39; &amp;gt; &amp;#39;二&amp;#39;## [1] TRUEc.</description>
+    </item>
+    
+    <item>
+      <title>R的介绍和安装</title>
+      <link>/2019/03/r-introduction-and-installation/</link>
+      <pubDate>Wed, 20 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/03/r-introduction-and-installation/</guid>
+      <description>R的介绍R的简介R的优势R的安装RStudio的安装RStudio的设置RStudio的布局190320
+R的介绍R的简介R是一种编程语言，是可以用来进行统计计算和绘图的免费软件。
+R的优势免费。虽然很多付费软件也并没有真的付费去用，但用R至少不用承受负罪感了。
+跨平台，Windows、linux和Mac都可以用。不过我只用过Windows，所以后面的安装教程也可能仅适用于Windows。
+有近14000个包（这是19年3月20日的数量。如果没记错的话，《R语言实战》第一版上这个数量是4000，这几年增加了将近10000个包）。
+有非常高端的绘图功能。这里主要指的是ggplot2包及其扩展。
+有非常强大的社区支持。遇到问题可以去StackOverflow，RStudio Community等地方寻找，不过像我这么内向的人，一般就打几个关键词，然后必应一下，基本上就能找到解决办法了。
+有RStudio这个非常好用的IDE（Integrated Development Environment，集成开发环境）
+R的安装进入CRAN;
+点左上角图标下的镜像，也就是Mirrors；
+寻找离自己近的镜像，我一般就用China下的第一个，清华的；
+根据自己的电脑系统点击不同的Download R for xxxxxx；
+点击install R for the first time，然后就会开始下载了；
+把下载好的安装包装上，所有选项都选默认吧。（换了新电脑后，只有一个C盘了，不存在想把程序装到别处的问题了）
+R已经装完了，但想要用的舒服还需要把RStudio装上。
+RStudio的安装点这个链接；
+点适合自己电脑系统的安装包，然后就会开始下载了；
+把安装包装上，同样，还是都选默认选项吧。最好把安装路径记下来，因为RStudio似乎不会自动生成桌面的快捷方式，需要你自己去把快捷方式弄到桌面上。</description>
     </item>
     
     <item>
