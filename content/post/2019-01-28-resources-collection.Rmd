@@ -18,73 +18,26 @@ output:
 
 # Article
 
-这里罗列了一些关于R语言的文章，主要包括R的优势、与R相关的一些概念、R的历史以及如何学习R。
-
-### Advantage
-
-这一部分收集了一些介绍R语言优势的文章。
-
- - [Why I use R for Data Science - An Ode to R](https://shirinsplayground.netlify.com/2017/09/ode_to_r/) (181110; 190306)  
- 以一个“grown up” with R的使用者视角，介绍了R语言的一些优点，包括：开源且跨平台；有众多用于解决各种问题的高质量包；绘图能力强大；统一且功能多样的IDE（Rstudio）；完善的社区支持。
- 
- - [6 REASONS TO LEARN R FOR BUSINESS](https://www.business-science.io/business/2017/12/27/six-reasons-to-use-R-for-business.html) (181110; 190306)  
- 从商业的视角，以数据为基础，论证R语言的优势，包括：综合质量高；为非计算机科学家设计；因`tidyverse`的存在而易学；有大脑、有肌肉、有心脏；适合商业领域使用；完善的社区支持。
+收集了一些关于R的概念和历史的文章。
 
 ### Concept
  
  - [Explain R environments like I’m five](https://colinfay.me/explain-environments-eli5/?utm_campaign=News&utm_medium=Community&utm_source=DataCamp.com) (181110; 190307)  
  介绍什么是R语言的环境，非常简单易懂。
  
- - [Environments in R](https://digitheadslabnotebook.blogspot.com/2011/06/environments-in-r.html)（190128）介绍了R中的环境和一些相关的内容，并没有看太明白。
+ - [Environments in R](https://digitheadslabnotebook.blogspot.com/2011/06/environments-in-r.html) (190128; 190408)  
+ 介绍了R中的环境和一些相关的内容，对于closure和namespace等概念还是无法理解。
  
 ### History
-
- - [R generation](https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1740-9713.2018.01169.x)（181110）详细介绍了R语言的历史。前段时间才看过，不知道为什么现在只剩一个摘要了，暂时先留着这个链接。
  
- - [stringsAsFactors: An unauthorized biography](https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/)（181110）据说`stringsAsFactors`参数问题，是R语言历史上争论最激烈的问题。
+ - [stringsAsFactors: An unauthorized biography](https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/) (181110; 190408)  
+ 据说`stringsAsFactors`参数问题，是R语言历史上争论最激烈的问题。
  
- - [Why do we use arrow as an assignment operator?](https://colinfay.me/r-assignment/)（181110）为什么用箭头作赋值符，了解一下？
+ - [Why do we use arrow as an assignment operator?](https://colinfay.me/r-assignment/) (181110; 190409)  
+ 介绍了R中使用`<-`作赋值符的由来？
  
- - [Here's why 2019 is a great year to start with R: A story of 10 year old R code then and now](https://jozefhajnala.gitlab.io/r/r908-10-year-old-code/)（190114）作者通过回顾自己十年前的代码，简单介绍了一下R的历史。
-
-### Learning
-
- - [Don't teach built-in plotting to beginners (teach ggplot2)](http://varianceexplained.org/r/teach_ggplot2_to_beginners/)；[Teach the tidyverse to beginners](http://varianceexplained.org/r/teach-tidyverse/#fnref:widyr)；[Don't teach students the hard way first](http://varianceexplained.org/r/teach-hard-way/)（181110）我接触R语言也有三年多了，但真正决定要认真学习它，还只是从去年夏天开始，其原因主要就是看了[David Robinson](http://varianceexplained.org/)的这几篇文章。我个人认为，会用R和会用`tidyverse`，其实是两个完全不同的概念，如果没有`tidyverse`的话，我可能是不会想学R的。恰好有一个比较极端的例子来对比R的`base`包和`tidyverse`包的区别，放在这里。
- 
- 研究生最后一个学期曾帮助~~mj同学~~修改代码，~~mj同学~~是一个非常聪明的同学（这一点可以通过我编写的matlab实验程序证明，无论在反应速度还是在工作记忆能力方面，~~mj同学~~都是参与过我实验的300多人当中的佼佼者）。当时她写了下面的代码：
- 
-```{r eval = FALSE}
-mean.matrix = tapply(datafile$depvar0, list(datafile$pp, datafile$condition), mean, na.rm = T)
-sd.matrix = tapply(datafile$depvar0, list(datafile$pp, datafile$condition), sd, na.rm = T)
-for(i in 1: nrow(datafile)){
-  datafile$zscore[i] = (datafile$depvar0[i] - mean.matrix[datafile$pp[i],datafile$condition[i]]) / sd.matrix[datafile$pp[i],datafile$condition[i]] 
-  }
-datafile <- datafile[abs(datafile$zscore) < 3,]
-datafile <- na.omit(datafile)
-datafile[order(-datafile$zscore),]
-```
- 
-这部分代码把我看傻了，看了好久也没看懂，在搞明白她到底要干什么之后（按某两个变量删超过3个标准差的数据），我改成了下面的代码（当然，只是管道中的一部分）：
- 
-```{r eval = FALSE}
-  group_by(pp, condition) %>% 
-  filter(near(depvar0, mean(depvar0), sd(depvar0) * 3)) %>% 
-  ungroup()
-```
- 
-所以，学R的话，直接学`tidyverse`就好了。
-
- - [Blog about something you just learned](https://edwinth.github.io/blog-new-things/?utm_campaign=News&utm_medium=Community&utm_source=DataCamp.com)（181110）我之所以也想写博客的原因所在。
- 
- - [LeaRning Path on R – Step by Step Guide to Learn Data Science on R](https://www.analyticsvidhya.com/learning-paths-data-science-business-analytics-business-intelligence-big-data/learning-path-r-data-science/)（181110）系统总结了学习R的路径。
- 
- - [Why R is Hard to Learn](http://r4stats.com/articles/why-r-is-hard-to-learn/)（181110）总结了一些R学习者的抱怨，内容我忘了，但看小标题，这文章是不是说反话呢？
- 
- - [The Tidyverse Curse](http://r4stats.com/2017/03/23/the-tidyverse-curse/#comments)（181110）上面那篇文章的后续，拿`dplyr`包对比了一下`tidyverse`和`base`的差异。同样，内容我忘了，所以不知道作者到底支持哪边了（不过既然我收藏了，应该还是支持`tidyverse`吧）。
- 
- - [HOW TO LEARN R, PART 1: LEARN FROM A MASTER DATA SCIENTIST'S CODE](https://www.business-science.io/learning-r/2018/03/03/how_to_learn_R_pt1.html)（181110）通过分析**David Robinson**博客中的代码，来探索该如何学习R。话说我最近正想把他的博客全都看一遍呢。
- 
- - [Advice to Young (and Old) Programmers: A Conversation with Hadley Wickham](https://r-posts.com/advice-to-young-and-old-programmers-a-conversation-with-hadley-wickham/)（181110）与大神**Hadley Wickham**的对话，内容不记得了，但肯定值得一读。
+ - [Here's why 2019 is a great year to start with R: A story of 10 year old R code then and now](https://jozefhajnala.gitlab.io/r/r908-10-year-old-code/) (190114; 190410)  
+ 回顾了近十年R的发展历程。
 
 # Communication
 
@@ -307,7 +260,13 @@ the Bias-Variance Tradeoff](http://www.r2d3.us/visual-intro-to-machine-learning-
  介绍如何使用R进行开发的书，前两章主要讲了使用R编程的相关知识，后面两章分别介绍了如何使用R开发包和制图工具。很有启发性的一本书，之前不知道该如何实现的一些内容，现在有点思路了，但书中的内容很多都是点到即止，深入学习需要看更专门的书。
  
  - [Advanced R ](http://adv-r.had.co.nz/) (190403)  
- 鼓起勇气看了一遍，难度时相当大，但也开阔了视角。
+ 鼓起勇气看了一遍，难度相当大，但也开阔了视角。
+ 
+ - [Fundamentals of Data Visualization](https://serialmentor.com/dataviz/) (190413)  
+ 人家手里的Aesthetic，才能称得上是Aesthetic啊！
+ 
+ - [Purrr tutorial](https://jennybc.github.io/purrr-tutorial/index.html) (190418)  
+ `purrr`包的教程，主要事实际的例子，所以有些重复的地方。
 
 ### Tidyverse
 

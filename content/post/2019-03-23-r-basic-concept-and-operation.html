@@ -21,7 +21,8 @@ output:
 <li><a href="#c.">c.赋值</a></li>
 </ul></li>
 <li><a href="#r">R的基本概念</a><ul>
-<li><a href="#a.">a.数据类型</a></li>
+<li><a href="#a.">a.数据结构</a></li>
+<li><a>数据探索</a></li>
 <li><a href="#b.">b.函数</a></li>
 <li><a href="#c.">c.包</a></li>
 </ul></li>
@@ -66,8 +67,33 @@ output:
 <div id="r" class="section level1">
 <h1>R的基本概念</h1>
 <div id="a." class="section level3">
-<h3>a.数据类型</h3>
-<p>主要包括向量、矩阵、数组、数据框和列表五种</p>
+<h3>a.数据结构</h3>
+<p>R中的数据结构主要包括向量（vector）、因子（factor）、数据框（dataframe）、矩阵（matrix）和数组（array）几种。</p>
+<p>向量包括原子向量（atomic vector）和列表（list），原子向量内的元素必须是同一种类型，而列表内的元素可以是不同的类型。</p>
+<p>原子向量分为数值型（numeric）、字符型（character）和逻辑性（logical）三种，数值型向量又分为整数型（integer）和双精度型（double），原子向量可以使用<code>c()</code>函数创建，c是combine或concatenate的缩写：</p>
+<pre class="r"><code>v_int &lt;- c(1L, 3L, 5L)
+v_dbl &lt;- c(1.1, 2.2, 3.3)
+v_chr &lt;- c(&#39;字&#39;, &#39;符&#39;, &#39;型&#39;)
+v_lgl &lt;- c(TRUE, FALSE, TRUE)</code></pre>
+<p>如果原子向量内部的数据类型不一致，则会发生强制转换（coercion），将所有数据转换成最灵活（flexible）的类型，类型的灵活性从高到低分别是字符型、双精度型、整数型和逻辑型：</p>
+<pre class="r"><code>(v_mix &lt;- c(1L, 1.1, &#39;字&#39;, TRUE))</code></pre>
+<pre><code>## [1] &quot;1&quot;    &quot;1.1&quot;  &quot;字&quot;   &quot;TRUE&quot;</code></pre>
+<p>索引（index）可以通过元素的位置来访问元素，该位置从1开始（而不是0），并置于方括号内（[]），负数表示去掉某元素，另外，也可以用逻辑值来访问元素：</p>
+<pre class="r"><code>v_mix[2:3]</code></pre>
+<pre><code>## [1] &quot;1.1&quot; &quot;字&quot;</code></pre>
+<pre class="r"><code>v_mix[-c(1, 4)]</code></pre>
+<pre><code>## [1] &quot;1.1&quot; &quot;字&quot;</code></pre>
+<pre class="r"><code>v_mix[c(FALSE, TRUE, TRUE, FALSE)]</code></pre>
+<pre><code>## [1] &quot;1.1&quot; &quot;字&quot;</code></pre>
+<p>列表，list函数，列表的索引</p>
+<p>因子，factor函数，levels参数；无序，有序；因子转数值</p>
+<p>数据框，最重要，同一列数据类型必须相同，但不同列的数据类型可以不同；data.frame函数，stringAsFactors参数，数据框的索引</p>
+<p>矩阵和数组，元素必须是同一类型</p>
+<p>特殊值NULL,表示没有任何值，NA表示缺失值</p>
+</div>
+<div class="section level3">
+<h3>数据探索</h3>
+<p>str函数、summary函数，mean函数、median函数、range函数、diff函数、IQR函数、quantile函数、var函数、sd函数、table函数、prob.table函数、round函数</p>
 </div>
 <div id="b." class="section level3">
 <h3>b.函数</h3>
@@ -75,6 +101,7 @@ output:
 <pre class="r"><code>mean(c(1, NA, 3, 6), na.rm = TRUE)</code></pre>
 <pre><code>## [1] 3.333333</code></pre>
 <p>函数<code>mean</code>告诉我们要求平均值，参数告诉我们要针对<code>c(1, NA, 3, 6)</code>这个向量求平均值，而<code>na.rm = TRUE</code>则告诉我们在求这个平均值的时候，要把缺失值NA去掉。</p>
+<p>sum和TRUE、FALSE的结合</p>
 </div>
 <div id="c." class="section level3">
 <h3>c.包</h3>

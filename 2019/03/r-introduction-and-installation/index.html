@@ -30,66 +30,42 @@
     
 
     
-    <meta name="description" content="R的介绍R的简介R的优势R的安装RStudio的安装RStudio的设置RStudio的布局190320
+    <meta name="description" content="R的介绍R的简介R的优势R的学习方法R的安装RStudio的安装RStudio简介RStudio的布局RStudio的设置190320
 R的介绍R的简介R是一种编程语言，是可以用来进行统计计算和绘图的免费软件。
-R的优势免费。虽然很多付费软件也并没有真的付费去用，但用R至少不用承受负罪感了。
-跨平台，Windows、linux和Mac都可以用。不过我只用过Windows，所以后面的安装教程也可能仅适用于Windows。
-有近14000个包（这是19年3月20日的数量。如果没记错的话，《R语言实战》第一版上这个数量是4000，这几年增加了将近10000个包）。
-有非常高端的绘图功能。这里主要指的是ggplot2包及其扩展。
-有非常强大的社区支持。遇到问题可以去StackOverflow，RStudio Community等地方寻找，不过像我这么内向的人，一般就打几个关键词，然后必应一下，基本上就能找到解决办法了。
-有RStudio这个非常好用的IDE（Integrated Development Environment，集成开发环境）
-R的安装进入CRAN;
-点左上角图标下的镜像，也就是Mirrors；
-寻找离自己近的镜像，我一般就用China下的第一个，清华的；
-根据自己的电脑系统点击不同的Download R for xxxxxx；
-点击install R for the first time，然后就会开始下载了；
-把下载好的安装包装上，所有选项都选默认吧。（换了新电脑后，只有一个C盘了，不存在想把程序装到别处的问题了）
-R已经装完了，但想要用的舒服还需要把RStudio装上。
-RStudio的安装点这个链接；
-点适合自己电脑系统的安装包，然后就会开始下载了；
-把安装包装上，同样，还是都选默认选项吧。最好把安装路径记下来，因为RStudio似乎不会自动生成桌面的快捷方式，需要你自己去把快捷方式弄到桌面上。">
-    <meta property="og:description" content="R的介绍R的简介R的优势R的安装RStudio的安装RStudio的设置RStudio的布局190320
+R的优势有一些文章介绍了R的优势，如：Why I use R for Data Science - An Ode to R；6 REASONS TO LEARN R FOR BUSINESS。不过对我来说，主要的优势还是以下几个：
+免费；
+无需太多的编程知识（在tidyverse等包的帮助下，即便没有正式的计算机科学或软件工程训练也能比较容易地上手）；
+RStudio这个IDE（Integrated Development Environment，集成开发环境）太好用了；
+R的学习方法直接学习tidyverse，参考：
+Don’t teach built-in plotting to beginners (teach ggplot2)：
+Teach the tidyverse to beginners；
+Don’t teach students the hard way first；研究生阶段，同学曾给我一份代码，包括以下部分：">
+    <meta property="og:description" content="R的介绍R的简介R的优势R的学习方法R的安装RStudio的安装RStudio简介RStudio的布局RStudio的设置190320
 R的介绍R的简介R是一种编程语言，是可以用来进行统计计算和绘图的免费软件。
-R的优势免费。虽然很多付费软件也并没有真的付费去用，但用R至少不用承受负罪感了。
-跨平台，Windows、linux和Mac都可以用。不过我只用过Windows，所以后面的安装教程也可能仅适用于Windows。
-有近14000个包（这是19年3月20日的数量。如果没记错的话，《R语言实战》第一版上这个数量是4000，这几年增加了将近10000个包）。
-有非常高端的绘图功能。这里主要指的是ggplot2包及其扩展。
-有非常强大的社区支持。遇到问题可以去StackOverflow，RStudio Community等地方寻找，不过像我这么内向的人，一般就打几个关键词，然后必应一下，基本上就能找到解决办法了。
-有RStudio这个非常好用的IDE（Integrated Development Environment，集成开发环境）
-R的安装进入CRAN;
-点左上角图标下的镜像，也就是Mirrors；
-寻找离自己近的镜像，我一般就用China下的第一个，清华的；
-根据自己的电脑系统点击不同的Download R for xxxxxx；
-点击install R for the first time，然后就会开始下载了；
-把下载好的安装包装上，所有选项都选默认吧。（换了新电脑后，只有一个C盘了，不存在想把程序装到别处的问题了）
-R已经装完了，但想要用的舒服还需要把RStudio装上。
-RStudio的安装点这个链接；
-点适合自己电脑系统的安装包，然后就会开始下载了；
-把安装包装上，同样，还是都选默认选项吧。最好把安装路径记下来，因为RStudio似乎不会自动生成桌面的快捷方式，需要你自己去把快捷方式弄到桌面上。">
+R的优势有一些文章介绍了R的优势，如：Why I use R for Data Science - An Ode to R；6 REASONS TO LEARN R FOR BUSINESS。不过对我来说，主要的优势还是以下几个：
+免费；
+无需太多的编程知识（在tidyverse等包的帮助下，即便没有正式的计算机科学或软件工程训练也能比较容易地上手）；
+RStudio这个IDE（Integrated Development Environment，集成开发环境）太好用了；
+R的学习方法直接学习tidyverse，参考：
+Don’t teach built-in plotting to beginners (teach ggplot2)：
+Teach the tidyverse to beginners；
+Don’t teach students the hard way first；研究生阶段，同学曾给我一份代码，包括以下部分：">
     <meta property="og:type" content="blog">
     <meta property="og:title" content="R的介绍和安装">
     <meta property="og:url" content="/2019/03/r-introduction-and-installation/">
     <meta property="og:site_name" content="RPG">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="RPG">
-    <meta name="twitter:description" content="R的介绍R的简介R的优势R的安装RStudio的安装RStudio的设置RStudio的布局190320
+    <meta name="twitter:description" content="R的介绍R的简介R的优势R的学习方法R的安装RStudio的安装RStudio简介RStudio的布局RStudio的设置190320
 R的介绍R的简介R是一种编程语言，是可以用来进行统计计算和绘图的免费软件。
-R的优势免费。虽然很多付费软件也并没有真的付费去用，但用R至少不用承受负罪感了。
-跨平台，Windows、linux和Mac都可以用。不过我只用过Windows，所以后面的安装教程也可能仅适用于Windows。
-有近14000个包（这是19年3月20日的数量。如果没记错的话，《R语言实战》第一版上这个数量是4000，这几年增加了将近10000个包）。
-有非常高端的绘图功能。这里主要指的是ggplot2包及其扩展。
-有非常强大的社区支持。遇到问题可以去StackOverflow，RStudio Community等地方寻找，不过像我这么内向的人，一般就打几个关键词，然后必应一下，基本上就能找到解决办法了。
-有RStudio这个非常好用的IDE（Integrated Development Environment，集成开发环境）
-R的安装进入CRAN;
-点左上角图标下的镜像，也就是Mirrors；
-寻找离自己近的镜像，我一般就用China下的第一个，清华的；
-根据自己的电脑系统点击不同的Download R for xxxxxx；
-点击install R for the first time，然后就会开始下载了；
-把下载好的安装包装上，所有选项都选默认吧。（换了新电脑后，只有一个C盘了，不存在想把程序装到别处的问题了）
-R已经装完了，但想要用的舒服还需要把RStudio装上。
-RStudio的安装点这个链接；
-点适合自己电脑系统的安装包，然后就会开始下载了；
-把安装包装上，同样，还是都选默认选项吧。最好把安装路径记下来，因为RStudio似乎不会自动生成桌面的快捷方式，需要你自己去把快捷方式弄到桌面上。">
+R的优势有一些文章介绍了R的优势，如：Why I use R for Data Science - An Ode to R；6 REASONS TO LEARN R FOR BUSINESS。不过对我来说，主要的优势还是以下几个：
+免费；
+无需太多的编程知识（在tidyverse等包的帮助下，即便没有正式的计算机科学或软件工程训练也能比较容易地上手）；
+RStudio这个IDE（Integrated Development Environment，集成开发环境）太好用了；
+R的学习方法直接学习tidyverse，参考：
+Don’t teach built-in plotting to beginners (teach ggplot2)：
+Teach the tidyverse to beginners；
+Don’t teach students the hard way first；研究生阶段，同学曾给我一份代码，包括以下部分：">
     
     
 
@@ -298,11 +274,13 @@ R的介绍R的简介R是一种编程语言，是可以用来进行统计计算
 <li><a href="#r">R的介绍</a><ul>
 <li><a href="#r">R的简介</a></li>
 <li><a href="#r">R的优势</a></li>
+<li><a href="#r">R的学习方法</a></li>
 </ul></li>
 <li><a href="#r">R的安装</a></li>
 <li><a href="#rstudio">RStudio的安装</a></li>
-<li><a href="#rstudio">RStudio的设置</a><ul>
+<li><a href="#rstudio">RStudio简介</a><ul>
 <li><a href="#rstudio">RStudio的布局</a></li>
+<li><a href="#rstudio">RStudio的设置</a></li>
 </ul></li>
 </ul>
 </div>
@@ -316,13 +294,44 @@ R的介绍R的简介R是一种编程语言，是可以用来进行统计计算
 </div>
 <div id="r" class="section level3">
 <h3>R的优势</h3>
+<p>有一些文章介绍了R的优势，如：<a href="https://shirinsplayground.netlify.com/2017/09/ode_to_r/">Why I use R for Data Science - An Ode to R</a>；<a href="https://www.business-science.io/business/2017/12/27/six-reasons-to-use-R-for-business.html">6 REASONS TO LEARN R FOR BUSINESS</a>。不过对我来说，主要的优势还是以下几个：</p>
 <ul>
-<li><p>免费。虽然很多付费软件也并没有真的付费去用，但用R至少不用承受负罪感了。</p></li>
-<li><p>跨平台，Windows、linux和Mac都可以用。不过我只用过Windows，所以后面的安装教程也可能仅适用于Windows。</p></li>
-<li><p>有近14000个包（这是19年3月20日的数量。如果没记错的话，《R语言实战》第一版上这个数量是4000，这几年增加了将近10000个包）。</p></li>
-<li><p>有非常高端的绘图功能。这里主要指的是<code>ggplot2</code>包及其扩展。</p></li>
-<li><p>有非常强大的社区支持。遇到问题可以去<a href="https://stackoverflow.com/">StackOverflow</a>，<a href="https://community.rstudio.com/">RStudio Community</a>等地方寻找，不过像我这么内向的人，一般就打几个关键词，然后必应一下，基本上就能找到解决办法了。</p></li>
-<li><p>有<a href="https://www.rstudio.com/">RStudio</a>这个非常好用的IDE（Integrated Development Environment，集成开发环境）</p></li>
+<li><p>免费；</p></li>
+<li><p>无需太多的编程知识（在<code>tidyverse</code>等包的帮助下，即便没有正式的计算机科学或软件工程训练也能比较容易地上手）；</p></li>
+<li><p><a href="https://www.rstudio.com/">RStudio</a>这个IDE（Integrated Development Environment，集成开发环境）太好用了；</p></li>
+</ul>
+</div>
+<div id="r" class="section level3">
+<h3>R的学习方法</h3>
+<ul>
+<li>直接学习<code>tidyverse</code>，参考：<br />
+<a href="http://varianceexplained.org/r/teach_ggplot2_to_beginners/">Don’t teach built-in plotting to beginners (teach ggplot2)</a>：<br />
+<a href="http://varianceexplained.org/r/teach-tidyverse/#fnref:widyr">Teach the tidyverse to beginners</a>；<br />
+<a href="http://varianceexplained.org/r/teach-hard-way/">Don’t teach students the hard way first</a>；</li>
+</ul>
+<p>研究生阶段，同学曾给我一份代码，包括以下部分：</p>
+<pre class="r"><code>mean.matrix = tapply(datafile$depvar0, list(datafile$pp, datafile$condition), mean, na.rm = T)
+sd.matrix = tapply(datafile$depvar0, list(datafile$pp, datafile$condition), sd, na.rm = T)
+for(i in 1: nrow(datafile)){
+  datafile$zscore[i] = (datafile$depvar0[i] - mean.matrix[datafile$pp[i],datafile$condition[i]]) / sd.matrix[datafile$pp[i],datafile$condition[i]] 
+  }
+datafile &lt;- datafile[abs(datafile$zscore) &lt; 3,]
+datafile &lt;- na.omit(datafile)
+datafile[order(-datafile$zscore),]</code></pre>
+<p>我问清楚她要干什么之后，改成了<code>tidyverse</code>化的代码：</p>
+<pre class="r"><code>  group_by(pp, condition) %&gt;% 
+  filter(near(depvar0, mean(depvar0), sd(depvar0) * 3)) %&gt;% 
+  ungroup()</code></pre>
+<p>如果没有<code>tidyverse</code>，我可能就不会学R了；</p>
+<ul>
+<li><p>尝试写与R有关的博客，参考：<br />
+<a href="https://edwinth.github.io/blog-new-things/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Blog about something you just learned</a>；</p></li>
+<li><p>研究专家的代码，参考：<br />
+<a href="https://www.business-science.io/learning-r/2018/03/03/how_to_learn_R_pt1.html">HOW TO LEARN R, PART 1: LEARN FROM A MASTER DATA SCIENTIST’S CODE</a>；</p></li>
+<li><p>听取大牛的建议，参考：<br />
+<a href="https://r-posts.com/advice-to-young-and-old-programmers-a-conversation-with-hadley-wickham/">Advice to Young (and Old) Programmers: A Conversation with Hadley Wickham</a>；</p></li>
+<li><p>学习路径，参考：<br />
+<a href="https://www.analyticsvidhya.com/learning-paths-data-science-business-analytics-business-intelligence-big-data/learning-path-r-data-science/">LeaRning Path on R – Step by Step Guide to Learn Data Science on R</a></p></li>
 </ul>
 </div>
 </div>
@@ -332,9 +341,9 @@ R的介绍R的简介R是一种编程语言，是可以用来进行统计计算
 <li><p>进入<a href="https://cran.r-project.org/">CRAN</a>;</p></li>
 <li><p>点左上角图标下的镜像，也就是<strong>Mirrors</strong>；</p></li>
 <li><p>寻找离自己近的镜像，我一般就用<strong>China</strong>下的第一个，清华的；</p></li>
-<li><p>根据自己的电脑系统点击不同的<strong>Download R for xxxxxx</strong>；</p></li>
+<li><p>根据自己的电脑系统点击不同的<strong>Download R for xxxxxx</strong>（只用过windows，所以这一点并不确定）；</p></li>
 <li><p>点击<strong>install R for the first time</strong>，然后就会开始下载了；</p></li>
-<li><p>把下载好的安装包装上，所有选项都选默认吧。（换了新电脑后，只有一个C盘了，不存在想把程序装到别处的问题了）</p></li>
+<li><p>把下载好的安装包装上，所有选项都选默认吧。</p></li>
 <li><p>R已经装完了，但想要用的舒服还需要把RStudio装上。</p></li>
 </ul>
 </div>
@@ -343,18 +352,21 @@ R的介绍R的简介R是一种编程语言，是可以用来进行统计计算
 <ul>
 <li><p>点<a href="https://www.rstudio.com/products/rstudio/download/#download">这个链接</a>；</p></li>
 <li><p>点适合自己电脑系统的安装包，然后就会开始下载了；</p></li>
-<li><p>把安装包装上，同样，还是都选默认选项吧。最好把安装路径记下来，因为RStudio似乎不会自动生成桌面的快捷方式，需要你自己去把快捷方式弄到桌面上。</p></li>
+<li><p>把安装包装上，同样，还是都选默认选项吧。最好把安装路径记下来，因为RStudio似乎不会自动生成桌面的快捷方式，需要你自己去把快捷方式弄到桌面上；</p></li>
 <li><p>双击图标进入RStudio，然后就可以愉快地使用R了。</p></li>
 </ul>
 </div>
 <div id="rstudio" class="section level1">
-<h1>RStudio的设置</h1>
+<h1>RStudio简介</h1>
 <div id="rstudio" class="section level3">
 <h3>RStudio的布局</h3>
 <ul>
 <li></li>
 <li>左下方是控制台（console）和terminal。控制台中可以输入简单的代码，及显示代码运行的记录，那个大于号叫提示符（prompt）。terminal似乎就是一个cmd，如果在这里输入notepad，就能打开记事本。</li>
 </ul>
+</div>
+<div id="rstudio" class="section level3">
+<h3>RStudio的设置</h3>
 </div>
 </div>
 
@@ -605,11 +617,12 @@ R的介绍R的简介R是一种编程语言，是可以用来进行统计计算
                   Apr 4, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather">ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordMachine LearningBasicsClassificationClusteringDeep LearningDimensionality ReductionPredictionProgramEvaluationFunctionLoopPipeTutorialData AcquisitionOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicCommon PlotsColorExtensionLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+              <div class="media-content hide-xs font-merryweather">ArticleConceptHistoryCommunicationBlogdownReportShinyWordMachine LearningBasicsClassificationClusteringDeep LearningDimensionality ReductionPredictionProgramEvaluationFunctionLoopPipeTutorialData AcquisitionOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicCommon PlotsColorExtensionLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
 还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
-Article这里罗列了一些关于R语言的文章，主要包括R的优势、与R相关的一些概念、R的历史以及如何学习R。
-Advantage这一部分收集了一些介绍R语言优势的文章。
-Why I use R for Data Science - An Ode to R (181110; 190306)</div>
+Article收集了一些关于R的概念和历史的文章。
+ConceptExplain R environments like I’m five (181110; 190307)
+介绍什么是R语言的环境，非常简单易懂。
+Environments in R (190128; 190408)</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -671,7 +684,7 @@ tidyverse之前R的介绍及安装
                   Mar 3, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather">R的基本操作a.计算b.逻辑运算c.赋值R的基本概念a.数据类型b.函数c.包190323
+              <div class="media-content hide-xs font-merryweather">R的基本操作a.计算b.逻辑运算c.赋值R的基本概念a.数据结构数据探索b.函数c.包190323
 R的基本操作a.计算R可以作为计算器使用，+、-、*、/、^分别代表加减乘除和乘方：
 2 ^ 2 / 2 - (2 * 2 + 2)## [1] -4%%求余数，%/%求商：
 5 %% 2## [1] 15 %/% 2## [1] 2b.逻辑运算==、!=、&gt;、&gt;=、&lt;、&lt;=分别用来判断相等、不等、大于、大于等于、小于、小于等于的关系，符合逻辑返回TRUE，反之返回FALSE。对于部分字符（英文字母和汉字），似乎是字母顺序排在后面的更大；对于字符型数值，似乎与其数值型数值相等；另外，逻辑型数值中，TRUE等于1，而FALSE等于0：
@@ -692,24 +705,16 @@ TRUE == 1## [1] TRUEFALSE == 0## [1] TRUE&#39;白马&#39; != &#39;马&#39;#
                   Mar 3, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather">R的介绍R的简介R的优势R的安装RStudio的安装RStudio的设置RStudio的布局190320
+              <div class="media-content hide-xs font-merryweather">R的介绍R的简介R的优势R的学习方法R的安装RStudio的安装RStudio简介RStudio的布局RStudio的设置190320
 R的介绍R的简介R是一种编程语言，是可以用来进行统计计算和绘图的免费软件。
-R的优势免费。虽然很多付费软件也并没有真的付费去用，但用R至少不用承受负罪感了。
-跨平台，Windows、linux和Mac都可以用。不过我只用过Windows，所以后面的安装教程也可能仅适用于Windows。
-有近14000个包（这是19年3月20日的数量。如果没记错的话，《R语言实战》第一版上这个数量是4000，这几年增加了将近10000个包）。
-有非常高端的绘图功能。这里主要指的是ggplot2包及其扩展。
-有非常强大的社区支持。遇到问题可以去StackOverflow，RStudio Community等地方寻找，不过像我这么内向的人，一般就打几个关键词，然后必应一下，基本上就能找到解决办法了。
-有RStudio这个非常好用的IDE（Integrated Development Environment，集成开发环境）
-R的安装进入CRAN;
-点左上角图标下的镜像，也就是Mirrors；
-寻找离自己近的镜像，我一般就用China下的第一个，清华的；
-根据自己的电脑系统点击不同的Download R for xxxxxx；
-点击install R for the first time，然后就会开始下载了；
-把下载好的安装包装上，所有选项都选默认吧。（换了新电脑后，只有一个C盘了，不存在想把程序装到别处的问题了）
-R已经装完了，但想要用的舒服还需要把RStudio装上。
-RStudio的安装点这个链接；
-点适合自己电脑系统的安装包，然后就会开始下载了；
-把安装包装上，同样，还是都选默认选项吧。最好把安装路径记下来，因为RStudio似乎不会自动生成桌面的快捷方式，需要你自己去把快捷方式弄到桌面上。</div>
+R的优势有一些文章介绍了R的优势，如：Why I use R for Data Science - An Ode to R；6 REASONS TO LEARN R FOR BUSINESS。不过对我来说，主要的优势还是以下几个：
+免费；
+无需太多的编程知识（在tidyverse等包的帮助下，即便没有正式的计算机科学或软件工程训练也能比较容易地上手）；
+RStudio这个IDE（Integrated Development Environment，集成开发环境）太好用了；
+R的学习方法直接学习tidyverse，参考：
+Don’t teach built-in plotting to beginners (teach ggplot2)：
+Teach the tidyverse to beginners；
+Don’t teach students the hard way first；研究生阶段，同学曾给我一份代码，包括以下部分：</div>
             </div>
             <div style="clear:both;"></div>
             <hr>

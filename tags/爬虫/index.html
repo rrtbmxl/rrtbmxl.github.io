@@ -331,11 +331,12 @@ rd$navigate(&#39;https://movie.douban.com/subject/25716096/comments?start=0&amp;
                   Apr 4, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather">ArticleAdvantageConceptHistoryLearningCommunicationBlogdownReportShinyWordMachine LearningBasicsClassificationClusteringDeep LearningDimensionality ReductionPredictionProgramEvaluationFunctionLoopPipeTutorialData AcquisitionOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicCommon PlotsColorExtensionLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
+              <div class="media-content hide-xs font-merryweather">ArticleConceptHistoryCommunicationBlogdownReportShinyWordMachine LearningBasicsClassificationClusteringDeep LearningDimensionality ReductionPredictionProgramEvaluationFunctionLoopPipeTutorialData AcquisitionOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicCommon PlotsColorExtensionLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
 还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
-Article这里罗列了一些关于R语言的文章，主要包括R的优势、与R相关的一些概念、R的历史以及如何学习R。
-Advantage这一部分收集了一些介绍R语言优势的文章。
-Why I use R for Data Science - An Ode to R (181110; 190306)</div>
+Article收集了一些关于R的概念和历史的文章。
+ConceptExplain R environments like I’m five (181110; 190307)
+介绍什么是R语言的环境，非常简单易懂。
+Environments in R (190128; 190408)</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
@@ -397,7 +398,7 @@ tidyverse之前R的介绍及安装
                   Mar 3, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather">R的基本操作a.计算b.逻辑运算c.赋值R的基本概念a.数据类型b.函数c.包190323
+              <div class="media-content hide-xs font-merryweather">R的基本操作a.计算b.逻辑运算c.赋值R的基本概念a.数据结构数据探索b.函数c.包190323
 R的基本操作a.计算R可以作为计算器使用，+、-、*、/、^分别代表加减乘除和乘方：
 2 ^ 2 / 2 - (2 * 2 + 2)## [1] -4%%求余数，%/%求商：
 5 %% 2## [1] 15 %/% 2## [1] 2b.逻辑运算==、!=、&gt;、&gt;=、&lt;、&lt;=分别用来判断相等、不等、大于、大于等于、小于、小于等于的关系，符合逻辑返回TRUE，反之返回FALSE。对于部分字符（英文字母和汉字），似乎是字母顺序排在后面的更大；对于字符型数值，似乎与其数值型数值相等；另外，逻辑型数值中，TRUE等于1，而FALSE等于0：
@@ -418,24 +419,16 @@ TRUE == 1## [1] TRUEFALSE == 0## [1] TRUE&#39;白马&#39; != &#39;马&#39;#
                   Mar 3, 2019
                 </span>
               </span>
-              <div class="media-content hide-xs font-merryweather">R的介绍R的简介R的优势R的安装RStudio的安装RStudio的设置RStudio的布局190320
+              <div class="media-content hide-xs font-merryweather">R的介绍R的简介R的优势R的学习方法R的安装RStudio的安装RStudio简介RStudio的布局RStudio的设置190320
 R的介绍R的简介R是一种编程语言，是可以用来进行统计计算和绘图的免费软件。
-R的优势免费。虽然很多付费软件也并没有真的付费去用，但用R至少不用承受负罪感了。
-跨平台，Windows、linux和Mac都可以用。不过我只用过Windows，所以后面的安装教程也可能仅适用于Windows。
-有近14000个包（这是19年3月20日的数量。如果没记错的话，《R语言实战》第一版上这个数量是4000，这几年增加了将近10000个包）。
-有非常高端的绘图功能。这里主要指的是ggplot2包及其扩展。
-有非常强大的社区支持。遇到问题可以去StackOverflow，RStudio Community等地方寻找，不过像我这么内向的人，一般就打几个关键词，然后必应一下，基本上就能找到解决办法了。
-有RStudio这个非常好用的IDE（Integrated Development Environment，集成开发环境）
-R的安装进入CRAN;
-点左上角图标下的镜像，也就是Mirrors；
-寻找离自己近的镜像，我一般就用China下的第一个，清华的；
-根据自己的电脑系统点击不同的Download R for xxxxxx；
-点击install R for the first time，然后就会开始下载了；
-把下载好的安装包装上，所有选项都选默认吧。（换了新电脑后，只有一个C盘了，不存在想把程序装到别处的问题了）
-R已经装完了，但想要用的舒服还需要把RStudio装上。
-RStudio的安装点这个链接；
-点适合自己电脑系统的安装包，然后就会开始下载了；
-把安装包装上，同样，还是都选默认选项吧。最好把安装路径记下来，因为RStudio似乎不会自动生成桌面的快捷方式，需要你自己去把快捷方式弄到桌面上。</div>
+R的优势有一些文章介绍了R的优势，如：Why I use R for Data Science - An Ode to R；6 REASONS TO LEARN R FOR BUSINESS。不过对我来说，主要的优势还是以下几个：
+免费；
+无需太多的编程知识（在tidyverse等包的帮助下，即便没有正式的计算机科学或软件工程训练也能比较容易地上手）；
+RStudio这个IDE（Integrated Development Environment，集成开发环境）太好用了；
+R的学习方法直接学习tidyverse，参考：
+Don’t teach built-in plotting to beginners (teach ggplot2)：
+Teach the tidyverse to beginners；
+Don’t teach students the hard way first；研究生阶段，同学曾给我一份代码，包括以下部分：</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
