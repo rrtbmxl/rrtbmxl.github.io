@@ -27,6 +27,9 @@ canonifyurls = true
 
 [permalinks]
   post = "/:year/:month/:slug/"
+  
+# Enable comments by entering your Disqus shortname
+disqusShortname = "rrtbmxl"
 
 [taxonomies]
   tag = "tags"
