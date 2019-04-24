@@ -76,24 +76,6 @@ TRUE == 1## [1] TRUEFALSE == 0## [1] TRUE&amp;#39;白马&amp;#39; != &amp;#3
     </item>
     
     <item>
-      <title>R的介绍和安装</title>
-      <link>/2019/03/r-introduction-and-installation/</link>
-      <pubDate>Wed, 20 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/2019/03/r-introduction-and-installation/</guid>
-      <description>R的介绍R的简介R的优势R的学习方法R的安装RStudio的安装RStudio简介RStudio的布局RStudio的设置190320
-R的介绍R的简介R是一种编程语言，是可以用来进行统计计算和绘图的免费软件。
-R的优势有一些文章介绍了R的优势，如：Why I use R for Data Science - An Ode to R；6 REASONS TO LEARN R FOR BUSINESS。不过对我来说，主要的优势还是以下几个：
-免费；
-无需太多的编程知识（在tidyverse等包的帮助下，即便没有正式的计算机科学或软件工程训练也能比较容易地上手）；
-RStudio这个IDE（Integrated Development Environment，集成开发环境）太好用了；
-R的学习方法直接学习tidyverse，参考：
-Don’t teach built-in plotting to beginners (teach ggplot2)：
-Teach the tidyverse to beginners；
-Don’t teach students the hard way first；研究生阶段，同学曾给我一份代码，包括以下部分：</description>
-    </item>
-    
-    <item>
       <title>使用R语言模拟抢红包</title>
       <link>/2018/12/red-envelope/</link>
       <pubDate>Sun, 09 Dec 2018 00:00:00 +0000</pubDate>

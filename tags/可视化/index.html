@@ -531,32 +531,6 @@ TRUE == 1## [1] TRUEFALSE == 0## [1] TRUE&#39;白马&#39; != &#39;马&#39;#
           <div class="media">
             
             <div class="media-body">
-              <a class="link-unstyled" href="/2019/03/r-introduction-and-installation/">
-                <h3 class="media-heading">R的介绍和安装</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Mar 3, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">R的介绍R的简介R的优势R的学习方法R的安装RStudio的安装RStudio简介RStudio的布局RStudio的设置190320
-R的介绍R的简介R是一种编程语言，是可以用来进行统计计算和绘图的免费软件。
-R的优势有一些文章介绍了R的优势，如：Why I use R for Data Science - An Ode to R；6 REASONS TO LEARN R FOR BUSINESS。不过对我来说，主要的优势还是以下几个：
-免费；
-无需太多的编程知识（在tidyverse等包的帮助下，即便没有正式的计算机科学或软件工程训练也能比较容易地上手）；
-RStudio这个IDE（Integrated Development Environment，集成开发环境）太好用了；
-R的学习方法直接学习tidyverse，参考：
-Don’t teach built-in plotting to beginners (teach ggplot2)：
-Teach the tidyverse to beginners；
-Don’t teach students the hard way first；研究生阶段，同学曾给我一份代码，包括以下部分：</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
               <a class="link-unstyled" href="/2019/02/reading-records-analysis/">
                 <h3 class="media-heading">11年-19年读书记录分析</h3>
               </a>
@@ -689,6 +663,28 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
             <hr>
           </div>
         
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/10/%E6%97%A5%E8%AE%B0%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">
+                <h3 class="media-heading">日记文本分析：第一部分</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Oct 10, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">据说希腊的德尔菲神庙上刻着几条箴言，其中一条告诫我们要“认识你自己”。这条箴言刻起来容易，做起来却很难，甚至可能是人生最困难的事情之一。要想认识自己，大概有四种方法，一是客观内容的客观描述，如测量人的身高、体重等各种身体特征，这些特征在一定的时间内不会有太大幅度的变化，用来测量这些特征的工具也具有极高的信度和效度，因此不论从要了解的内容和用于了解该内容的方式，都是很客观的；二是客观内容的主观描述，如使用问卷量表测量人的各种能力，人的能力应该也是比较恒定的，但用于测量这些特征的工具，无论是编制过程还是施用过程，都避免不了与人为因素有关的干扰，即便硬要说它是客观的，也是“主观”的客观。三是主观内容的主观描述，如各种投射测验，对于这些测验，我没有实际接触过，但从书本上来看，难免不让我认为这种测验从内容到方式都不是那么客观；最后一种就显而易见了，即对主观内容的客观描述，如对推特的文本分析，我要进行的日记文本分析，也是这一范围之内的。日记本身是主观的产物，但这里我要对这些主观的内容进行客观的数据分析，进而从这一角度来加深对自己的了解，不过这个方法的局限性也很大，毕竟不是每个人都有几十万字的日记文本可以用来分析。另外再加一句，上面这段话，也可以说是对客观内容的主观描述。
+这篇文章分为三部分，首先是对我每天记日记的时间进行一个简单的分析，然后对文本进行分词，针对词频进行分析，最后是一个初步的情感分析。下面先载入需要用到的包。
+导入需要的包library(tidyverse)library(readxl)library(jiebaR)library(ggthemes)一般情况下，我的第一行代码都是library(tidyverse)，这次主要用到了其中dplyr、tidyr、stringr以及ggplot2四个包；readxl包用来读入.xlsx格式的文件；jiebarR用来分词；ggthemes用来添加我最喜欢的tufte主题。
+时间分析首先要把日记中与时间有关的内容提取出来，我记录时间的格式很固定，都是20XX年X月X日 周X XX：XX的形式，通过以下代码，可以把这部分内容提取出来：
+time &lt;- read_lines(&#39;dairy.txt&#39;) %&gt;% as.tibble() %&gt;% filter(str_detect(value, &#39;.*年.*月.*日.*周&#39;)) %&gt;% mutate(num = row_number()) %&gt;% select(2, time = 1)处理后是这个样子的：
+numtime12012年1月13日 周五 21：4022012年1月14日 周六 21：4132012年1月15日 周日 21：5342012年1月16日 周一 21：5852012年1月17日 周二 21：4562012年1月18日 周三 21：5172012年1月19日 周四 22：0182012年1月20日 周五 21：4392012年1月21日 周六 21：35102012年1月22日 周日 21：53所有的时间都放在一起是没法分析的，接下来我就把各部分时间分离开，并转化成了整数型，这一步代码如下：</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
       </div>
     </div>
     <div class="modal-footer">
@@ -696,7 +692,7 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         13 posts found
+         12 posts found
       </p>
     </div>
   </div>
