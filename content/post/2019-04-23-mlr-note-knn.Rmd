@@ -1,0 +1,109 @@
+---
+title: 《机器学习与R语言》学习笔记01：kNN
+date: '2019-04-23'
+categories:
+  - R
+tags:
+  - 笔记
+  - 机器学习
+slug: mlr-note-knn
+output:
+  blogdown::html_page
+---
+
+通过将《机器学习与R语言》一书中的代码`tidyverse`化，来学习这本书。
+
+书中第一个例子是利用kNN算法来诊断乳腺癌。
+
+首先载入需要用到的包：
+
+```{r message = FALSE}
+library(tidyverse) # 清洗数据
+library(here) # 设置数据文件路径
+library(knitr) # 呈现更好看的表格
+library(kableExtra) # 同上
+library(class) # 使用包中的knn()函数
+library(gmodels) # 使用包中的CrossTable()函数
+```
+
+然后导入数据并清洗：
+
+```{r message = FALSE}
+wbcd <- read_csv(here('content', 'post', 'data', '01-wisc_bc_data.csv')) %>% 
+  select(-id) %>% 
+  mutate(diagnosis = factor(diagnosis, levels = c('B', 'M'),
+                            labels = c('Benign', 'Malignant'))) %>% 
+  mutate_if(is.numeric, ~ (.x - min(.x)) / (max(.x) - min(.x)))
+```
+
+首先使用`here`函数找到数据文件的路径，然后使用`read_csv`函数将其读入R中；随后通过`select`函数将id变量去掉；然后利用`mutate`函数将diagnosis变量改为因子型；最后利用`mutate_if`函数，将所有数值型的变量进行min-max标准化，这里用到了公式化的匿名函数，可以使代码更为简练。此时的数据是这样的：
+
+```{r}
+wbcd %>% head() %>% 
+  kable() %>% 
+  kable_styling(bootstrap_options = "striped", font_size = 12) %>%
+  scroll_box(width = "100%") 
+```
+
+书中还提到了Z分数标准化，因为有现成的`scale`函数，所以代码会稍微简单：
+
+```{r eval = FALSE}
+wbcd <- read_csv(here('data', '01-wisc_bc_data.csv')) %>% 
+  select(-id) %>% 
+  mutate(diagnosis = factor(diagnosis, levels = c('B', 'M'),
+                            labels = c('Benign', 'Malignant'))) %>% 
+  mutate_if(is.numeric, scale)
+```
+
+下一步是创建训练数据集和测试数据集。首先先设定一个随机种子，保证结果可以复现，然后利用`sample_n`函数从完整数据中随机选择469行作为训练数据集，并利用`setdiff`函数筛选出训练数据集的补集作为测试数据集；最后利用`pull`函数把标签提取出来：
+
+```{r}
+set.seed(0412)
+wbcd_train <- wbcd %>% sample_n(469)
+wbcd_test <- wbcd %>% setdiff(wbcd_train)
+wbcd_train_labels <- wbcd_train %>% pull(1)
+wbcd_test_labels <- wbcd_test %>% pull(1)
+```
+
+数据已经整理好，可以建模了，但是在书中没有看到将数据集中的标签变量去掉的过程，所以在这里的模型中，我把两个数据集的标签变量都去掉了：
+
+```{r}
+wbcd_test_pred <- knn(train = wbcd_train[, -1], test = wbcd_test[, -1], 
+                      cl = wbcd_train_labels, k = 21)
+```
+
+看一下模型的性能：
+
+```{r}
+CrossTable(wbcd_test_labels, wbcd_test_pred, prop.chisq = FALSE)
+```
+
+跟书中的结果不一样，但也不错。
+
+最后，书中还使用不同的k值对模型进行了评估，但没有给出相应的代码，我这里补充了一下：
+
+```{r}
+k <- map(1:30, ~ knn(train = wbcd_train[, -1], test = wbcd_test[, -1], 
+         cl = wbcd_train_labels, k = .x)) %>% 
+  enframe(name = 'k', value = 'prediction') %>% 
+  unnest() %>% 
+  mutate(label = rep(wbcd_test_labels, 30),
+         FN = prediction == 'Malignant' & label == 'Benign',
+         FP = prediction == 'Benign' & label == 'Malignant') %>% 
+  group_by(k) %>% 
+  summarise(FN = sum(FN), 
+            FP = sum(FP),
+            total = FN + FP)
+```
+
+首先利用`map`函数将1到30分别映射到模型的k参数上，此时得到了会是一个长度为30的列表；随后利用`enframe`函数将列表变为行数为30的数据框，这时value变量下的每一个元素都包含100个字符；随后利用`unnest`将value变量中的字符解放出来，使数据框的行数变为3000；剩余的代码就比较简单，不多描述。
+
+这时的数据是这样的：
+
+```{r}
+k %>% kable() %>% 
+  kable_styling(bootstrap_options = "striped", font_size = 12) %>%
+  scroll_box(width = "100%") 
+```
+
+可以看到，k值从11到17时的结果都很“完美”。

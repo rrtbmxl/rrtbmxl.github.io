@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>机器学习 on RPG</title>
+    <link>/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+    <description>Recent content in 机器学习 on RPG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 23 Apr 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>《机器学习与R语言》学习笔记01：kNN</title>
+      <link>/2019/04/mlr-note-knn/</link>
+      <pubDate>Tue, 23 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/04/mlr-note-knn/</guid>
+      <description>通过将《机器学习与R语言》一书中的代码tidyverse化，来学习这本书。
+书中第一个例子是利用kNN算法来诊断乳腺癌。
+首先载入需要用到的包：
+library(tidyverse) # 清洗数据library(here) # 设置数据文件路径library(knitr) # 呈现更好看的表格library(kableExtra) # 同上library(class) # 使用包中的knn()函数library(gmodels) # 使用包中的CrossTable()函数然后导入数据并清洗：
+wbcd &amp;lt;- read_csv(here(&amp;#39;content&amp;#39;, &amp;#39;post&amp;#39;, &amp;#39;data&amp;#39;, &amp;#39;01-wisc_bc_data.csv&amp;#39;)) %&amp;gt;% select(-id) %&amp;gt;% mutate(diagnosis = factor(diagnosis, levels = c(&amp;#39;B&amp;#39;, &amp;#39;M&amp;#39;),labels = c(&amp;#39;Benign&amp;#39;, &amp;#39;Malignant&amp;#39;))) %&amp;gt;% mutate_if(is.numeric, ~ (.x - min(.x)) / (max(.x) - min(.x)))首先使用here函数找到数据文件的路径，然后使用read_csv函数将其读入R中；随后通过select函数将id变量去掉；然后利用mutate函数将diagnosis变量改为因子型；最后利用mutate_if函数，将所有数值型的变量进行min-max标准化，这里用到了公式化的匿名函数，可以使代码更为简练。此时的数据是这样的：
+wbcd %&amp;gt;% head() %&amp;gt;% kable() %&amp;gt;% kable_styling(bootstrap_options = &amp;quot;striped&amp;quot;, font_size = 12) %&amp;gt;%scroll_box(width = &amp;quot;100%&amp;quot;) diagnosisradius_meantexture_meanperimeter_meanarea_meansmoothness_meancompactness_meanconcavity_meanconcave points_meansymmetry_meanfractal_dimension_meanradius_setexture_seperimeter_searea_sesmoothness_secompactness_seconcavity_seconcave points_sesymmetry_sefractal_dimension_seradius_worsttexture_worstperimeter_worstarea_worstsmoothness_worstcompactness_worstconcavity_worstconcave points_worstsymmetry_worstfractal_dimension_worstMalignant0.</description>
+    </item>
+    
+  </channel>
+</rss>

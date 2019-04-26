@@ -1,0 +1,1219 @@
+---
+title: 《机器学习与R语言》学习笔记01：kNN
+date: '2019-04-23'
+categories:
+  - R
+tags:
+  - 笔记
+  - 机器学习
+slug: mlr-note-knn
+output:
+  blogdown::html_page
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<p>通过将《机器学习与R语言》一书中的代码<code>tidyverse</code>化，来学习这本书。</p>
+<p>书中第一个例子是利用kNN算法来诊断乳腺癌。</p>
+<p>首先载入需要用到的包：</p>
+<pre class="r"><code>library(tidyverse) # 清洗数据
+library(here) # 设置数据文件路径
+library(knitr) # 呈现更好看的表格
+library(kableExtra) # 同上
+library(class) # 使用包中的knn()函数
+library(gmodels) # 使用包中的CrossTable()函数</code></pre>
+<p>然后导入数据并清洗：</p>
+<pre class="r"><code>wbcd &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;01-wisc_bc_data.csv&#39;)) %&gt;% 
+  select(-id) %&gt;% 
+  mutate(diagnosis = factor(diagnosis, levels = c(&#39;B&#39;, &#39;M&#39;),
+                            labels = c(&#39;Benign&#39;, &#39;Malignant&#39;))) %&gt;% 
+  mutate_if(is.numeric, ~ (.x - min(.x)) / (max(.x) - min(.x)))</code></pre>
+<p>首先使用<code>here</code>函数找到数据文件的路径，然后使用<code>read_csv</code>函数将其读入R中；随后通过<code>select</code>函数将id变量去掉；然后利用<code>mutate</code>函数将diagnosis变量改为因子型；最后利用<code>mutate_if</code>函数，将所有数值型的变量进行min-max标准化，这里用到了公式化的匿名函数，可以使代码更为简练。此时的数据是这样的：</p>
+<pre class="r"><code>wbcd %&gt;% head() %&gt;% 
+  kable() %&gt;% 
+  kable_styling(bootstrap_options = &quot;striped&quot;, font_size = 12) %&gt;%
+  scroll_box(width = &quot;100%&quot;) </code></pre>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+diagnosis
+</th>
+<th style="text-align:right;">
+radius_mean
+</th>
+<th style="text-align:right;">
+texture_mean
+</th>
+<th style="text-align:right;">
+perimeter_mean
+</th>
+<th style="text-align:right;">
+area_mean
+</th>
+<th style="text-align:right;">
+smoothness_mean
+</th>
+<th style="text-align:right;">
+compactness_mean
+</th>
+<th style="text-align:right;">
+concavity_mean
+</th>
+<th style="text-align:right;">
+concave points_mean
+</th>
+<th style="text-align:right;">
+symmetry_mean
+</th>
+<th style="text-align:right;">
+fractal_dimension_mean
+</th>
+<th style="text-align:right;">
+radius_se
+</th>
+<th style="text-align:right;">
+texture_se
+</th>
+<th style="text-align:right;">
+perimeter_se
+</th>
+<th style="text-align:right;">
+area_se
+</th>
+<th style="text-align:right;">
+smoothness_se
+</th>
+<th style="text-align:right;">
+compactness_se
+</th>
+<th style="text-align:right;">
+concavity_se
+</th>
+<th style="text-align:right;">
+concave points_se
+</th>
+<th style="text-align:right;">
+symmetry_se
+</th>
+<th style="text-align:right;">
+fractal_dimension_se
+</th>
+<th style="text-align:right;">
+radius_worst
+</th>
+<th style="text-align:right;">
+texture_worst
+</th>
+<th style="text-align:right;">
+perimeter_worst
+</th>
+<th style="text-align:right;">
+area_worst
+</th>
+<th style="text-align:right;">
+smoothness_worst
+</th>
+<th style="text-align:right;">
+compactness_worst
+</th>
+<th style="text-align:right;">
+concavity_worst
+</th>
+<th style="text-align:right;">
+concave points_worst
+</th>
+<th style="text-align:right;">
+symmetry_worst
+</th>
+<th style="text-align:right;">
+fractal_dimension_worst
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Malignant
+</td>
+<td style="text-align:right;">
+0.5210374
+</td>
+<td style="text-align:right;">
+0.0226581
+</td>
+<td style="text-align:right;">
+0.5459885
+</td>
+<td style="text-align:right;">
+0.3637328
+</td>
+<td style="text-align:right;">
+0.5937528
+</td>
+<td style="text-align:right;">
+0.7920373
+</td>
+<td style="text-align:right;">
+0.7031396
+</td>
+<td style="text-align:right;">
+0.7311133
+</td>
+<td style="text-align:right;">
+0.6863636
+</td>
+<td style="text-align:right;">
+0.6055181
+</td>
+<td style="text-align:right;">
+0.3561470
+</td>
+<td style="text-align:right;">
+0.1204694
+</td>
+<td style="text-align:right;">
+0.3690336
+</td>
+<td style="text-align:right;">
+0.2738113
+</td>
+<td style="text-align:right;">
+0.1592956
+</td>
+<td style="text-align:right;">
+0.3513984
+</td>
+<td style="text-align:right;">
+0.1356818
+</td>
+<td style="text-align:right;">
+0.3006251
+</td>
+<td style="text-align:right;">
+0.3116452
+</td>
+<td style="text-align:right;">
+0.1830424
+</td>
+<td style="text-align:right;">
+0.6207755
+</td>
+<td style="text-align:right;">
+0.1415245
+</td>
+<td style="text-align:right;">
+0.6683102
+</td>
+<td style="text-align:right;">
+0.4506980
+</td>
+<td style="text-align:right;">
+0.6011358
+</td>
+<td style="text-align:right;">
+0.6192916
+</td>
+<td style="text-align:right;">
+0.5686102
+</td>
+<td style="text-align:right;">
+0.9120275
+</td>
+<td style="text-align:right;">
+0.5984624
+</td>
+<td style="text-align:right;">
+0.4188640
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Malignant
+</td>
+<td style="text-align:right;">
+0.6431445
+</td>
+<td style="text-align:right;">
+0.2725736
+</td>
+<td style="text-align:right;">
+0.6157833
+</td>
+<td style="text-align:right;">
+0.5015907
+</td>
+<td style="text-align:right;">
+0.2898799
+</td>
+<td style="text-align:right;">
+0.1817680
+</td>
+<td style="text-align:right;">
+0.2036082
+</td>
+<td style="text-align:right;">
+0.3487575
+</td>
+<td style="text-align:right;">
+0.3797980
+</td>
+<td style="text-align:right;">
+0.1413227
+</td>
+<td style="text-align:right;">
+0.1564367
+</td>
+<td style="text-align:right;">
+0.0825893
+</td>
+<td style="text-align:right;">
+0.1244405
+</td>
+<td style="text-align:right;">
+0.1256598
+</td>
+<td style="text-align:right;">
+0.1193867
+</td>
+<td style="text-align:right;">
+0.0813230
+</td>
+<td style="text-align:right;">
+0.0469697
+</td>
+<td style="text-align:right;">
+0.2538360
+</td>
+<td style="text-align:right;">
+0.0845388
+</td>
+<td style="text-align:right;">
+0.0911101
+</td>
+<td style="text-align:right;">
+0.6069015
+</td>
+<td style="text-align:right;">
+0.3035714
+</td>
+<td style="text-align:right;">
+0.5398177
+</td>
+<td style="text-align:right;">
+0.4352143
+</td>
+<td style="text-align:right;">
+0.3475533
+</td>
+<td style="text-align:right;">
+0.1545634
+</td>
+<td style="text-align:right;">
+0.1929712
+</td>
+<td style="text-align:right;">
+0.6391753
+</td>
+<td style="text-align:right;">
+0.2335896
+</td>
+<td style="text-align:right;">
+0.2228781
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Malignant
+</td>
+<td style="text-align:right;">
+0.6014956
+</td>
+<td style="text-align:right;">
+0.3902604
+</td>
+<td style="text-align:right;">
+0.5957432
+</td>
+<td style="text-align:right;">
+0.4494168
+</td>
+<td style="text-align:right;">
+0.5143089
+</td>
+<td style="text-align:right;">
+0.4310165
+</td>
+<td style="text-align:right;">
+0.4625117
+</td>
+<td style="text-align:right;">
+0.6356859
+</td>
+<td style="text-align:right;">
+0.5095960
+</td>
+<td style="text-align:right;">
+0.2112468
+</td>
+<td style="text-align:right;">
+0.2296216
+</td>
+<td style="text-align:right;">
+0.0943025
+</td>
+<td style="text-align:right;">
+0.1803704
+</td>
+<td style="text-align:right;">
+0.1629218
+</td>
+<td style="text-align:right;">
+0.1508312
+</td>
+<td style="text-align:right;">
+0.2839547
+</td>
+<td style="text-align:right;">
+0.0967677
+</td>
+<td style="text-align:right;">
+0.3898466
+</td>
+<td style="text-align:right;">
+0.2056903
+</td>
+<td style="text-align:right;">
+0.1270055
+</td>
+<td style="text-align:right;">
+0.5563856
+</td>
+<td style="text-align:right;">
+0.3600746
+</td>
+<td style="text-align:right;">
+0.5084417
+</td>
+<td style="text-align:right;">
+0.3745085
+</td>
+<td style="text-align:right;">
+0.4835898
+</td>
+<td style="text-align:right;">
+0.3853751
+</td>
+<td style="text-align:right;">
+0.3597444
+</td>
+<td style="text-align:right;">
+0.8350515
+</td>
+<td style="text-align:right;">
+0.4037059
+</td>
+<td style="text-align:right;">
+0.2134330
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Malignant
+</td>
+<td style="text-align:right;">
+0.2100904
+</td>
+<td style="text-align:right;">
+0.3608387
+</td>
+<td style="text-align:right;">
+0.2335015
+</td>
+<td style="text-align:right;">
+0.1029056
+</td>
+<td style="text-align:right;">
+0.8113208
+</td>
+<td style="text-align:right;">
+0.8113613
+</td>
+<td style="text-align:right;">
+0.5656045
+</td>
+<td style="text-align:right;">
+0.5228628
+</td>
+<td style="text-align:right;">
+0.7762626
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+0.1390911
+</td>
+<td style="text-align:right;">
+0.1758752
+</td>
+<td style="text-align:right;">
+0.1266550
+</td>
+<td style="text-align:right;">
+0.0381548
+</td>
+<td style="text-align:right;">
+0.2514532
+</td>
+<td style="text-align:right;">
+0.5432151
+</td>
+<td style="text-align:right;">
+0.1429545
+</td>
+<td style="text-align:right;">
+0.3536655
+</td>
+<td style="text-align:right;">
+0.7281477
+</td>
+<td style="text-align:right;">
+0.2872048
+</td>
+<td style="text-align:right;">
+0.2483102
+</td>
+<td style="text-align:right;">
+0.3859275
+</td>
+<td style="text-align:right;">
+0.2413467
+</td>
+<td style="text-align:right;">
+0.0940081
+</td>
+<td style="text-align:right;">
+0.9154725
+</td>
+<td style="text-align:right;">
+0.8140117
+</td>
+<td style="text-align:right;">
+0.5486422
+</td>
+<td style="text-align:right;">
+0.8848797
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+0.7737111
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Malignant
+</td>
+<td style="text-align:right;">
+0.6298926
+</td>
+<td style="text-align:right;">
+0.1565776
+</td>
+<td style="text-align:right;">
+0.6309861
+</td>
+<td style="text-align:right;">
+0.4892895
+</td>
+<td style="text-align:right;">
+0.4303512
+</td>
+<td style="text-align:right;">
+0.3478928
+</td>
+<td style="text-align:right;">
+0.4639175
+</td>
+<td style="text-align:right;">
+0.5183897
+</td>
+<td style="text-align:right;">
+0.3782828
+</td>
+<td style="text-align:right;">
+0.1868155
+</td>
+<td style="text-align:right;">
+0.2338222
+</td>
+<td style="text-align:right;">
+0.0930649
+</td>
+<td style="text-align:right;">
+0.2205626
+</td>
+<td style="text-align:right;">
+0.1636876
+</td>
+<td style="text-align:right;">
+0.3323588
+</td>
+<td style="text-align:right;">
+0.1679184
+</td>
+<td style="text-align:right;">
+0.1436364
+</td>
+<td style="text-align:right;">
+0.3570752
+</td>
+<td style="text-align:right;">
+0.1361794
+</td>
+<td style="text-align:right;">
+0.1457996
+</td>
+<td style="text-align:right;">
+0.5197439
+</td>
+<td style="text-align:right;">
+0.1239339
+</td>
+<td style="text-align:right;">
+0.5069476
+</td>
+<td style="text-align:right;">
+0.3415749
+</td>
+<td style="text-align:right;">
+0.4373638
+</td>
+<td style="text-align:right;">
+0.1724151
+</td>
+<td style="text-align:right;">
+0.3194888
+</td>
+<td style="text-align:right;">
+0.5584192
+</td>
+<td style="text-align:right;">
+0.1575005
+</td>
+<td style="text-align:right;">
+0.1425948
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Malignant
+</td>
+<td style="text-align:right;">
+0.2588386
+</td>
+<td style="text-align:right;">
+0.2025702
+</td>
+<td style="text-align:right;">
+0.2679842
+</td>
+<td style="text-align:right;">
+0.1415058
+</td>
+<td style="text-align:right;">
+0.6786133
+</td>
+<td style="text-align:right;">
+0.4619962
+</td>
+<td style="text-align:right;">
+0.3697282
+</td>
+<td style="text-align:right;">
+0.4020378
+</td>
+<td style="text-align:right;">
+0.5186869
+</td>
+<td style="text-align:right;">
+0.5511794
+</td>
+<td style="text-align:right;">
+0.0807532
+</td>
+<td style="text-align:right;">
+0.1171322
+</td>
+<td style="text-align:right;">
+0.0687933
+</td>
+<td style="text-align:right;">
+0.0380801
+</td>
+<td style="text-align:right;">
+0.1970629
+</td>
+<td style="text-align:right;">
+0.2343107
+</td>
+<td style="text-align:right;">
+0.0927273
+</td>
+<td style="text-align:right;">
+0.2153817
+</td>
+<td style="text-align:right;">
+0.1937299
+</td>
+<td style="text-align:right;">
+0.1446596
+</td>
+<td style="text-align:right;">
+0.2682319
+</td>
+<td style="text-align:right;">
+0.3126333
+</td>
+<td style="text-align:right;">
+0.2639076
+</td>
+<td style="text-align:right;">
+0.1367479
+</td>
+<td style="text-align:right;">
+0.7127386
+</td>
+<td style="text-align:right;">
+0.4827837
+</td>
+<td style="text-align:right;">
+0.4277157
+</td>
+<td style="text-align:right;">
+0.5982818
+</td>
+<td style="text-align:right;">
+0.4770353
+</td>
+<td style="text-align:right;">
+0.4549390
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>书中还提到了Z分数标准化，因为有现成的<code>scale</code>函数，所以代码会稍微简单：</p>
+<pre class="r"><code>wbcd &lt;- read_csv(here(&#39;data&#39;, &#39;01-wisc_bc_data.csv&#39;)) %&gt;% 
+  select(-id) %&gt;% 
+  mutate(diagnosis = factor(diagnosis, levels = c(&#39;B&#39;, &#39;M&#39;),
+                            labels = c(&#39;Benign&#39;, &#39;Malignant&#39;))) %&gt;% 
+  mutate_if(is.numeric, scale)</code></pre>
+<p>下一步是创建训练数据集和测试数据集。首先先设定一个随机种子，保证结果可以复现，然后利用<code>sample_n</code>函数从完整数据中随机选择469行作为训练数据集，并利用<code>setdiff</code>函数筛选出训练数据集的补集作为测试数据集；最后利用<code>pull</code>函数把标签提取出来：</p>
+<pre class="r"><code>set.seed(0412)
+wbcd_train &lt;- wbcd %&gt;% sample_n(469)
+wbcd_test &lt;- wbcd %&gt;% setdiff(wbcd_train)
+wbcd_train_labels &lt;- wbcd_train %&gt;% pull(1)
+wbcd_test_labels &lt;- wbcd_test %&gt;% pull(1)</code></pre>
+<p>数据已经整理好，可以建模了，但是在书中没有看到将数据集中的标签变量去掉的过程，所以在这里的模型中，我把两个数据集的标签变量都去掉了：</p>
+<pre class="r"><code>wbcd_test_pred &lt;- knn(train = wbcd_train[, -1], test = wbcd_test[, -1], 
+                      cl = wbcd_train_labels, k = 21)</code></pre>
+<p>看一下模型的性能：</p>
+<pre class="r"><code>CrossTable(wbcd_test_labels, wbcd_test_pred, prop.chisq = FALSE)</code></pre>
+<pre><code>## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## |           N / Row Total |
+## |           N / Col Total |
+## |         N / Table Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  100 
+## 
+##  
+##                  | wbcd_test_pred 
+## wbcd_test_labels |    Benign | Malignant | Row Total | 
+## -----------------|-----------|-----------|-----------|
+##           Benign |        68 |         0 |        68 | 
+##                  |     1.000 |     0.000 |     0.680 | 
+##                  |     0.986 |     0.000 |           | 
+##                  |     0.680 |     0.000 |           | 
+## -----------------|-----------|-----------|-----------|
+##        Malignant |         1 |        31 |        32 | 
+##                  |     0.031 |     0.969 |     0.320 | 
+##                  |     0.014 |     1.000 |           | 
+##                  |     0.010 |     0.310 |           | 
+## -----------------|-----------|-----------|-----------|
+##     Column Total |        69 |        31 |       100 | 
+##                  |     0.690 |     0.310 |           | 
+## -----------------|-----------|-----------|-----------|
+## 
+## </code></pre>
+<p>跟书中的结果不一样，但也不错。</p>
+<p>最后，书中还使用不同的k值对模型进行了评估，但没有给出相应的代码，我这里补充了一下：</p>
+<pre class="r"><code>k &lt;- map(1:30, ~ knn(train = wbcd_train[, -1], test = wbcd_test[, -1], 
+         cl = wbcd_train_labels, k = .x)) %&gt;% 
+  enframe(name = &#39;k&#39;, value = &#39;prediction&#39;) %&gt;% 
+  unnest() %&gt;% 
+  mutate(label = rep(wbcd_test_labels, 30),
+         FN = prediction == &#39;Malignant&#39; &amp; label == &#39;Benign&#39;,
+         FP = prediction == &#39;Benign&#39; &amp; label == &#39;Malignant&#39;) %&gt;% 
+  group_by(k) %&gt;% 
+  summarise(FN = sum(FN), 
+            FP = sum(FP),
+            total = FN + FP)</code></pre>
+<p>首先利用<code>map</code>函数将1到30分别映射到模型的k参数上，此时得到了会是一个长度为30的列表；随后利用<code>enframe</code>函数将列表变为行数为30的数据框，这时value变量下的每一个元素都包含100个字符；随后利用<code>unnest</code>将value变量中的字符解放出来，使数据框的行数变为3000；剩余的代码就比较简单，不多描述。</p>
+<p>这时的数据是这样的：</p>
+<pre class="r"><code>k %&gt;% kable() %&gt;% 
+  kable_styling(bootstrap_options = &quot;striped&quot;, font_size = 12) %&gt;%
+  scroll_box(width = &quot;100%&quot;) </code></pre>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+k
+</th>
+<th style="text-align:right;">
+FN
+</th>
+<th style="text-align:right;">
+FP
+</th>
+<th style="text-align:right;">
+total
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+29
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>可以看到，k值从11到17时的结果都很“完美”。</p>

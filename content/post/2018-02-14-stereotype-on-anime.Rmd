@@ -1,6 +1,5 @@
 ---
 title: 关于动画的刻板印象
-author: ''
 date: '2018-02-14'
 slug: stereotype-on-anime
 categories:
@@ -27,19 +26,20 @@ tags:
 先载入要用到的包：
 
 ```{r message = FALSE}
-library(tidyverse)
-library(knitr)
-library(scales)
+library(tidyverse) # 清洗数据及可视化
+library(here) # 设置数据路径
+library(knitr) # 呈现更好看的表格
+library(kableExtra) # 同上
 ```
-
-按照惯例，先载入了`tidyverse`包；然后为了数据能展示得更好看一点，以及数据的正常显示，也载入了`knitr`包；另外，后面在画图的时候，还要用到`scales`包，这里也一并载入。
 
 然后来看一下这份数据：
 
-```{r warning = FALSE}
-douban <- read_csv('douban.csv')
+```{r message = FALSE, warning = FALSE}
+douban <- read_csv(here('content', 'post', 'data', '180214-douban.csv'))
 
-head(douban, 10) %>% kable()
+head(douban, 10) %>% kable() %>% 
+  kable_styling(bootstrap_options = 'striped', font_size = 12) %>% 
+  scroll_box(width = '100%')
 ```
 
 这里首先使用`read_csv`函数将数据导入。不知道为什么，这样载入后数据直接显示是不正常的，但是通过`kable`函数显示就没问题了；同样也不知道为什么（应该是因为片名中存在逗号），使用`read.csv`会报错，所以最终就用了这样的方式。可以看到，这份数据有12个变量，其中“评分”，“名字”，“投票人数”，“类型”，“产地”，“年代”几个变量是我所需要的。另外，这份数据一共包含了7万多部影视的信息。下面先简单的把这份数据清理一下：
@@ -79,18 +79,14 @@ anime %>% filter(number > 100) %>%
 然后分区域来看一下，先看下美国的情况，代码及图如下：
 
 ```{r}
-plot_usa <- anime %>% filter(region == '美国') %>% 
+(plot_usa <- anime %>% filter(region == '美国') %>% 
   top_n(20, number) %>% 
   ggplot(aes(reorder(name,number), number)) + 
   geom_col(fill = '#870204', width = .8) + 
   coord_flip() + 
   geom_text(aes(label = rating), hjust = 'right', color = 'white') + 
-  scale_y_continuous(labels = comma) + 
-  labs(x = '片名', y = '评价人数')
-```
-
-```{r}
-plot_usa
+  scale_y_continuous(labels = scales::comma) + 
+  labs(x = '片名', y = '评价人数'))
 ```
 
 这里我选择了评价人数最多的20部美国动画，并把评分也标了上去。这20部动画我看过10部，除了《狮子王》之外，应该全是在成年以后看的（可能也是因为这些动画都比较新）。就我的了解，这些动画大部分都是既适合小孩子看，也适合成年人看，并不是专门为了给小孩子看而制作的，所以我觉得，美国应该不存在“动画是给小孩子看的”这一刻板印象。
@@ -98,18 +94,14 @@ plot_usa
 然后看看日本的情况：
 
 ```{r}
-plot_jpn <- anime %>% filter(region == '日本') %>% 
+(plot_jpn <- anime %>% filter(region == '日本') %>% 
   top_n(20, number) %>% 
   ggplot(aes(reorder(name,number), number)) + 
   geom_col(fill = '#870204', width = .8) + 
   coord_flip() + 
   geom_text(aes(label = rating), hjust = 'right', color = 'white') + 
-  scale_y_continuous(labels = comma) + 
-  labs(x = '片名', y = '评价人数')
-```
-
-```{r}
-plot_jpn
+  scale_y_continuous(labels = scales::comma) + 
+  labs(x = '片名', y = '评价人数'))
 ```
 
 这20部动画我也是只看过10部，这10部主要是宫崎骏的动画。虽然他的动画都是以一些少年少女为主角，但面向的年龄段应该也是比较宽的（而且可能不太适合太小的孩子看）。总的来说，这20部里面，除了《哆啦A梦》，可能都不是专门制作给小孩子看的，所以我觉得日本也不存在这种刻板印象。
@@ -117,18 +109,14 @@ plot_jpn
 最后来看看国产动画：
 
 ```{r}
-plot_chn <- anime %>% filter(region == '中国') %>% 
+(plot_chn <- anime %>% filter(region == '中国') %>% 
   top_n(20, number) %>% 
   ggplot(aes(reorder(name,number), number)) + 
   geom_col(fill = '#870204', width = .8) + 
   coord_flip() + 
   geom_text(aes(label = rating), hjust = 'right', color = 'white') + 
-  scale_y_continuous(labels = comma) + 
-  labs(x = '片名', y = '评价人数')
-```
-
-```{r}
-plot_chn
+  scale_y_continuous(labels = scales::comma) + 
+  labs(x = '片名', y = '评价人数'))
 ```
 
 这20部动画大部分都看过，即便没看过，也肯定听说过。首先，我可以肯定，《十万个冷笑话》之下的那些动画全都是低龄向的，上面的麦兜系列也是，然后《十万个冷笑话》跟《李献计历险记》应该是成人向的，其他的应该是全年龄的。可以说，我国的经典动画一半以上都是低龄向的，所以我觉得，我们国家可能确实存在一种“动画是给小孩子看的”刻板印象。不过，这上边的动画很多都是比较旧的，也许新的动画中，这种现象已经减少了，所以还需要根据年代来看看这种趋势的变化。另外，我很意外，《喜羊羊》系列和《熊出没》系列竟然没有进前20，这一方面可能是因为这些动画都分了很多部，评分不集中，另一方面可能是因为这些动画的很多观众还没有长到会上豆瓣给动画打分的年纪。

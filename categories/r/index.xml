@@ -6,10 +6,24 @@
     <description>Recent content in R on RPG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 07 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 23 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>《机器学习与R语言》学习笔记01：kNN</title>
+      <link>/2019/04/mlr-note-knn/</link>
+      <pubDate>Tue, 23 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/04/mlr-note-knn/</guid>
+      <description>通过将《机器学习与R语言》一书中的代码tidyverse化，来学习这本书。
+书中第一个例子是利用kNN算法来诊断乳腺癌。
+首先载入需要用到的包：
+library(tidyverse) # 清洗数据library(here) # 设置数据文件路径library(knitr) # 呈现更好看的表格library(kableExtra) # 同上library(class) # 使用包中的knn()函数library(gmodels) # 使用包中的CrossTable()函数然后导入数据并清洗：
+wbcd &amp;lt;- read_csv(here(&amp;#39;content&amp;#39;, &amp;#39;post&amp;#39;, &amp;#39;data&amp;#39;, &amp;#39;01-wisc_bc_data.csv&amp;#39;)) %&amp;gt;% select(-id) %&amp;gt;% mutate(diagnosis = factor(diagnosis, levels = c(&amp;#39;B&amp;#39;, &amp;#39;M&amp;#39;),labels = c(&amp;#39;Benign&amp;#39;, &amp;#39;Malignant&amp;#39;))) %&amp;gt;% mutate_if(is.numeric, ~ (.x - min(.x)) / (max(.x) - min(.x)))首先使用here函数找到数据文件的路径，然后使用read_csv函数将其读入R中；随后通过select函数将id变量去掉；然后利用mutate函数将diagnosis变量改为因子型；最后利用mutate_if函数，将所有数值型的变量进行min-max标准化，这里用到了公式化的匿名函数，可以使代码更为简练。此时的数据是这样的：
+wbcd %&amp;gt;% head() %&amp;gt;% kable() %&amp;gt;% kable_styling(bootstrap_options = &amp;quot;striped&amp;quot;, font_size = 12) %&amp;gt;%scroll_box(width = &amp;quot;100%&amp;quot;) diagnosisradius_meantexture_meanperimeter_meanarea_meansmoothness_meancompactness_meanconcavity_meanconcave points_meansymmetry_meanfractal_dimension_meanradius_setexture_seperimeter_searea_sesmoothness_secompactness_seconcavity_seconcave points_sesymmetry_sefractal_dimension_seradius_worsttexture_worstperimeter_worstarea_worstsmoothness_worstcompactness_worstconcavity_worstconcave points_worstsymmetry_worstfractal_dimension_worstMalignant0.</description>
+    </item>
     
     <item>
       <title>R语言学习资源总结</title>
@@ -209,9 +223,8 @@ reading %&amp;gt;% head() %&amp;gt;% kable()yearregionpassagesentencesent
 如果存在的话，这一刻板印象是仅限于我们国家，还是全都这样？
 要进行验证的话，首先要有相关的数据。虽然我平常关于动画的信息会参考IMDB和MAL，但要完成这一任务，显然还是豆瓣更合适。我试图在豆瓣网站上爬取我所需要的信息，但折腾了一上午才发现，我所掌握的那一点点爬虫技术根本就无法爬取我所需要的数据，于是我就在网上找了一份现成的（早知道就不折腾了）。这份数据是2016年的，还算比较新，内容也完全符合我的需要。其次，要找到具有代表性的作品。关于哪些动画是代表性的，每个人肯定都有不同的看法，可能不会有特定的原型，所以这里我先用豆瓣上的评价人数为指标来评定动画的代表性，评价人数越多，就说明其越具有代表性。另外，要拿国产动画和国外动画进行对比，但实际上所谓的国外动画，主要就是美国和日本的动画（三个国家的动画数量占了全部动画数量的81.4%），所以后面只挑了这三个地区的数据。
 先载入要用到的包：
-library(tidyverse)library(knitr)library(scales)按照惯例，先载入了tidyverse包；然后为了数据能展示得更好看一点，以及数据的正常显示，也载入了knitr包；另外，后面在画图的时候，还要用到scales包，这里也一并载入。
-然后来看一下这份数据：
-douban &amp;lt;- read_csv(&amp;#39;douban.csv&amp;#39;)## Parsed with column specification:## cols(## 评分 = col_double(),## 名字 = col_character(),## 投票人数 = col_integer(),## 类型 = col_character(),## 产地 = col_character(),## 上映时间 = col_character(),## 时长 = col_character(),## 年代 = col_character(),## 是否连续剧 = col_integer(),## 集数 = col_character(),## 看过 = col_integer(),## 待看 = col_character()## )head(douban, 10) %&amp;gt;% kable()评分名字投票人数类型产地上映时间时长年代是否连续剧集数看过待看7.</description>
+library(tidyverse) # 清洗数据及可视化library(here) # 设置数据路径library(knitr) # 呈现更好看的表格library(kableExtra) # 同上然后来看一下这份数据：
+douban &amp;lt;- read_csv(here(&amp;#39;content&amp;#39;, &amp;#39;post&amp;#39;, &amp;#39;data&amp;#39;, &amp;#39;180214-douban.csv&amp;#39;))head(douban, 10) %&amp;gt;% kable() %&amp;gt;% kable_styling(bootstrap_options = &amp;#39;striped&amp;#39;, font_size = 12) %&amp;gt;% scroll_box(width = &amp;#39;100%&amp;#39;)评分名字投票人数类型产地上映时间时长年代是否连续剧集数看过待看7.</description>
     </item>
     
   </channel>

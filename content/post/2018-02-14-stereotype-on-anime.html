@@ -1,6 +1,5 @@
 ---
 title: 关于动画的刻板印象
-author: ''
 date: '2018-02-14'
 slug: stereotype-on-anime
 categories:
@@ -10,6 +9,7 @@ tags:
   - 心理学
 ---
 
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
 <p>前段时间带孩子去看了<a href="https://movie.douban.com/subject/27605297/">《金龟子》</a>动画大电影，感觉很无趣。我原以为其身为童年回忆，来到屏幕，面对长幼两辈，必有看点，没想到竟演出如此幼稚之戏！看了几分钟之后，我就开始玩手机了。坐我前面的也是一对父子，动画放了一半的时候，孩子问了他爸爸一句话，让我印象很深刻。他问：“爸爸，你怎么不看啊？”孩子显然是很喜欢这部动画的，希望他爸爸也跟他一起看，但这动画实在无法勾起我们的兴趣。电影结束回到家后，我产生了一个疑问，难道这部动画真的没办法制作成老少咸宜的吗？是出于什么原因，导致这部本来可以通过卖情怀让成年人也产生兴趣的动画最终只是一部低龄向动画？我想，原因不外乎在我们国家对于动画一直存在一个根深蒂固的刻板印象，即，动画是给小孩子看的。</p>
@@ -22,188 +22,442 @@ tags:
 </ul>
 <p>要进行验证的话，首先要有相关的数据。虽然我平常关于动画的信息会参考<a href="http://www.imdb.com/">IMDB</a>和<a href="https://myanimelist.net/">MAL</a>，但要完成这一任务，显然还是<a href="https://www.douban.com/">豆瓣</a>更合适。我试图在豆瓣网站上爬取我所需要的信息，但折腾了一上午才发现，我所掌握的那一点点爬虫技术根本就无法爬取我所需要的数据，于是我就在网上找了一份现成的（早知道就不折腾了）。这份数据是2016年的，还算比较新，内容也完全符合我的需要。其次，要找到具有代表性的作品。关于哪些动画是代表性的，每个人肯定都有不同的看法，可能不会有特定的原型，所以这里我先用豆瓣上的评价人数为指标来评定动画的代表性，评价人数越多，就说明其越具有代表性。另外，要拿国产动画和国外动画进行对比，但实际上所谓的国外动画，主要就是美国和日本的动画（三个国家的动画数量占了全部动画数量的81.4%），所以后面只挑了这三个地区的数据。</p>
 <p>先载入要用到的包：</p>
-<pre class="r"><code>library(tidyverse)
-library(knitr)
-library(scales)</code></pre>
-<p>按照惯例，先载入了<code>tidyverse</code>包；然后为了数据能展示得更好看一点，以及数据的正常显示，也载入了<code>knitr</code>包；另外，后面在画图的时候，还要用到<code>scales</code>包，这里也一并载入。</p>
+<pre class="r"><code>library(tidyverse) # 清洗数据及可视化
+library(here) # 设置数据路径
+library(knitr) # 呈现更好看的表格
+library(kableExtra) # 同上</code></pre>
 <p>然后来看一下这份数据：</p>
-<pre class="r"><code>douban &lt;- read_csv(&#39;douban.csv&#39;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   评分 = col_double(),
-##   名字 = col_character(),
-##   投票人数 = col_integer(),
-##   类型 = col_character(),
-##   产地 = col_character(),
-##   上映时间 = col_character(),
-##   时长 = col_character(),
-##   年代 = col_character(),
-##   是否连续剧 = col_integer(),
-##   集数 = col_character(),
-##   看过 = col_integer(),
-##   待看 = col_character()
-## )</code></pre>
-<pre class="r"><code>head(douban, 10) %&gt;% kable()</code></pre>
-<table>
+<pre class="r"><code>douban &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;180214-douban.csv&#39;))
+
+head(douban, 10) %&gt;% kable() %&gt;% 
+  kable_styling(bootstrap_options = &#39;striped&#39;, font_size = 12) %&gt;% 
+  scroll_box(width = &#39;100%&#39;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
 <thead>
-<tr class="header">
-<th align="center">评分</th>
-<th align="left">名字</th>
-<th align="center">投票人数</th>
-<th align="left">类型</th>
-<th align="left">产地</th>
-<th align="left">上映时间</th>
-<th align="left">时长</th>
-<th align="left">年代</th>
-<th align="center">是否连续剧</th>
-<th align="left">集数</th>
-<th align="center">看过</th>
-<th align="left">待看</th>
+<tr>
+<th style="text-align:right;">
+评分
+</th>
+<th style="text-align:left;">
+名字
+</th>
+<th style="text-align:right;">
+投票人数
+</th>
+<th style="text-align:left;">
+类型
+</th>
+<th style="text-align:left;">
+产地
+</th>
+<th style="text-align:left;">
+上映时间
+</th>
+<th style="text-align:left;">
+时长
+</th>
+<th style="text-align:left;">
+年代
+</th>
+<th style="text-align:right;">
+是否连续剧
+</th>
+<th style="text-align:left;">
+集数
+</th>
+<th style="text-align:right;">
+看过
+</th>
+<th style="text-align:left;">
+待看
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="center">7.7</td>
-<td align="left">0.109027778</td>
-<td align="center">3901</td>
-<td align="left">剧情</td>
-<td align="left">澳大利亚</td>
-<td align="left">2006-08-17</td>
-<td align="left">Japan: 99 分钟</td>
-<td align="left">2006</td>
-<td align="center">0</td>
-<td align="left">NONE</td>
-<td align="center">NA</td>
-<td align="left">NA</td>
+<tr>
+<td style="text-align:right;">
+7.7
+</td>
+<td style="text-align:left;">
+0.109027778
+</td>
+<td style="text-align:right;">
+3901
+</td>
+<td style="text-align:left;">
+剧情
+</td>
+<td style="text-align:left;">
+澳大利亚
+</td>
+<td style="text-align:left;">
+2006-08-17
+</td>
+<td style="text-align:left;">
+Japan: 99 分钟
+</td>
+<td style="text-align:left;">
+2006
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
-<tr class="even">
-<td align="center">7.9</td>
-<td align="left">0.1875</td>
-<td align="center">512</td>
-<td align="left">剧情</td>
-<td align="left">新加坡</td>
-<td align="left">2005-12-17</td>
-<td align="left">Japan: 93 分钟</td>
-<td align="left">2005</td>
-<td align="center">0</td>
-<td align="left">NONE</td>
-<td align="center">NA</td>
-<td align="left">NA</td>
+<tr>
+<td style="text-align:right;">
+7.9
+</td>
+<td style="text-align:left;">
+0.1875
+</td>
+<td style="text-align:right;">
+512
+</td>
+<td style="text-align:left;">
+剧情
+</td>
+<td style="text-align:left;">
+新加坡
+</td>
+<td style="text-align:left;">
+2005-12-17
+</td>
+<td style="text-align:left;">
+Japan: 93 分钟
+</td>
+<td style="text-align:left;">
+2005
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
-<tr class="odd">
-<td align="center">9.6</td>
-<td align="left">肖申克的救赎 The Shawshank Redemption</td>
-<td align="center">692795</td>
-<td align="left">剧情 / 犯罪</td>
-<td align="left">美国</td>
-<td align="left">1994-09-10(多伦多电影节) / 1994-10-14(美国)</td>
-<td align="left">142 分钟</td>
-<td align="left">1994</td>
-<td align="center">0</td>
-<td align="left">NONE</td>
-<td align="center">532</td>
-<td align="left">NA</td>
+<tr>
+<td style="text-align:right;">
+9.6
+</td>
+<td style="text-align:left;">
+肖申克的救赎 The Shawshank Redemption
+</td>
+<td style="text-align:right;">
+692795
+</td>
+<td style="text-align:left;">
+剧情 / 犯罪
+</td>
+<td style="text-align:left;">
+美国
+</td>
+<td style="text-align:left;">
+1994-09-10(多伦多电影节) / 1994-10-14(美国)
+</td>
+<td style="text-align:left;">
+142 分钟
+</td>
+<td style="text-align:left;">
+1994
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:right;">
+532
+</td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
-<tr class="even">
-<td align="center">6.8</td>
-<td align="left">0.965972222</td>
-<td align="center">38</td>
-<td align="left">短片</td>
-<td align="left">中国大陆</td>
-<td align="left">NONE</td>
-<td align="left">9分钟</td>
-<td align="left">2011</td>
-<td align="center">0</td>
-<td align="left">NONE</td>
-<td align="center">NA</td>
-<td align="left">NA</td>
+<tr>
+<td style="text-align:right;">
+6.8
+</td>
+<td style="text-align:left;">
+0.965972222
+</td>
+<td style="text-align:right;">
+38
+</td>
+<td style="text-align:left;">
+短片
+</td>
+<td style="text-align:left;">
+中国大陆
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:left;">
+9分钟
+</td>
+<td style="text-align:left;">
+2011
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
-<tr class="odd">
-<td align="center">7.1</td>
-<td align="left">0.97</td>
-<td align="center">44</td>
-<td align="left">短片</td>
-<td align="left">Netherlands</td>
-<td align="left">NONE</td>
-<td align="left">9分钟</td>
-<td align="left">2013</td>
-<td align="center">0</td>
-<td align="left">NONE</td>
-<td align="center">NA</td>
-<td align="left">NA</td>
+<tr>
+<td style="text-align:right;">
+7.1
+</td>
+<td style="text-align:left;">
+0.97
+</td>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:left;">
+短片
+</td>
+<td style="text-align:left;">
+Netherlands
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:left;">
+9分钟
+</td>
+<td style="text-align:left;">
+2013
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
-<tr class="even">
-<td align="center">6.1</td>
-<td align="left">12.21</td>
-<td align="center">179</td>
-<td align="left">剧情 / 爱情</td>
-<td align="left">中国大陆</td>
-<td align="left">2012-12-08(中国大陆)</td>
-<td align="left">21分钟</td>
-<td align="left">2012</td>
-<td align="center">0</td>
-<td align="left">NONE</td>
-<td align="center">NA</td>
-<td align="left">NA</td>
+<tr>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:left;">
+12.21
+</td>
+<td style="text-align:right;">
+179
+</td>
+<td style="text-align:left;">
+剧情 / 爱情
+</td>
+<td style="text-align:left;">
+中国大陆
+</td>
+<td style="text-align:left;">
+2012-12-08(中国大陆)
+</td>
+<td style="text-align:left;">
+21分钟
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
-<tr class="odd">
-<td align="center">9.5</td>
-<td align="left">控方证人 Witness for the Prosecution</td>
-<td align="center">42995</td>
-<td align="left">剧情 / 悬疑 / 犯罪</td>
-<td align="left">美国</td>
-<td align="left">1957-12-17(美国)</td>
-<td align="left">116分钟</td>
-<td align="left">1957</td>
-<td align="center">0</td>
-<td align="left">NONE</td>
-<td align="center">NA</td>
-<td align="left">NA</td>
+<tr>
+<td style="text-align:right;">
+9.5
+</td>
+<td style="text-align:left;">
+控方证人 Witness for the Prosecution
+</td>
+<td style="text-align:right;">
+42995
+</td>
+<td style="text-align:left;">
+剧情 / 悬疑 / 犯罪
+</td>
+<td style="text-align:left;">
+美国
+</td>
+<td style="text-align:left;">
+1957-12-17(美国)
+</td>
+<td style="text-align:left;">
+116分钟
+</td>
+<td style="text-align:left;">
+1957
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
-<tr class="even">
-<td align="center">5.8</td>
-<td align="left">37</td>
-<td align="center">360</td>
-<td align="left">剧情 / 家庭</td>
-<td align="left">中国大陆 / 香港</td>
-<td align="left">2012-06-01(中国大陆)</td>
-<td align="left">97分钟</td>
-<td align="left">2012</td>
-<td align="center">0</td>
-<td align="left">NONE</td>
-<td align="center">NA</td>
-<td align="left">NA</td>
+<tr>
+<td style="text-align:right;">
+5.8
+</td>
+<td style="text-align:left;">
+37
+</td>
+<td style="text-align:right;">
+360
+</td>
+<td style="text-align:left;">
+剧情 / 家庭
+</td>
+<td style="text-align:left;">
+中国大陆 / 香港
+</td>
+<td style="text-align:left;">
+2012-06-01(中国大陆)
+</td>
+<td style="text-align:left;">
+97分钟
+</td>
+<td style="text-align:left;">
+2012
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
-<tr class="odd">
-<td align="center">7.4</td>
-<td align="left">49</td>
-<td align="center">1333</td>
-<td align="left">剧情</td>
-<td align="left">日本</td>
-<td align="left">NONE</td>
-<td align="left">23分钟</td>
-<td align="left">2013</td>
-<td align="center">1</td>
-<td align="left">11</td>
-<td align="center">NA</td>
-<td align="left">NA</td>
+<tr>
+<td style="text-align:right;">
+7.4
+</td>
+<td style="text-align:left;">
+49
+</td>
+<td style="text-align:right;">
+1333
+</td>
+<td style="text-align:left;">
+剧情
+</td>
+<td style="text-align:left;">
+日本
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:left;">
+23分钟
+</td>
+<td style="text-align:left;">
+2013
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+11
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
-<tr class="even">
-<td align="center">9.5</td>
-<td align="left">美丽人生 La vita è bella</td>
-<td align="center">327855</td>
-<td align="left">剧情 / 喜剧 / 爱情</td>
-<td align="left">意大利</td>
-<td align="left">1997-12-20(意大利)</td>
-<td align="left">116分钟</td>
-<td align="left">1997</td>
-<td align="center">0</td>
-<td align="left">NONE</td>
-<td align="center">511</td>
-<td align="left">NA</td>
+<tr>
+<td style="text-align:right;">
+9.5
+</td>
+<td style="text-align:left;">
+美丽人生 La vita è bella
+</td>
+<td style="text-align:right;">
+327855
+</td>
+<td style="text-align:left;">
+剧情 / 喜剧 / 爱情
+</td>
+<td style="text-align:left;">
+意大利
+</td>
+<td style="text-align:left;">
+1997-12-20(意大利)
+</td>
+<td style="text-align:left;">
+116分钟
+</td>
+<td style="text-align:left;">
+1997
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NONE
+</td>
+<td style="text-align:right;">
+511
+</td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 </tbody>
 </table>
+</div>
 <p>这里首先使用<code>read_csv</code>函数将数据导入。不知道为什么，这样载入后数据直接显示是不正常的，但是通过<code>kable</code>函数显示就没问题了；同样也不知道为什么（应该是因为片名中存在逗号），使用<code>read.csv</code>会报错，所以最终就用了这样的方式。可以看到，这份数据有12个变量，其中“评分”，“名字”，“投票人数”，“类型”，“产地”，“年代”几个变量是我所需要的。另外，这份数据一共包含了7万多部影视的信息。下面先简单的把这份数据清理一下：</p>
 <pre class="r"><code>anime &lt;- douban %&gt;% select(name = 2, number = 3, rating = 1, 
                            type = 4, region = 5, year = 8) %&gt;% 
@@ -221,84 +475,194 @@ library(scales)</code></pre>
 <pre class="r"><code>head(anime, 10) %&gt;% kable()</code></pre>
 <table>
 <thead>
-<tr class="header">
-<th align="left">name</th>
-<th align="right">number</th>
-<th align="right">rating</th>
-<th align="left">region</th>
-<th align="left">year</th>
+<tr>
+<th style="text-align:left;">
+name
+</th>
+<th style="text-align:right;">
+number
+</th>
+<th style="text-align:right;">
+rating
+</th>
+<th style="text-align:left;">
+region
+</th>
+<th style="text-align:left;">
+year
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">千与千寻</td>
-<td align="right">525505</td>
-<td align="right">9.2</td>
-<td align="left">日本</td>
-<td align="left">2001</td>
+<tr>
+<td style="text-align:left;">
+千与千寻
+</td>
+<td style="text-align:right;">
+525505
+</td>
+<td style="text-align:right;">
+9.2
+</td>
+<td style="text-align:left;">
+日本
+</td>
+<td style="text-align:left;">
+2001
+</td>
 </tr>
-<tr class="even">
-<td align="left">飞屋环游记</td>
-<td align="right">423327</td>
-<td align="right">8.9</td>
-<td align="left">美国</td>
-<td align="left">2009</td>
+<tr>
+<td style="text-align:left;">
+飞屋环游记
+</td>
+<td style="text-align:right;">
+423327
+</td>
+<td style="text-align:right;">
+8.9
+</td>
+<td style="text-align:left;">
+美国
+</td>
+<td style="text-align:left;">
+2009
+</td>
 </tr>
-<tr class="odd">
-<td align="left">机器人总动员</td>
-<td align="right">421734</td>
-<td align="right">9.3</td>
-<td align="left">美国</td>
-<td align="left">2008</td>
+<tr>
+<td style="text-align:left;">
+机器人总动员
+</td>
+<td style="text-align:right;">
+421734
+</td>
+<td style="text-align:right;">
+9.3
+</td>
+<td style="text-align:left;">
+美国
+</td>
+<td style="text-align:left;">
+2008
+</td>
 </tr>
-<tr class="even">
-<td align="left">龙猫</td>
-<td align="right">344318</td>
-<td align="right">9.1</td>
-<td align="left">日本</td>
-<td align="left">1988</td>
+<tr>
+<td style="text-align:left;">
+龙猫
+</td>
+<td style="text-align:right;">
+344318
+</td>
+<td style="text-align:right;">
+9.1
+</td>
+<td style="text-align:left;">
+日本
+</td>
+<td style="text-align:left;">
+1988
+</td>
 </tr>
-<tr class="odd">
-<td align="left">疯狂原始人</td>
-<td align="right">311462</td>
-<td align="right">8.8</td>
-<td align="left">美国</td>
-<td align="left">2013</td>
+<tr>
+<td style="text-align:left;">
+疯狂原始人
+</td>
+<td style="text-align:right;">
+311462
+</td>
+<td style="text-align:right;">
+8.8
+</td>
+<td style="text-align:left;">
+美国
+</td>
+<td style="text-align:left;">
+2013
+</td>
 </tr>
-<tr class="even">
-<td align="left">西游记之大圣归来</td>
-<td align="right">311050</td>
-<td align="right">8.3</td>
-<td align="left">中国</td>
-<td align="left">2015</td>
+<tr>
+<td style="text-align:left;">
+西游记之大圣归来
+</td>
+<td style="text-align:right;">
+311050
+</td>
+<td style="text-align:right;">
+8.3
+</td>
+<td style="text-align:left;">
+中国
+</td>
+<td style="text-align:left;">
+2015
+</td>
 </tr>
-<tr class="odd">
-<td align="left">神偷奶爸</td>
-<td align="right">305753</td>
-<td align="right">8.5</td>
-<td align="left">美国</td>
-<td align="left">2010</td>
+<tr>
+<td style="text-align:left;">
+神偷奶爸
+</td>
+<td style="text-align:right;">
+305753
+</td>
+<td style="text-align:right;">
+8.5
+</td>
+<td style="text-align:left;">
+美国
+</td>
+<td style="text-align:left;">
+2010
+</td>
 </tr>
-<tr class="even">
-<td align="left">疯狂动物城</td>
-<td align="right">284652</td>
-<td align="right">9.3</td>
-<td align="left">美国</td>
-<td align="left">2016</td>
+<tr>
+<td style="text-align:left;">
+疯狂动物城
+</td>
+<td style="text-align:right;">
+284652
+</td>
+<td style="text-align:right;">
+9.3
+</td>
+<td style="text-align:left;">
+美国
+</td>
+<td style="text-align:left;">
+2016
+</td>
 </tr>
-<tr class="odd">
-<td align="left">超能陆战队</td>
-<td align="right">282909</td>
-<td align="right">8.6</td>
-<td align="left">美国</td>
-<td align="left">2014</td>
+<tr>
+<td style="text-align:left;">
+超能陆战队
+</td>
+<td style="text-align:right;">
+282909
+</td>
+<td style="text-align:right;">
+8.6
+</td>
+<td style="text-align:left;">
+美国
+</td>
+<td style="text-align:left;">
+2014
+</td>
 </tr>
-<tr class="even">
-<td align="left">哈尔的移动城堡</td>
-<td align="right">279362</td>
-<td align="right">8.8</td>
-<td align="left">日本</td>
-<td align="left">2004</td>
+<tr>
+<td style="text-align:left;">
+哈尔的移动城堡
+</td>
+<td style="text-align:right;">
+279362
+</td>
+<td style="text-align:right;">
+8.8
+</td>
+<td style="text-align:left;">
+日本
+</td>
+<td style="text-align:left;">
+2004
+</td>
 </tr>
 </tbody>
 </table>
@@ -309,70 +673,99 @@ library(scales)</code></pre>
             mean_number = mean(number, na.rm = TRUE)) %&gt;% kable()</code></pre>
 <table>
 <thead>
-<tr class="header">
-<th align="left">region</th>
-<th align="right">N</th>
-<th align="right">mean_rating</th>
-<th align="right">mean_number</th>
+<tr>
+<th style="text-align:left;">
+region
+</th>
+<th style="text-align:right;">
+N
+</th>
+<th style="text-align:right;">
+mean_rating
+</th>
+<th style="text-align:right;">
+mean_number
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">美国</td>
-<td align="right">1302</td>
-<td align="right">7.984485</td>
-<td align="right">9583.803</td>
+<tr>
+<td style="text-align:left;">
+美国
+</td>
+<td style="text-align:right;">
+1302
+</td>
+<td style="text-align:right;">
+7.984485
+</td>
+<td style="text-align:right;">
+9583.803
+</td>
 </tr>
-<tr class="even">
-<td align="left">日本</td>
-<td align="right">3153</td>
-<td align="right">7.672693</td>
-<td align="right">4570.155</td>
+<tr>
+<td style="text-align:left;">
+日本
+</td>
+<td style="text-align:right;">
+3153
+</td>
+<td style="text-align:right;">
+7.672693
+</td>
+<td style="text-align:right;">
+4570.155
+</td>
 </tr>
-<tr class="odd">
-<td align="left">中国</td>
-<td align="right">709</td>
-<td align="right">7.050635</td>
-<td align="right">4855.121</td>
+<tr>
+<td style="text-align:left;">
+中国
+</td>
+<td style="text-align:right;">
+709
+</td>
+<td style="text-align:right;">
+7.050635
+</td>
+<td style="text-align:right;">
+4855.121
+</td>
 </tr>
 </tbody>
 </table>
 <p>这里只选择了评价人数大于100的动画。对比一下就可以发现，日本动画在数量上是碾压性的，但质量方面还是美国更胜一筹。对于国产动画，各方面都还有所欠缺，国产动画的崛起还有很长的路要走。</p>
 <p>然后分区域来看一下，先看下美国的情况，代码及图如下：</p>
-<pre class="r"><code>plot_usa &lt;- anime %&gt;% filter(region == &#39;美国&#39;) %&gt;% 
+<pre class="r"><code>(plot_usa &lt;- anime %&gt;% filter(region == &#39;美国&#39;) %&gt;% 
   top_n(20, number) %&gt;% 
   ggplot(aes(reorder(name,number), number)) + 
   geom_col(fill = &#39;#870204&#39;, width = .8) + 
   coord_flip() + 
   geom_text(aes(label = rating), hjust = &#39;right&#39;, color = &#39;white&#39;) + 
-  scale_y_continuous(labels = comma) + 
-  labs(x = &#39;片名&#39;, y = &#39;评价人数&#39;)</code></pre>
-<pre class="r"><code>plot_usa</code></pre>
-<p><img src="/post/2018-02-14-stereotype-on-anime_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+  scale_y_continuous(labels = scales::comma) + 
+  labs(x = &#39;片名&#39;, y = &#39;评价人数&#39;))</code></pre>
+<p><img src="/post/2018-02-14-stereotype-on-anime_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>这里我选择了评价人数最多的20部美国动画，并把评分也标了上去。这20部动画我看过10部，除了《狮子王》之外，应该全是在成年以后看的（可能也是因为这些动画都比较新）。就我的了解，这些动画大部分都是既适合小孩子看，也适合成年人看，并不是专门为了给小孩子看而制作的，所以我觉得，美国应该不存在“动画是给小孩子看的”这一刻板印象。</p>
 <p>然后看看日本的情况：</p>
-<pre class="r"><code>plot_jpn &lt;- anime %&gt;% filter(region == &#39;日本&#39;) %&gt;% 
+<pre class="r"><code>(plot_jpn &lt;- anime %&gt;% filter(region == &#39;日本&#39;) %&gt;% 
   top_n(20, number) %&gt;% 
   ggplot(aes(reorder(name,number), number)) + 
   geom_col(fill = &#39;#870204&#39;, width = .8) + 
   coord_flip() + 
   geom_text(aes(label = rating), hjust = &#39;right&#39;, color = &#39;white&#39;) + 
-  scale_y_continuous(labels = comma) + 
-  labs(x = &#39;片名&#39;, y = &#39;评价人数&#39;)</code></pre>
-<pre class="r"><code>plot_jpn</code></pre>
-<p><img src="/post/2018-02-14-stereotype-on-anime_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+  scale_y_continuous(labels = scales::comma) + 
+  labs(x = &#39;片名&#39;, y = &#39;评价人数&#39;))</code></pre>
+<p><img src="/post/2018-02-14-stereotype-on-anime_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>这20部动画我也是只看过10部，这10部主要是宫崎骏的动画。虽然他的动画都是以一些少年少女为主角，但面向的年龄段应该也是比较宽的（而且可能不太适合太小的孩子看）。总的来说，这20部里面，除了《哆啦A梦》，可能都不是专门制作给小孩子看的，所以我觉得日本也不存在这种刻板印象。</p>
 <p>最后来看看国产动画：</p>
-<pre class="r"><code>plot_chn &lt;- anime %&gt;% filter(region == &#39;中国&#39;) %&gt;% 
+<pre class="r"><code>(plot_chn &lt;- anime %&gt;% filter(region == &#39;中国&#39;) %&gt;% 
   top_n(20, number) %&gt;% 
   ggplot(aes(reorder(name,number), number)) + 
   geom_col(fill = &#39;#870204&#39;, width = .8) + 
   coord_flip() + 
   geom_text(aes(label = rating), hjust = &#39;right&#39;, color = &#39;white&#39;) + 
-  scale_y_continuous(labels = comma) + 
-  labs(x = &#39;片名&#39;, y = &#39;评价人数&#39;)</code></pre>
-<pre class="r"><code>plot_chn</code></pre>
-<p><img src="/post/2018-02-14-stereotype-on-anime_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+  scale_y_continuous(labels = scales::comma) + 
+  labs(x = &#39;片名&#39;, y = &#39;评价人数&#39;))</code></pre>
+<p><img src="/post/2018-02-14-stereotype-on-anime_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>这20部动画大部分都看过，即便没看过，也肯定听说过。首先，我可以肯定，《十万个冷笑话》之下的那些动画全都是低龄向的，上面的麦兜系列也是，然后《十万个冷笑话》跟《李献计历险记》应该是成人向的，其他的应该是全年龄的。可以说，我国的经典动画一半以上都是低龄向的，所以我觉得，我们国家可能确实存在一种“动画是给小孩子看的”刻板印象。不过，这上边的动画很多都是比较旧的，也许新的动画中，这种现象已经减少了，所以还需要根据年代来看看这种趋势的变化。另外，我很意外，《喜羊羊》系列和《熊出没》系列竟然没有进前20，这一方面可能是因为这些动画都分了很多部，评分不集中，另一方面可能是因为这些动画的很多观众还没有长到会上豆瓣给动画打分的年纪。</p>
 <p>假如我们国家且仅有我们国家存在这样的一种刻板印象，那它是怎么造成的呢？是因为文化差异，还是因为从有刻板印象到消除刻板印象需要一个过程而我们国家恰好处于那个尚未消除这一刻板印象的阶段？这个问题不是我能回答的，但这个问题对我们国家动画产业的发展却影响甚大。因为我们有这样一个观念，所以制作方不会吃饱了撑的去制作全年龄向的动画，而这一结果又反过来继续加深了这一观念。因为动画的观众主要是小孩子，他们对动画的质量没有太高的要求，动画制作者也没必要精心打磨自己的作品，水平也就始终停滞不前或说跟不上其他国家的脚步。所以国产动画要崛起，可能得首先从打破这一刻板印象开始，把更多挑剔的成年人纳入到动画的观众中来。</p>
 <p>以上只是我个人根据不一定合适的信息而产生的主观想法，存在很多缺陷。比如，上豆瓣的人年纪应该都不小了，这份数据里缺少低龄群体的评分；另外，进入前20的大部分都是动画电影，很少有TV版，所以其实也不是很有代表性；最后，我的想法不能代表大众的想法，我认为是低龄向的动画也许在大众眼里不是那样的。这也让我产生了一个想法，即有没有可能通过问卷调查来针对这一问题进行更科学、更系统的研究（如果没人研究过的话）？比如，用更合理的标准根据不同的年代选出具有代表性的动画，然后找人来针对不同的动画进行适合年龄段的评分，然后计算出不同年代不同区域的代表性动画所适合的年龄范围，从而来针对这一刻板印象进行更合理的验证？</p>

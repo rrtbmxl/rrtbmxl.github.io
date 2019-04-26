@@ -39,9 +39,8 @@ time &amp;lt;- read_lines(&amp;#39;dairy.txt&amp;#39;) %&amp;gt;% as.tibble() %&
 如果存在的话，这一刻板印象是仅限于我们国家，还是全都这样？
 要进行验证的话，首先要有相关的数据。虽然我平常关于动画的信息会参考IMDB和MAL，但要完成这一任务，显然还是豆瓣更合适。我试图在豆瓣网站上爬取我所需要的信息，但折腾了一上午才发现，我所掌握的那一点点爬虫技术根本就无法爬取我所需要的数据，于是我就在网上找了一份现成的（早知道就不折腾了）。这份数据是2016年的，还算比较新，内容也完全符合我的需要。其次，要找到具有代表性的作品。关于哪些动画是代表性的，每个人肯定都有不同的看法，可能不会有特定的原型，所以这里我先用豆瓣上的评价人数为指标来评定动画的代表性，评价人数越多，就说明其越具有代表性。另外，要拿国产动画和国外动画进行对比，但实际上所谓的国外动画，主要就是美国和日本的动画（三个国家的动画数量占了全部动画数量的81.4%），所以后面只挑了这三个地区的数据。
 先载入要用到的包：
-library(tidyverse)library(knitr)library(scales)按照惯例，先载入了tidyverse包；然后为了数据能展示得更好看一点，以及数据的正常显示，也载入了knitr包；另外，后面在画图的时候，还要用到scales包，这里也一并载入。
-然后来看一下这份数据：
-douban &amp;lt;- read_csv(&amp;#39;douban.csv&amp;#39;)## Parsed with column specification:## cols(## 评分 = col_double(),## 名字 = col_character(),## 投票人数 = col_integer(),## 类型 = col_character(),## 产地 = col_character(),## 上映时间 = col_character(),## 时长 = col_character(),## 年代 = col_character(),## 是否连续剧 = col_integer(),## 集数 = col_character(),## 看过 = col_integer(),## 待看 = col_character()## )head(douban, 10) %&amp;gt;% kable()评分名字投票人数类型产地上映时间时长年代是否连续剧集数看过待看7.</description>
+library(tidyverse) # 清洗数据及可视化library(here) # 设置数据路径library(knitr) # 呈现更好看的表格library(kableExtra) # 同上然后来看一下这份数据：
+douban &amp;lt;- read_csv(here(&amp;#39;content&amp;#39;, &amp;#39;post&amp;#39;, &amp;#39;data&amp;#39;, &amp;#39;180214-douban.csv&amp;#39;))head(douban, 10) %&amp;gt;% kable() %&amp;gt;% kable_styling(bootstrap_options = &amp;#39;striped&amp;#39;, font_size = 12) %&amp;gt;% scroll_box(width = &amp;#39;100%&amp;#39;)评分名字投票人数类型产地上映时间时长年代是否连续剧集数看过待看7.</description>
     </item>
     
   </channel>
