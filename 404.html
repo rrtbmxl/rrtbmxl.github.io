@@ -114,6 +114,26 @@
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="/2019/04/mlr-note-nb/">
+                <h3 class="media-heading">《机器学习与R语言》学习笔记02：朴素贝叶斯</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Apr 4, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">书中的第二个例子是利用朴素贝叶斯算法判断垃圾短信。
+首先载入需要用到的包：
+library(tidyverse) # 清洗数据library(here) # 设置数据文件路径library(tidytext) # 分词及创建稀疏矩阵library(e1071) # 建模library(gmodels) # 评估模型在清洗数据的时候遇到一定的困难，因为书中是用tm包进行文本处理的，而我完全没有用过这个包（甚至也没有装这个包），所以看书中的代码就只能凭感觉脑补了。不过，还好，最后还是成功写出了tidyverse化的数据清洗代码，如下：
+sms &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;02-sms_spam.csv&#39;)) %&gt;% mutate(type = factor(type),row = row_number()) %&gt;% unnest_tokens(word, text) %&gt;% anti_join(stop_words) %&gt;% filter(!str_detect(word, &#39;\\d&#39;)) %&gt;% cast_sparse(row, word) %&gt;% as.matrix() %&gt;% as_tibble() %&gt;% select(which(colSums(.) &gt; 4)) %&gt;% bind_cols(read_csv(here(&#39;data&#39;, &#39;02-sms_spam.csv&#39;)) %&gt;% mutate(type = factor(type),row = row_number()) %&gt;% unnest_tokens(word, text) %&gt;% anti_join(stop_words) %&gt;% filter(!str_detect(word, &#39;\\d&#39;)) %&gt;%select(-3) %&gt;% distinct()) %&gt;% mutate_if(is.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="/2019/04/mlr-note-knn/">
                 <h3 class="media-heading">《机器学习与R语言》学习笔记01：kNN</h3>
               </a>
@@ -334,28 +354,6 @@ tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉�
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="/2018/10/rick-and-morty-heatmap/">
-                <h3 class="media-heading">看图写代码：瑞克与莫蒂剧集评分热力图</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Oct 10, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">大概是去年的这个时间，我在一个名叫Data Is Beautiful的reddit论坛上看到了一张Rick and Morty的分集评分热力图，就想用R把它重复出来。当时水平还不怎么样，只能画个大概出来，很多细节都不知道该如何呈现；前几个月，又重新尝试了下，大部分细节都知道该如何实现了，但还是差一点；这里再尝试一下，看看能不能完全重复出来，毕竟这张图应该就是用R画的。
-图是这样的：
-首先，还是先把需要用到的包载入：
-library(tidyverse)然后载入数据：
-rm &lt;- read_csv(&quot;rick &amp; morty.csv&quot;) %&gt;% mutate_at(vars(Episode, Season), as.factor)载入数据的时候，为方便后面的绘图，顺便把集数和季数两个变量改成了因子型。具体的数据是这样的：
-rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt;dbl&gt;## 1 1 1 8.1## 2 2 1 8.7## 3 3 1 8.4## 4 4 1 8.6## 5 5 1 8.9## 6 6 1 9 ## 7 7 1 8.</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -363,7 +361,7 @@ rm## # A tibble: 31 x 3## Episode Season Rating## &lt;fct&gt; &lt;fct&gt; &lt
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         13 posts found
+         14 posts found
       </p>
     </div>
   </div>

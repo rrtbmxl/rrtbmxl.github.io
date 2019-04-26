@@ -1,0 +1,274 @@
+---
+title: 《机器学习与R语言》学习笔记02：朴素贝叶斯
+date: '2019-04-25'
+categories:
+  - R
+tags:
+  - 笔记
+  - 机器学习
+slug: mlr-note-nb
+---
+
+
+
+<p>书中的第二个例子是利用朴素贝叶斯算法判断垃圾短信。</p>
+<p>首先载入需要用到的包：</p>
+<pre class="r"><code>library(tidyverse) # 清洗数据
+library(here) # 设置数据文件路径
+library(tidytext) # 分词及创建稀疏矩阵
+library(e1071) # 建模
+library(gmodels) # 评估模型</code></pre>
+<p>在清洗数据的时候遇到一定的困难，因为书中是用<code>tm</code>包进行文本处理的，而我完全没有用过这个包（甚至也没有装这个包），所以看书中的代码就只能凭感觉脑补了。不过，还好，最后还是成功写出了<code>tidyverse</code>化的数据清洗代码，如下：</p>
+<pre class="r"><code>sms &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;02-sms_spam.csv&#39;)) %&gt;% 
+  mutate(type = factor(type),
+         row = row_number()) %&gt;% 
+  unnest_tokens(word, text) %&gt;% 
+  anti_join(stop_words) %&gt;% 
+  filter(!str_detect(word, &#39;\\d&#39;)) %&gt;% 
+  cast_sparse(row, word) %&gt;% 
+  as.matrix() %&gt;% 
+  as_tibble() %&gt;% 
+  select(which(colSums(.) &gt; 4)) %&gt;% 
+  bind_cols(read_csv(here(&#39;data&#39;, &#39;02-sms_spam.csv&#39;)) %&gt;% 
+              mutate(type = factor(type),
+                     row = row_number()) %&gt;% 
+              unnest_tokens(word, text) %&gt;% 
+              anti_join(stop_words) %&gt;% 
+              filter(!str_detect(word, &#39;\\d&#39;)) %&gt;%
+              select(-3) %&gt;% 
+              distinct()) %&gt;% 
+  mutate_if(is.numeric, factor, levels = c(0, 1), labels = c(&#39;No&#39;, &#39;Yes&#39;))</code></pre>
+<p>虽然是很长一串，但还是要比书中的代码少10来行的，而且连贯性和可读性也更高，最重要的是，只需要命名一个变量。</p>
+<p>分解一下：</p>
+<p>原始数据是这样的：</p>
+<pre class="r"><code>(sms &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;02-sms_spam.csv&#39;)))</code></pre>
+<pre><code>## # A tibble: 5,574 x 2
+##    type  text                                                              
+##    &lt;chr&gt; &lt;chr&gt;                                                             
+##  1 ham   Go until jurong point, crazy.. Available only in bugis n great wo~
+##  2 ham   Ok lar... Joking wif u oni...                                     
+##  3 spam  Free entry in 2 a wkly comp to win FA Cup final tkts 21st May 200~
+##  4 ham   U dun say so early hor... U c already then say...                 
+##  5 ham   Nah I don&#39;t think he goes to usf, he lives around here though     
+##  6 spam  FreeMsg Hey there darling it&#39;s been 3 week&#39;s now and no word back~
+##  7 ham   Even my brother is not like to speak with me. They treat me like ~
+##  8 ham   As per your request &#39;Melle Melle (Oru Minnaminunginte Nurungu Vet~
+##  9 spam  WINNER!! As a valued network customer you have been selected to r~
+## 10 spam  Had your mobile 11 months or more? U R entitled to Update to the ~
+## # ... with 5,564 more rows</code></pre>
+<p>随后将标签变量<code>type</code>变为因子型，并新增<code>row</code>变量，记录行数：</p>
+<pre class="r"><code>sms &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;02-sms_spam.csv&#39;)) %&gt;% 
+  mutate(type = factor(type),
+         row = row_number())</code></pre>
+<p>然后利用<code>tidytext</code>包中的<code>unnest_token</code>函数进行分词，利用<code>anti_join</code>函数去掉停用词，再利用<code>filter</code>和<code>str_detect</code>的组合去掉数字。此时的数据是这样的：</p>
+<pre class="r"><code>(sms &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;02-sms_spam.csv&#39;)) %&gt;% 
+  mutate(type = factor(type),
+         row = row_number()) %&gt;% 
+  unnest_tokens(word, text) %&gt;% 
+  anti_join(stop_words) %&gt;% 
+  filter(!str_detect(word, &#39;\\d&#39;)))</code></pre>
+<pre><code>## # A tibble: 34,390 x 3
+##    type    row word  
+##    &lt;fct&gt; &lt;int&gt; &lt;chr&gt; 
+##  1 ham       1 jurong
+##  2 ham       1 crazy 
+##  3 ham       1 bugis 
+##  4 ham       1 world 
+##  5 ham       1 la    
+##  6 ham       1 buffet
+##  7 ham       1 cine  
+##  8 ham       1 amore 
+##  9 ham       1 wat   
+## 10 ham       2 lar   
+## # ... with 34,380 more rows</code></pre>
+<p>其中共涉及到7440个词汇。</p>
+<p>这时遇到了困难，因为需要把数据整成稀疏矩阵，也就是要做到每个词自成一列，假如某条短信内出现了该词，则记为1，没有出现的话，则记为0。数据一共5000多行，而词汇共有7000多个，即要整理出一个5000*7000的矩阵或数据框。一开始想尝试用<code>tidyr</code>包来解决这个问题，结果发现生成了一个5GB的数据框，虽然也能把问题解决，但这个方法太慢了。看书里的方法，<code>tm</code>包中是有相关的函数来进行这一步转换的；去网上查，发现<code>Matrix</code>包也能解决这个问题，但它们都会破坏代码的完整性。后来想到，<code>tidytext</code>应该不会没有处理这种问题的函数，看了下，果然有个<code>cast_sparse</code>函数，可以调用<code>Matrix</code>包中的<code>sparseMatrix</code>函数。此时问题还没有完全解决，以为<code>cast_sparse</code>函数生成的矩阵是一个class为<code>dgCMatrix</code>的矩阵，没法直接转为数据框。又在网上查了下，发现可以先将其转为矩阵，然后再转为数据框。此时的部分数据是这样的：</p>
+<pre class="r"><code>(sms &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;02-sms_spam.csv&#39;)) %&gt;% 
+  mutate(type = factor(type),
+         row = row_number()) %&gt;% 
+  unnest_tokens(word, text) %&gt;% 
+  anti_join(stop_words) %&gt;% 
+  filter(!str_detect(word, &#39;\\d&#39;)) %&gt;% 
+  cast_sparse(row, word) %&gt;% 
+  as.matrix() %&gt;% 
+  as_tibble())</code></pre>
+<pre><code>## # A tibble: 5,454 x 7,440
+##    jurong crazy bugis world    la buffet  cine amore   wat   lar joking
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1      1     1     1     1     1      1     1     1     1     0      0
+##  2      0     0     0     0     0      0     0     0     0     1      1
+##  3      0     0     0     0     0      0     0     0     0     0      0
+##  4      0     0     0     0     0      0     0     0     0     0      0
+##  5      0     0     0     0     0      0     0     0     0     0      0
+##  6      0     0     0     0     0      0     0     0     0     0      0
+##  7      0     0     0     0     0      0     0     0     0     0      0
+##  8      0     0     0     0     0      0     0     0     0     0      0
+##  9      0     0     0     0     0      0     0     0     0     0      0
+## 10      0     0     0     0     0      0     0     0     0     0      0
+## # ... with 5,444 more rows, and 7,429 more variables: wif &lt;dbl&gt;,
+## #   oni &lt;dbl&gt;, free &lt;dbl&gt;, entry &lt;dbl&gt;, wkly &lt;dbl&gt;, comp &lt;dbl&gt;, win &lt;dbl&gt;,
+## #   fa &lt;dbl&gt;, cup &lt;dbl&gt;, final &lt;dbl&gt;, tkts &lt;dbl&gt;, text &lt;dbl&gt;,
+## #   receive &lt;dbl&gt;, question &lt;dbl&gt;, std &lt;dbl&gt;, txt &lt;dbl&gt;, rate &lt;dbl&gt;,
+## #   apply &lt;dbl&gt;, dun &lt;dbl&gt;, hor &lt;dbl&gt;, nah &lt;dbl&gt;, usf &lt;dbl&gt;, lives &lt;dbl&gt;,
+## #   freemsg &lt;dbl&gt;, hey &lt;dbl&gt;, darling &lt;dbl&gt;, `week&#39;s` &lt;dbl&gt;, word &lt;dbl&gt;,
+## #   fun &lt;dbl&gt;, tb &lt;dbl&gt;, xxx &lt;dbl&gt;, chgs &lt;dbl&gt;, send &lt;dbl&gt;, rcv &lt;dbl&gt;,
+## #   brother &lt;dbl&gt;, speak &lt;dbl&gt;, treat &lt;dbl&gt;, aids &lt;dbl&gt;, patent &lt;dbl&gt;,
+## #   request &lt;dbl&gt;, melle &lt;dbl&gt;, oru &lt;dbl&gt;, minnaminunginte &lt;dbl&gt;,
+## #   nurungu &lt;dbl&gt;, vettam &lt;dbl&gt;, set &lt;dbl&gt;, callertune &lt;dbl&gt;,
+## #   callers &lt;dbl&gt;, press &lt;dbl&gt;, copy &lt;dbl&gt;, friends &lt;dbl&gt;, winner &lt;dbl&gt;,
+## #   valued &lt;dbl&gt;, network &lt;dbl&gt;, customer &lt;dbl&gt;, selected &lt;dbl&gt;,
+## #   receivea &lt;dbl&gt;, prize &lt;dbl&gt;, reward &lt;dbl&gt;, claim &lt;dbl&gt;, call &lt;dbl&gt;,
+## #   code &lt;dbl&gt;, valid &lt;dbl&gt;, hours &lt;dbl&gt;, mobile &lt;dbl&gt;, months &lt;dbl&gt;,
+## #   entitled &lt;dbl&gt;, update &lt;dbl&gt;, colour &lt;dbl&gt;, mobiles &lt;dbl&gt;,
+## #   camera &lt;dbl&gt;, gonna &lt;dbl&gt;, home &lt;dbl&gt;, talk &lt;dbl&gt;, stuff &lt;dbl&gt;,
+## #   anymore &lt;dbl&gt;, tonight &lt;dbl&gt;, cried &lt;dbl&gt;, chances &lt;dbl&gt;, cash &lt;dbl&gt;,
+## #   pounds &lt;dbl&gt;, cost &lt;dbl&gt;, day &lt;dbl&gt;, tsandcs &lt;dbl&gt;, reply &lt;dbl&gt;,
+## #   hl &lt;dbl&gt;, info &lt;dbl&gt;, urgent &lt;dbl&gt;, won &lt;dbl&gt;, week &lt;dbl&gt;,
+## #   membership &lt;dbl&gt;, jackpot &lt;dbl&gt;, www.dbuk.net &lt;dbl&gt;, lccltd &lt;dbl&gt;,
+## #   pobox &lt;dbl&gt;, searching &lt;dbl&gt;, words &lt;dbl&gt;, breather &lt;dbl&gt;,
+## #   promise &lt;dbl&gt;, wont &lt;dbl&gt;, ...</code></pre>
+<p>下一步是按着书里的标准，去掉出现频次较低的词汇，仅保留至少出现过5次的词汇。这里也遇到点小困难，本来是想用<code>select_*</code>系列的函数剔除低频词汇的，但没有成功，最后在网上查到了更为简单的方式。这时变量就从7440变成了1312，数据框的大小也从300多MB减少到了50多MB：</p>
+<pre class="r"><code>(sms &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;02-sms_spam.csv&#39;)) %&gt;% 
+  mutate(type = factor(type),
+         row = row_number()) %&gt;% 
+  unnest_tokens(word, text) %&gt;% 
+  anti_join(stop_words) %&gt;% 
+  filter(!str_detect(word, &#39;\\d&#39;)) %&gt;% 
+  cast_sparse(row, word) %&gt;% 
+  as.matrix() %&gt;% 
+  as_tibble() %&gt;% 
+  select(which(colSums(.) &gt; 4)))</code></pre>
+<pre><code>## # A tibble: 5,454 x 1,312
+##    crazy bugis world    la  cine   wat   lar joking   wif  free entry  wkly
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     1     1     1     1     1     1     0      0     0     0     0     0
+##  2     0     0     0     0     0     0     1      1     1     0     0     0
+##  3     0     0     0     0     0     0     0      0     0     1     1     1
+##  4     0     0     0     0     0     0     0      0     0     0     0     0
+##  5     0     0     0     0     0     0     0      0     0     0     0     0
+##  6     0     0     0     0     0     0     0      0     0     0     0     0
+##  7     0     0     0     0     0     0     0      0     0     0     0     0
+##  8     0     0     0     0     0     0     0      0     0     0     0     0
+##  9     0     0     0     0     0     0     0      0     0     0     0     0
+## 10     0     0     0     0     0     0     0      0     0     1     0     0
+## # ... with 5,444 more rows, and 1,300 more variables: comp &lt;dbl&gt;,
+## #   win &lt;dbl&gt;, cup &lt;dbl&gt;, final &lt;dbl&gt;, text &lt;dbl&gt;, receive &lt;dbl&gt;,
+## #   question &lt;dbl&gt;, std &lt;dbl&gt;, txt &lt;dbl&gt;, rate &lt;dbl&gt;, apply &lt;dbl&gt;,
+## #   dun &lt;dbl&gt;, nah &lt;dbl&gt;, usf &lt;dbl&gt;, freemsg &lt;dbl&gt;, hey &lt;dbl&gt;,
+## #   darling &lt;dbl&gt;, word &lt;dbl&gt;, fun &lt;dbl&gt;, xxx &lt;dbl&gt;, send &lt;dbl&gt;,
+## #   brother &lt;dbl&gt;, speak &lt;dbl&gt;, treat &lt;dbl&gt;, request &lt;dbl&gt;, set &lt;dbl&gt;,
+## #   callertune &lt;dbl&gt;, callers &lt;dbl&gt;, press &lt;dbl&gt;, copy &lt;dbl&gt;,
+## #   friends &lt;dbl&gt;, winner &lt;dbl&gt;, valued &lt;dbl&gt;, network &lt;dbl&gt;,
+## #   customer &lt;dbl&gt;, selected &lt;dbl&gt;, prize &lt;dbl&gt;, reward &lt;dbl&gt;,
+## #   claim &lt;dbl&gt;, call &lt;dbl&gt;, code &lt;dbl&gt;, valid &lt;dbl&gt;, hours &lt;dbl&gt;,
+## #   mobile &lt;dbl&gt;, months &lt;dbl&gt;, entitled &lt;dbl&gt;, update &lt;dbl&gt;,
+## #   colour &lt;dbl&gt;, mobiles &lt;dbl&gt;, camera &lt;dbl&gt;, gonna &lt;dbl&gt;, home &lt;dbl&gt;,
+## #   talk &lt;dbl&gt;, stuff &lt;dbl&gt;, anymore &lt;dbl&gt;, tonight &lt;dbl&gt;, cash &lt;dbl&gt;,
+## #   pounds &lt;dbl&gt;, cost &lt;dbl&gt;, day &lt;dbl&gt;, reply &lt;dbl&gt;, hl &lt;dbl&gt;,
+## #   info &lt;dbl&gt;, urgent &lt;dbl&gt;, won &lt;dbl&gt;, week &lt;dbl&gt;, pobox &lt;dbl&gt;,
+## #   searching &lt;dbl&gt;, words &lt;dbl&gt;, promise &lt;dbl&gt;, wont &lt;dbl&gt;,
+## #   wonderful &lt;dbl&gt;, times &lt;dbl&gt;, date &lt;dbl&gt;, sunday &lt;dbl&gt;, credit &lt;dbl&gt;,
+## #   click &lt;dbl&gt;, wap &lt;dbl&gt;, link &lt;dbl&gt;, message &lt;dbl&gt;, http &lt;dbl&gt;,
+## #   watching &lt;dbl&gt;, eh &lt;dbl&gt;, remember &lt;dbl&gt;, naughty &lt;dbl&gt;, wet &lt;dbl&gt;,
+## #   fine &lt;dbl&gt;, feel &lt;dbl&gt;, england &lt;dbl&gt;, dont &lt;dbl&gt;, miss &lt;dbl&gt;,
+## #   team &lt;dbl&gt;, news &lt;dbl&gt;, ur &lt;dbl&gt;, national &lt;dbl&gt;, `i‘m` &lt;dbl&gt;,
+## #   ha &lt;dbl&gt;, ü &lt;dbl&gt;, pay &lt;dbl&gt;, da &lt;dbl&gt;, ...</code></pre>
+<p>这时一个稀疏矩阵就建好了，但数据中还没有标签，所以我又用一大段重复的代码把行数和标签并了进去。暂时没想到更简单的方式可以在不打断代码的前提下完成同样的事情。最后一步是按照书中讲到的，把所有预测变量变为因子型：</p>
+<pre class="r"><code>sms &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;02-sms_spam.csv&#39;)) %&gt;% 
+  mutate(type = factor(type),
+         row = row_number()) %&gt;% 
+  unnest_tokens(word, text) %&gt;% 
+  anti_join(stop_words) %&gt;% 
+  filter(!str_detect(word, &#39;\\d&#39;)) %&gt;% 
+  cast_sparse(row, word) %&gt;% 
+  as.matrix() %&gt;% 
+  as_tibble() %&gt;% 
+  select(which(colSums(.) &gt; 4)) %&gt;% 
+  bind_cols(read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;02-sms_spam.csv&#39;)) %&gt;% 
+              mutate(type = factor(type),
+                     row = row_number()) %&gt;% 
+              unnest_tokens(word, text) %&gt;% 
+              anti_join(stop_words) %&gt;% 
+              filter(!str_detect(word, &#39;\\d&#39;)) %&gt;%
+              select(-3) %&gt;% 
+              distinct()) %&gt;% 
+  mutate_if(is.numeric, factor, levels = c(0, 1), labels = c(&#39;No&#39;, &#39;Yes&#39;))</code></pre>
+<p>数据已经清洗好了，可以创建训练数据集和测试数据集了：</p>
+<pre class="r"><code>set.seed(0424)
+sms_train &lt;- sms %&gt;% sample_n(4169)
+sms_test &lt;- sms %&gt;% setdiff(sms_train)</code></pre>
+<p>这里也遇到个问题。在去掉频次较少的词汇前，也就是有7000多列时，<code>sample_n</code>函数会报错，但去掉那些词汇后，就没有问题了。猜测使用<code>sample_n</code>函数时，数据的变量数不能大于参数n的值？</p>
+<p>然后就可以建模了。模型里的训练数据去掉了最后两列（行数和标签），而且需要注意的是，因为词汇中包括type这个词，所以本来的<code>type</code>变量名被自动变更为<code>type1</code>了。</p>
+<pre class="r"><code>sms_class &lt;- naiveBayes(sms_train[, -1313:-1314], sms_train$type1)
+sms_pred &lt;- predict(sms_class, sms_test)</code></pre>
+<p>用测试数据评估一下模型：</p>
+<pre class="r"><code>CrossTable(sms_pred, sms_test$type1, 
+           prop.chisq = FALSE, prop.t = FALSE,
+           dnn = c(&#39;predicted&#39;, &#39;actual&#39;))</code></pre>
+<pre><code>## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## |           N / Row Total |
+## |           N / Col Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  890 
+## 
+##  
+##              | actual 
+##    predicted |       ham |      spam | Row Total | 
+## -------------|-----------|-----------|-----------|
+##          ham |       789 |        14 |       803 | 
+##              |     0.983 |     0.017 |     0.902 | 
+##              |     0.996 |     0.143 |           | 
+## -------------|-----------|-----------|-----------|
+##         spam |         3 |        84 |        87 | 
+##              |     0.034 |     0.966 |     0.098 | 
+##              |     0.004 |     0.857 |           | 
+## -------------|-----------|-----------|-----------|
+## Column Total |       792 |        98 |       890 | 
+##              |     0.890 |     0.110 |           | 
+## -------------|-----------|-----------|-----------|
+## 
+## </code></pre>
+<p>应该还挺不错的。</p>
+<p>按书里的方式，更改<code>laplace</code>参数再试一下：</p>
+<pre class="r"><code>sms_class1 &lt;- naiveBayes(sms_train[, -1313:-1314], sms_train$type1, laplace = 1)
+sms_pred1 &lt;- predict(sms_class1, sms_test)
+
+CrossTable(sms_pred1, sms_test$type1, 
+           prop.chisq = FALSE, prop.t = FALSE,
+           dnn = c(&#39;predicted&#39;, &#39;actual&#39;))</code></pre>
+<pre><code>## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## |           N / Row Total |
+## |           N / Col Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  890 
+## 
+##  
+##              | actual 
+##    predicted |       ham |      spam | Row Total | 
+## -------------|-----------|-----------|-----------|
+##          ham |       790 |        16 |       806 | 
+##              |     0.980 |     0.020 |     0.906 | 
+##              |     0.997 |     0.163 |           | 
+## -------------|-----------|-----------|-----------|
+##         spam |         2 |        82 |        84 | 
+##              |     0.024 |     0.976 |     0.094 | 
+##              |     0.003 |     0.837 |           | 
+## -------------|-----------|-----------|-----------|
+## Column Total |       792 |        98 |       890 | 
+##              |     0.890 |     0.110 |           | 
+## -------------|-----------|-----------|-----------|
+## 
+## </code></pre>
+<p>此时模型确实得到了一定程度的优化，因为虽然多看了两条垃圾短信，但少错过了一条非垃圾短信。</p>

@@ -6,10 +6,22 @@
     <description>Recent content in 笔记 on RPG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 25 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>《机器学习与R语言》学习笔记02：朴素贝叶斯</title>
+      <link>/2019/04/mlr-note-nb/</link>
+      <pubDate>Thu, 25 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/04/mlr-note-nb/</guid>
+      <description>书中的第二个例子是利用朴素贝叶斯算法判断垃圾短信。
+首先载入需要用到的包：
+library(tidyverse) # 清洗数据library(here) # 设置数据文件路径library(tidytext) # 分词及创建稀疏矩阵library(e1071) # 建模library(gmodels) # 评估模型在清洗数据的时候遇到一定的困难，因为书中是用tm包进行文本处理的，而我完全没有用过这个包（甚至也没有装这个包），所以看书中的代码就只能凭感觉脑补了。不过，还好，最后还是成功写出了tidyverse化的数据清洗代码，如下：
+sms &amp;lt;- read_csv(here(&amp;#39;content&amp;#39;, &amp;#39;post&amp;#39;, &amp;#39;data&amp;#39;, &amp;#39;02-sms_spam.csv&amp;#39;)) %&amp;gt;% mutate(type = factor(type),row = row_number()) %&amp;gt;% unnest_tokens(word, text) %&amp;gt;% anti_join(stop_words) %&amp;gt;% filter(!str_detect(word, &amp;#39;\\d&amp;#39;)) %&amp;gt;% cast_sparse(row, word) %&amp;gt;% as.matrix() %&amp;gt;% as_tibble() %&amp;gt;% select(which(colSums(.) &amp;gt; 4)) %&amp;gt;% bind_cols(read_csv(here(&amp;#39;data&amp;#39;, &amp;#39;02-sms_spam.csv&amp;#39;)) %&amp;gt;% mutate(type = factor(type),row = row_number()) %&amp;gt;% unnest_tokens(word, text) %&amp;gt;% anti_join(stop_words) %&amp;gt;% filter(!str_detect(word, &amp;#39;\\d&amp;#39;)) %&amp;gt;%select(-3) %&amp;gt;% distinct()) %&amp;gt;% mutate_if(is.</description>
+    </item>
     
     <item>
       <title>《机器学习与R语言》学习笔记01：kNN</title>

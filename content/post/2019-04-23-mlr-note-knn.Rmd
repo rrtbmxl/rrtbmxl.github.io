@@ -7,8 +7,6 @@ tags:
   - 笔记
   - 机器学习
 slug: mlr-note-knn
-output:
-  blogdown::html_page
 ---
 
 通过将《机器学习与R语言》一书中的代码`tidyverse`化，来学习这本书。
