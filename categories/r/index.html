@@ -228,6 +228,65 @@
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
+        <a class="link-unstyled" href="/2019/05/anime-recommend-with-ml/">
+          使用机器学习给自己推荐番剧：first try
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-05-12T00:00:00Z">
+        
+  May 12, 2019
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt" itemprop="articleBody">
+      A.关于数据B.数据探索b1.番名b2.季数b3.集数b4.年份b5.季节b6.来源b7.类别b8.制作公司b9.评分及人数extra 1.个人、豆瓣与MAL的对比b0.声优extra 2.声优关系网络C.建模与评估c1.清洗数据c2.创建训练数据集和测试数据集c3.朴素贝叶斯算法c4.规则学习算法D.局限于展望花费许多时间学到的东西自然是要用一用的，如果工作中用不到的话，那就用来为生活增添些许乐趣吧。
+看番多年，难免遇到烂番，既浪费时间，又影响心情；另外，有些优秀的番剧，可能因为某些原因，与自己失之交臂。要是能在自己看过的番剧的基础上，建立一个模型，帮自己避免烂番，发掘好番，那真是再好不过了。于是我就把自己近年来看过的番剧整理了一下，收集了若干相关信息，做成了excel表格，作为建立模型的原材料。数据是手动整理的，花费的时间比我预计的多很多，但在整理的过程中，也引发了不少回忆，所以也算不上是浪费时间。
+A.关于数据数据就是我看番的记录，不全，但应该是足够用了。反应变量是我对某番剧的评分，从5分到10分，是离散数据，在这第一次尝试中，计划将其变为二元分类数据，即5分到7分为不推荐，8分到10分为推荐。预测变量有十来个，包括番剧的年代、类型、制作公司、声优和网站评分等信息，在第一次尝试中，计划把数据弄成稀疏矩阵，使用朴素贝叶斯算法和规则学习算法来进行分类。
+在查看数据之前，先载入分析需要用到的包：
+library(tidyverse)library(readxl)library(here)library(ggthemes)library(corrplot)library(tidytext)library(widyr)library(igraph)library(ggraph)library(e1071)library(RWeka)library(gmodels)然后导入数据，并进行初步的清洗：
+anime &lt;- read_xlsx(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;anime_record.xlsx&#39;)) %&gt;%mutate_all(str_remove_all, pattern = &#39;\U00A0&#39;) %&gt;% # 去掉不间断空格&lt;U+00A0&gt;select(-record_time) %&gt;%mutate(studio = str_remove(studio, &#39;,.*&#39;)) %&gt;%mutate_at(vars(c(&#39;season_number&#39;, &#39;episode&#39;, &#39;year&#39;, &#39;rating&#39;, &#39;db_number&#39;, &#39;mal_number&#39;)), as.
+      <p>
+        <a href="/2019/05/anime-recommend-with-ml/" class="postShorten-excerpt_link link">Continue reading</a>
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
+            
+              
+  
+    
+      
+        
+      
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title" itemprop="headline">
         <a class="link-unstyled" href="/2019/04/mlr-note-nb/">
           《机器学习与R语言》学习笔记02：朴素贝叶斯
         </a>
@@ -590,66 +649,6 @@ book &lt;- read_xlsx(&#39;读书记录.xlsx&#39;) %&gt;% select(year = 2, name =
 </article>
 
             
-              
-  
-    
-      
-        
-      
-    
-  
-
-
-  
-
-<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
-  <div class="postShorten-wrap">
-    
-    <div class="postShorten-header">
-      <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="/2019/01/pseudo-dynamic-website-scraping/">
-          （伪）动态网页爬虫-《狗十三》豆瓣短评爬取
-        </a>
-      </h1>
-      
-  <div class="postShorten-meta post-meta">
-    
-      <time itemprop="datePublished" datetime="2019-01-06T00:00:00Z">
-        
-  January 6, 2019
-
-      </time>
-    
-    
-  
-  
-    <span>in</span>
-    
-      <a class="category-link" href="/categories/r">R</a>
-    
-  
-
-  </div>
-
-    </div>
-    <div class="postShorten-excerpt" itemprop="articleBody">
-      这周公司组织了电影赏析，看的电影是《狗十三》。我之前并没有看过这部电影，就想着先去豆瓣上看一下评论。这电影的评论还不少，有好几百条，完全可以全爬下来，分析一下。拉到页面下面，点击后页，url就会跟着变化（start=那里），说明这也不是啥动态网页，完全可以写个循环，用rvest包一页一页的爬。但实际爬取的时候，遇到了问题，就是未登陆的状态下，只能爬前220条评论。我搜索了一下模拟登录的办法，似乎是成功了，但后续该怎么弄，我就不知道了。我在这里卡了一天，没想到解决办法。昨天早上躺在被窝里，突然想到，我之前研究了下用RSelenium爬取动态网页，这里我完全可以先用RSelenium模拟登录，然后把网页当成动态网页爬啊。试了一下，成功了，下面就是相关的操作过程。
-首先还是载入需要用的包，要使用RSelenium包，还要先进行一些配置，具体内容可以看RSelenium包的官方网站（这网站好像需要科学上网）：
-library(tidyverse)library(RSelenium)library(rvest)library(jiebaR)library(wordcloud2)library(knitr)接下来跟Selenium Server进行连接，这里我用的是Chrome浏览器（变量名rd本应该在第一行，不知道为什么跑到下边去了……）：
- rd &lt;- remoteDriver(remoteServerAddr = &quot;localhost&quot;,port = 4444L,browserName = &quot;chrome&quot;)然后模拟打开豆瓣电影的登录页面，输入用户名和密码，点击登录按键，就可以登录了：
-rd$open()rd$navigate(&#39;https://www.douban.com/accounts/login?source=movie&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;email&quot;]&#39;)we$sendKeysToElement(list(&#39;用户名&#39;))we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;password&quot;]&#39;)we$sendKeysToElement(list(&#39;密码&#39;))we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;lzform&quot;]/div[6]/input&#39;)we$clickElement()如果没接触过爬虫的，看着上面的代码可能有点懵，但实际上没啥太玄奥的东西。RSelenium包中的函数名就明白显示了它是干什么的，而参数中的那些xpath，在Chrome浏览器中都是可以直接复制出来的。
-后面就可以开始爬虫了。我只爬了评价星级、短评时间、有帮助次数和短评文本四项信息。需要说明的是，有些用户虽然写了短评，但不会打分，这种情况下，我认为的将其评价星级定位“无评价”。因为不打分也会影响后面内容的xpath，所以那部分用了一些if条件。另外，虽然不知道会不会用上，在每页的内容爬取完之后，我也会让程序随机休息几秒，省得被轻易地认定为是爬虫程序。
-rd$navigate(&#39;https://movie.douban.com/subject/25716096/comments?start=0&amp;limit=20&amp;sort=new_score&amp;status=P&#39;)dog13 &lt;- tibble()for (i in 1:50) {rank &lt;- character(0)time &lt;- character(0)help &lt;- character(0)text &lt;- character(0)temp &lt;- tibble()for (j in 1:20) {xpath_rank &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[2]&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_rank)rank[j] &lt;- ifelse(str_length(we$getElementAttribute(&#39;title&#39;) %&gt;% unlist()) &gt; 2, &#39;无评价&#39;, we$getElementAttribute(&#39;title&#39;) %&gt;% unlist())if (str_length(we$getElementAttribute(&#39;title&#39;) %&gt;% unlist()) &lt; 3) {xpath_time &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[3]&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_time)time[j] &lt;- we$getElementText() %&gt;% unlist()} else {xpath_time &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[2]/span[2]&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_time)time[j] &lt;- we$getElementText() %&gt;% unlist()}xpath_help &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/h3/span[1]/span&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_help)help[j] &lt;- we$getElementText() %&gt;% unlist()xpath_text &lt;- str_c(&#39;//*[@id=&quot;comments&quot;]/div[&#39;, j, &#39;]/div[2]/p/span&#39;)we &lt;- rd$findElement(using = &#39;xpath&#39;, xpath_text)text[j] &lt;- we$getElementText() %&gt;% unlist()df &lt;- tibble(rank, time, help, text)}dog13 &lt;- bind_rows(dog13, df)rest &lt;- sample(1:10, 1)if (i &lt; 2) {we &lt;- rd$findElement(using = &#39;xpath&#39;, &#39;//*[@id=&quot;paginator&quot;]/a&#39;)we$clickElement()Sys.
-      <p>
-        <a href="/2019/01/pseudo-dynamic-website-scraping/" class="postShorten-excerpt_link link">Continue reading</a>
-        
-      </p>
-    </div>
-  </div>
-  
-</article>
-
-            
             
   <div class="pagination-bar">
     <ul class="pagination">
@@ -664,7 +663,7 @@ rd$navigate(&#39;https://movie.douban.com/subject/25716096/comments?start=0&amp;
           </li>
         
       
-      <li class="pagination-number">page 1 of 2</li>
+      <li class="pagination-number">page 1 of 3</li>
     </ul>
   </div>
 
@@ -715,6 +714,28 @@ rd$navigate(&#39;https://movie.douban.com/subject/25716096/comments?start=0&amp;
       <div class="no-result text-color-light text-center">no post found</div>
       <div class="results">
         
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2019/05/anime-recommend-with-ml/">
+                <h3 class="media-heading">使用机器学习给自己推荐番剧：first try</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">A.关于数据B.数据探索b1.番名b2.季数b3.集数b4.年份b5.季节b6.来源b7.类别b8.制作公司b9.评分及人数extra 1.个人、豆瓣与MAL的对比b0.声优extra 2.声优关系网络C.建模与评估c1.清洗数据c2.创建训练数据集和测试数据集c3.朴素贝叶斯算法c4.规则学习算法D.局限于展望花费许多时间学到的东西自然是要用一用的，如果工作中用不到的话，那就用来为生活增添些许乐趣吧。
+看番多年，难免遇到烂番，既浪费时间，又影响心情；另外，有些优秀的番剧，可能因为某些原因，与自己失之交臂。要是能在自己看过的番剧的基础上，建立一个模型，帮自己避免烂番，发掘好番，那真是再好不过了。于是我就把自己近年来看过的番剧整理了一下，收集了若干相关信息，做成了excel表格，作为建立模型的原材料。数据是手动整理的，花费的时间比我预计的多很多，但在整理的过程中，也引发了不少回忆，所以也算不上是浪费时间。
+A.关于数据数据就是我看番的记录，不全，但应该是足够用了。反应变量是我对某番剧的评分，从5分到10分，是离散数据，在这第一次尝试中，计划将其变为二元分类数据，即5分到7分为不推荐，8分到10分为推荐。预测变量有十来个，包括番剧的年代、类型、制作公司、声优和网站评分等信息，在第一次尝试中，计划把数据弄成稀疏矩阵，使用朴素贝叶斯算法和规则学习算法来进行分类。
+在查看数据之前，先载入分析需要用到的包：
+library(tidyverse)library(readxl)library(here)library(ggthemes)library(corrplot)library(tidytext)library(widyr)library(igraph)library(ggraph)library(e1071)library(RWeka)library(gmodels)然后导入数据，并进行初步的清洗：
+anime &lt;- read_xlsx(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;anime_record.xlsx&#39;)) %&gt;%mutate_all(str_remove_all, pattern = &#39;\U00A0&#39;) %&gt;% # 去掉不间断空格&lt;U+00A0&gt;select(-record_time) %&gt;%mutate(studio = str_remove(studio, &#39;,.*&#39;)) %&gt;%mutate_at(vars(c(&#39;season_number&#39;, &#39;episode&#39;, &#39;year&#39;, &#39;rating&#39;, &#39;db_number&#39;, &#39;mal_number&#39;)), as.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
         
           <div class="media">
             
@@ -938,27 +959,6 @@ iris %&gt;% group_by(Species) %&gt;% summarise(avg_sl = mean(Sepal.Length), se =
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="/2018/11/text-analysis-for-tianlong/">
-                <h3 class="media-heading">利用文本分析对比两版本天龙八部</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。
-首先还是载入相关的包，这次的包有点多：
-library(tidyverse)library(readxl)library(tidytext)library(jiebaR)library(ggthemes)library(widyr)library(igraph)library(ggraph)然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：
-tl_new &lt;- read_lines(&#39;tl_new.txt&#39;)tl_old &lt;- read_lines(&#39;tl_old.txt&#39;)tl_main &lt;- read_lines(&#39;tl_main.txt&#39;) %&gt;% .[-1]因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：
-tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)tl_old_tran &lt;- tl_old %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)上面的替换工作并不全，比如，同样是段郞，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -966,7 +966,7 @@ tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉�
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         14 posts found
+         15 posts found
       </p>
     </div>
   </div>

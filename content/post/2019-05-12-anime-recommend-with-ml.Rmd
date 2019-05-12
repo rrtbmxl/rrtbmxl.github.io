@@ -1,0 +1,510 @@
+---
+title: 使用机器学习给自己推荐番剧：first try
+date: '2019-05-12'
+categories:
+  - R
+tags:
+  - 机器学习
+slug: anime-recommend-with-ml
+output:
+  blogdown::html_page:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, dpi = 300)
+```
+
+花费许多时间学到的东西自然是要用一用的，如果工作中用不到的话，那就用来为生活增添些许乐趣吧。
+
+看番多年，难免遇到烂番，既浪费时间，又影响心情；另外，有些优秀的番剧，可能因为某些原因，与自己失之交臂。要是能在自己看过的番剧的基础上，建立一个模型，帮自己避免烂番，发掘好番，那真是再好不过了。于是我就把自己近年来看过的番剧整理了一下，收集了若干相关信息，做成了excel表格，作为建立模型的原材料。数据是手动整理的，花费的时间比我预计的多很多，但在整理的过程中，也引发了不少回忆，所以也算不上是浪费时间。
+
+# A.关于数据
+
+数据就是我看番的记录，不全，但应该是足够用了。反应变量是我对某番剧的评分，从5分到10分，是离散数据，在这第一次尝试中，计划将其变为二元分类数据，即5分到7分为不推荐，8分到10分为推荐。预测变量有十来个，包括番剧的年代、类型、制作公司、声优和网站评分等信息，在第一次尝试中，计划把数据弄成稀疏矩阵，使用朴素贝叶斯算法和规则学习算法来进行分类。
+
+在查看数据之前，先载入分析需要用到的包：
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(here)
+library(ggthemes)
+library(corrplot)
+library(tidytext)
+library(widyr)
+library(igraph)
+library(ggraph)
+library(e1071)
+library(RWeka)
+library(gmodels)
+```
+
+然后导入数据，并进行初步的清洗：
+
+```{r}
+anime <- read_xlsx(here('content', 'post', 'data', 'anime_record.xlsx')) %>%
+  mutate_all(str_remove_all, pattern = '\U00A0') %>% # 去掉不间断空格<U+00A0>
+  select(-record_time) %>%
+  mutate(studio = str_remove(studio, ',.*')) %>%
+  mutate_at(vars(c('season_number', 'episode', 'year', 'rating', 
+                   'db_number', 'mal_number')), as.integer) %>% 
+  mutate_at(vars(c('db_rating', 'mal_rating')), as.numeric)
+```
+
+看一下数据的情况：
+
+```{r}
+glimpse(anime)
+```
+
+可以看到，共有186行数据，15列变量。下面简单介绍下变量：
+
+ - **name**：番剧的名称；
+ 
+ - **series**：番剧的系列名，也就是番剧第一季的名字；
+ 
+ - **season_number**：番剧的季数；
+ 
+ - **episode**：番剧的总集数；
+ 
+ - **year**：番剧首播的年份；
+ 
+ - **season**：番剧首播的季节；
+ 
+ - **origin**；番剧的来源，即由什么而改编；
+ 
+ - **genra**：番剧的类型；
+ 
+ - **studio**：番剧的制作公司；
+ 
+ - **rating**；我个人对番剧的评分，即反应变量；
+ 
+ - **db_rating**：豆瓣上对番剧的评分；
+ 
+ - **db_number**：豆瓣上对番剧评分的人数；
+ 
+ - **mal_rating**：MAL上对番剧的评分；
+ 
+ - **mal_number**：MAL上对番剧评分的人数；
+ 
+ - **cast**：番剧的声优
+
+其实还有很多其他信息可以收集的，如监督、配乐、原画、作者、销量等信息，但我都没有记录，因为觉得这些信息对我看不看某个番剧没有太大的影响（毕竟人方面主要还是看声优，监督是谁，一般并不关心；而销量也没怎么关注过）。
+
+变量介绍到此，下面开始对数据进行探索。
+
+# B.数据探索
+
+探索前说一下缺失值的问题。整份数据中只有2个缺失值，是《死亡笔记》的豆瓣评分和豆瓣人数，因为被和谐的原因，竟然在豆瓣上连个条目都没有。不过，在最后建模的时候，我也没有用到这两个变量，所以这个问题不算个问题。
+
+在后面的数据探索中，我频繁地使用同样的几行代码对数据进行统计，为了节省代码，就先写了个函数：
+
+```{r}
+my_awesome_summary <- function(data) {
+  data %>% summarise(N = n(), rating = mean(rating), 
+            db_rating = mean(db_rating, na.rm = TRUE), 
+            db_number = mean(db_number, na.rm = TRUE),
+            mal_rating = mean(mal_rating), mal_number = mean(mal_number))
+}
+```
+
+该函数会在分类的基础上，计算各类别的个数及若干变量的平均值。当然，最好不要用`my_awesome_summary`这种函数名。
+
+### b1.番名
+
+番名肯定会对我决定看不看某个番产生一定的影响，在中二的年代，《死亡笔记》《反叛的鲁路修》这样的名字，确实很有吸引力。不过，我不知道该如何使用这一变量，所以没有在后面的模型中用到。但这一变量倒在清洗数据时发挥了一定的作用。
+
+### b2.季数
+
+先看一下按季数进行分类的情况：
+
+```{r}
+anime %>% group_by(season_number) %>% 
+  my_awesome_summary() %>% 
+  knitr::kable(digits = 2)
+```
+
+超过3季的番很少，实际上，也就只有《夏目友人帐》作到了第六季。考虑将第2季及后续的合并在一起，与第1季进行对比：
+
+```{r}
+anime %>% mutate(season_state = ifelse(season_number == 1, 'first', 'second+')) %>% 
+  group_by(season_state) %>% 
+  my_awesome_summary() %>% 
+  knitr::kable(digits = 2)
+```
+
+从评分来看，后续的番剧确实要比第1季的番剧要好一些，因此我有一个猜测，即如果某个番剧出了续集，则它更值得观看。筛选一下数据，进行对比：
+
+```{r}
+anime %>% 
+  mutate(season_more = ifelse(series %in% (anime %>% filter(season_number > 1) %>% 
+                                             pull(series) %>% unique()), 'yes', 'no')) %>% 
+  group_by(season_more) %>% 
+  my_awesome_summary() %>% 
+  knitr::kable(digits = 2)
+```
+
+这样一对比就更明显了，但有一点需要注意，就是数据中的某个“没有”后续的番剧可能并不是没有后续，只是我没有去看。
+
+第一个变量提取出来了，即有无后续。
+
+### b3.集数
+
+下面看下集数变量的情况：
+
+```{r}
+anime %>% group_by(episode) %>% 
+  my_awesome_summary() %>% 
+  knitr::kable(digits = 2)
+```
+
+集数的类型还挺多的，我对此进行了简化，将超过20集的视为长篇，不足20集的视为短篇。这里其实并没有真正的长篇，毕竟最长的也才64集（钢炼FA），不过我没有把看过的长篇统计在内，所以这么称呼也可以吧：
+
+```{r}
+anime %>% mutate(episode = ifelse(episode < 20, 'short', 'long'),
+                 episode = factor(episode, levels = c('short', 'long'))) %>% 
+  group_by(episode) %>% 
+  my_awesome_summary() %>% 
+  knitr::kable(digits = 2)
+```
+
+在我的评分中，长篇的确实更好一些，但其实这也挺危险的，因为万一是个长篇的烂番的话，那可真是让人加倍的烦躁了。
+
+第二个变量为是否是长篇。
+
+### b4.年份
+
+还是先看一下各年份的情况：
+
+```{r}
+anime %>% group_by(year) %>% 
+  my_awesome_summary() %>% 
+  knitr::kable(digits = 2)
+```
+
+数据中的旧番挺少的，主要是因为我是对我网盘里有资源的番剧进行的整理，而很多旧番，已经找不到资源了。另外，2018年的番剧，我竟然看了38部，看来去年是挺焦虑的，需要大量看番来缓解。不过，那年番剧的整理质量似乎挺差的，高质量的番剧，主要还是集中在2008年前后。
+
+同样为了简化，我将2015年设为节点，之前的归类为旧番，剩下的归类为新番。看一下分类后的情况：
+
+```{r}
+anime %>% mutate(year = ifelse(year < 2015, 'old', 'new'),
+                 year = factor(year, levels = c('old', 'new'))) %>% 
+  group_by(year) %>% 
+  my_awesome_summary() %>% 
+  knitr::kable(digits = 2)
+```
+
+番还是老的香啊！
+
+第三个变量就是是否为旧番了。
+
+### b5.季节
+
+番剧一般都是在1月、4月、7月和10月开始播出，对应冬番、春番、夏番和秋番。先看一下各季节的番剧情况：
+
+```{r}
+anime %>% group_by(season) %>% 
+  my_awesome_summary() %>% 
+  knitr::kable(digits = 2)
+```
+
+就我个人的评分而言，似乎是春番更好一些，但实际上，我看番是以补为主，以追为辅，大部分的情况下，我都意识不到这部番当年是在哪个季节里播出的，所以这个变量就先不用了。
+
+### b6.来源
+
+来源主要包括漫画、轻小说、游戏和原创，也有个别来源不明的以及由正统小说改编的，放进了其他类别里（有一个小说改编的，我错误的放进了轻改里，但忘了是哪个了）。看一下各来源的情况：
+
+```{r}
+anime %>% group_by(origin) %>% 
+  my_awesome_summary() %>% 
+  knitr::kable(digits = 2)
+```
+
+我看的番剧有一半是由漫画改编的，我对这些番剧的评分也还不错，但是，我几乎从来没有因为看过某个漫画或轻小说而去看某个动画的（没有时间啊），也不会因为看了某个番剧，觉得好看，而去追原作的（一拳超人是个例外），所以这个变量对我看不看某个番剧应该也没啥太大的影响，先放弃了。
+
+### b7.类别
+
+番剧类别一共由30多种，先看下整体的情况：
+
+```{r}
+anime %>% separate_rows(genra, sep = ',') %>% 
+  group_by(genra) %>% 
+  my_awesome_summary() %>% 
+  arrange(-N) %>% 
+  knitr::kable(digits = 2)
+```
+
+我看的最多的几个类别的喜剧（Comedy）、动作（Action）、校园（School）、日常（Slice of Life）和超自然（Super Natural），但我评分最高的几个类别是军事（Military）、超能力（Super Power）和少年（Shounen）（仅统计个数超过 10的），如果不统计一下的话，我自己都不知道。另外，我最不喜欢的是后宫（Harem）。记得有次跟hj师妹聊番剧，我说我最喜欢的是《凉宫春日的忧郁》，她（似乎很鄙夷地）跟我说，她不喜欢这种男性向的后宫番。首先，我想说，《凉宫》不是后宫番啊；其次，我也很讨厌后宫番啊！
+
+计划将这一变量转换成稀疏矩阵，并去掉个数出现太少的类别。
+
+### b8.制作公司
+
+我看的番剧共涉及到将近50个制作公司，还是先看一下整体的情况：
+
+```{r}
+anime %>%  
+  group_by(studio) %>% 
+  my_awesome_summary() %>% 
+  arrange(-N) %>% 
+  knitr::kable(digits = 2)
+```
+
+看的最多的三个制作公司分别是A-1，节操社（J.C. Staff）和京阿尼（Kyoto Animation），没想到我竟然看了那么多节操社的作品。为了更直观的对比，我选择个数超过5的11个公司，对评分进行了可视化：
+
+```{r}
+anime %>%  
+  group_by(studio) %>% 
+  my_awesome_summary() %>% 
+  filter(N > 5) %>% 
+  gather(rater, score, c('rating', 'db_rating', 'mal_rating')) %>% 
+  select(studio, rater, score) %>% 
+  ggplot(aes(studio, score, fill = rater)) + 
+  geom_col(aes(group = rater), position = 'dodge') + 
+  scale_x_discrete(labels = c('A-1\nPictures', 'Bones', "Brain's\nBase", 'J.C.\nStaff',
+                              'Kyoto\nAnimation', 'Mad\nhouse', 'Production\nI.G',
+                              'Shaft', 'Studio\nDeen', 'Sunrise', 'White\nFox')) + 
+  scale_y_continuous(breaks = 1:10, labels = 1:10) + 
+  coord_cartesian(ylim = 1:10) + 
+  scale_fill_manual(values = c('#009E73', '#E69F00', '#56B4E9'),
+                    labels = c('豆瓣评分', 'MAL评分', '个人评分')) + 
+  labs(x = '', y = '', fill = '') + 
+  theme_tufte() + 
+  theme(legend.position = 'top')
+```
+
+可以看到，骨头社（Bones）的评价是最高的，而节操社的评价是最低的。如果某个番剧是骨头社、京阿尼、疯房子（Mad House）或者白狐社（White Fox）制作的，我基本上就可以放心的观看了（我对这几个公司的评分都要高于MAL上的评分）。
+
+同上，也计划将这一变量转换成稀疏矩阵，并去掉个数出现太少的制作公司。
+
+### b9.评分及人数
+
+3个评分变量和2个人数变量都是数值型，其中我的个人评分是反应变量，就是最终想通过模型预测的变量，而另外4个变量之间会有较高的相关，考虑只使用其中1个变量。先看一下相关的情况：
+
+```{r}
+corrplot(cor(anime[, 10:14], use = 'complete.obs'), 
+         method = 'number', type = 'upper')
+```
+
+3个评分之间都由很高的相关，鉴于此，计划只使用豆瓣评分和MAL评分其中之一作为预测变量。在后面建模的时候，发现用豆瓣评分建立的模型不如使用MAL评分建立的模型要好，因此就只使用MAL的评分了，将其评分的中位数设为节点，大于中位数的视为推荐，小于中位数的视为不推荐。至于评分人数，跟我的评分相关也不低，但都低于相应的评分与我的评分之间的相关，因此就不使用了。对于我的评分，这次先处理为二元分类变量，将5-7分设为“不推荐”，而将8-10分设为“推荐”，作为反应变量的标签。
+
+### extra 1.个人、豆瓣与MAL的对比
+
+虽然我个人的评分于豆瓣评分、MAL评分都有很高的相关，但还是有一定的差异的。首先来看看我心中最好的番剧（即我评为10分的番剧）和豆瓣上、MAL上最好的番剧有什么不同：
+
+```{r}
+anime %>% filter(rating == 10) %>% 
+  select(name, rating) %>% 
+  bind_cols(anime %>% arrange(-db_rating) %>% 
+              select(db_name = name, db_rating) %>% slice(1:10)) %>% 
+  bind_cols(anime %>% arrange(-mal_rating) %>% 
+              select(mal_name = name, mal_rating) %>% slice(1:10)) %>% 
+  knitr::kable(digits = 2)
+```
+
+可以看到，豆瓣上几乎是夏目的天下，跟我只重了钢炼FA一个。灵能2我也很喜欢，但感觉还是跟一拳超人差了一个档次。我的十佳跟MAL的十佳有5个重叠，对于物语系列能排到前10，甚感意外。
+
+再来看看评分的整体分布：
+
+```{r}
+anime %>% gather(rating, value, c('rating', 'db_rating', 'mal_rating')) %>% 
+  select(rating, value) %>% 
+  ggplot(aes(value, fill = rating)) + 
+  geom_density(alpha = .8) +
+  scale_x_continuous(breaks = 4:10, labels = 4:10) + 
+  scale_fill_manual(values = c('#009E73', '#E69F00', '#56B4E9'),
+                    labels = c('豆瓣评分', 'MAL评分', '个人评分')) + 
+  labs(x = '', y = '', fill = '') + 
+  theme_tufte() + 
+  theme(legend.position = 'top')
+```
+
+我的评分大部分都是7分或8分，7分就是那种看不看两可的感觉，而8分就是很值得一看了。MAL上的评分集中在7分和9分之间，很少有能在MAL上拿到9分以上的番剧；而豆瓣上的评分则稍微分散一些，峰值出现在9分左右，看来豆瓣上的用户倾向于给出高分，但这也是因为豆瓣上给番剧评分的用户远少于MAL上的用户：
+
+```{r}
+anime %>% gather(number, value, c('db_number', 'mal_number')) %>% 
+  select(number, value) %>% 
+  ggplot(aes(value, fill = number)) + 
+  geom_histogram(show.legend = FALSE) +
+  scale_x_continuous(labels = scales::comma) + 
+  scale_fill_manual(values = c('#009E73', '#E69F00')) + 
+  labs(x = '', y = '', fill = '') + 
+  facet_wrap(~ number, nrow = 2, scales = 'free',
+             labeller = as_labeller(c('db_number' = '豆瓣人数', 
+                                      'mal_number' = 'MAL人数'))) + 
+  theme_tufte() + 
+  theme(legend.position = 'top')
+```
+
+但从趋势上来看，还是差不多的。
+
+### b0.声优
+
+最后一个变量是声优。虽然只收集了不到200个番剧，但声优数却有600多。先看一下主要声优的情况（仅统计参演超过10部的声优）：
+
+```{r}
+anime %>% separate_rows(cast, sep = '/') %>% 
+  group_by(cast) %>% 
+  my_awesome_summary() %>% 
+  filter(N > 10) %>% arrange(-rating) %>% 
+  knitr::kable(digits = 2)
+```
+
+关智一以绝对的优势排在了第一名，看来只要有他出演，质量就可以得到保证。那看看他出演了哪些番剧吧：
+
+```{r}
+anime %>% filter(str_detect(cast, '关智一')) %>% 
+  select(name, rating, db_rating, db_number, mal_rating, mal_number) %>% 
+  knitr::kable(digits = 2)
+```
+
+但我目前最喜欢的声优是神谷浩史，在我看的番剧中，他出现的次数也是最多的，来看看他的情况：
+
+```{r}
+anime %>% filter(str_detect(cast, '神谷浩史')) %>% 
+  select(name, rating, db_rating, db_number, mal_rating, mal_number) %>% 
+  knitr::kable(digits = 2)
+```
+
+卡米亚真是出演了不少热门番剧。
+
+这一变量也是转换成稀疏矩阵，并去掉出现次数太少的声优。
+
+### extra 2.声优关系网络
+
+这种图挺难画好看的，花了不少时间来调整：
+
+```{r}
+anime %>% separate_rows(cast, sep = '/') %>% 
+  group_by(name) %>% 
+  mutate(linenumber = group_indices()) %>% 
+  pairwise_count(cast, linenumber) %>% 
+  group_by(item1, item2) %>% 
+  count(sort = TRUE) %>% 
+  ungroup() %>% 
+  filter(n > 4) %>% 
+  graph_from_data_frame() %>% 
+  ggraph(layout = "fr") + 
+  geom_edge_link(aes(alpha = n, width = n), color = 'grey50') +
+  scale_edge_width(range = c(.5, 2)) +
+  geom_node_point(color = '#D55E00', size = 4) +
+  geom_node_text(aes(label = name), size = 2, color = 'black') + 
+  theme_void() + 
+  theme(legend.position = '')
+```
+
+仔细看的话，可以看到不少有意思的地方，但这不是主题，略过。
+
+# C.建模与评估
+
+数据都探索完了，接下来就可以建立模型，进行分类了。
+
+### c1.清洗数据
+
+不过首先还是应该对数据进行清洗，需要清洗的地方前面以前都提到了：
+
+```{r}
+anime_clean <- anime %>%   
+  mutate(season_more = ifelse(series %in% (anime %>% filter(season_number > 1) %>% 
+                                             pull(series) %>% unique()), 1, 0),
+         lengthy = ifelse(episode > 20, 1, 0),
+         old = ifelse(year < 2015, 1, 0),
+         mal_recommand = ifelse(mal_rating > median(mal_rating), 1, 0),
+         recommend = ifelse(rating > 7, 1, 0),
+         recommend = factor(recommend, levels = c(1, 0), 
+                            labels = c('recommend', 'not recommend'))) %>% 
+  bind_cols(anime %>% mutate(row = row_number()) %>% 
+              separate_rows(genra, sep = ',') %>% 
+              cast_sparse(row, genra) %>% 
+              as.matrix() %>% 
+              as_tibble() %>% 
+              select(which(colSums(.) > 9)),
+            anime %>% mutate(row = row_number()) %>% 
+              cast_sparse(row, studio) %>% 
+              as.matrix() %>% 
+              as_tibble() %>% 
+              select(which(colSums(.) > 4)),
+            anime %>% mutate(row = row_number()) %>% 
+              separate_rows(cast, sep = '/') %>% 
+              cast_sparse(row, cast) %>% 
+              as.matrix() %>% 
+              as_tibble() %>% 
+              select(which(colSums(.) > 4))) %>% 
+  select(recommend, everything()) %>% 
+  select(-3:-16) %>% 
+  mutate_if(is.numeric, factor, levels = c(0, 1), labels = c('No', 'Yes'))
+```
+
+这大概是我接触R以来写的最长的一段数据清洗的代码了，`tidyverse`化的R代码，真是越看越好看。现在的数据共有182个变量：
+
+```{r}
+dim(anime_clean)
+```
+
+### c2.创建训练数据集和测试数据集
+
+然后将数据分为训练集和测试集，训练集包括124行数据，测试集包括剩余的62行数据：
+
+```{r}
+set.seed(0509)
+anime_train <- anime_clean %>% sample_n(124)
+anime_test <- anime_clean %>% setdiff(anime_train)
+```
+
+### c3.朴素贝叶斯算法
+
+先试试朴素贝叶斯算法：
+
+```{r}
+anime_class <- naiveBayes(anime_train[, -1], anime_train$recommend)
+anime_pred <- predict(anime_class, anime_test[, -1])
+
+CrossTable(anime_pred, anime_test$recommend, prop.chisq = FALSE, 
+           dnn = c('predicted', 'actual'))
+```
+
+结果似乎还不错，有3个不推荐的分类为了推荐，另有7个推荐的分类为了不推荐。比起错过好番，我更怕遇到烂番，因为我稍微有些强迫症，一旦看了某个番剧，就会把它坚持看完，哪怕它再烂。看看是哪些番剧分类错了吧：
+
+```{r}
+anime_test %>% bind_cols(predict = anime_pred) %>% 
+  select(name, recommend, predict) %>% 
+  filter(recommend != predict) %>% 
+  knitr::kable(digits = 2)
+```
+
+暗杀教室Q作为暗杀教室的衍生剧，其实还蛮好看的，我评分的时候其实也在犹豫。有几个错的挺离谱的，比如MegaloBox，那真是强烈推荐啊；而甲铁城的卡巴内瑞，那真是强烈不推荐啊！
+
+### c4.规则学习算法
+
+再试试规则学习算法：
+
+```{r}
+anime_JRip <- JRip(recommend ~ ., data = anime_train[, -2])
+anime_pred <- predict(anime_JRip, anime_test[, -1:-2])
+
+CrossTable(anime_pred, anime_test$recommend, prop.chisq = FALSE, 
+           dnn = c('predicted', 'actual'))
+```
+
+结果跟朴素贝叶斯算法差不多，只是在FN上少了1个。看下在规则学习算法下，哪些番剧被分类错了吧：
+
+```{r}
+anime_test %>% bind_cols(predict = anime_pred) %>% 
+  select(name, recommend, predict) %>% 
+  filter(recommend != predict) %>% 
+  knitr::kable(digits = 2)
+```
+
+有4个番剧，两种算法都分类错了，看来应该找找原因，但是对于俺妹系列，我似乎应该把对它们的评分改了。另外，这一算法的一个严重错误是对工作细胞的分类，这么火的番剧，怎么可能不推荐呢？
+
+# D.局限于展望
+
+第一次尝试就到此为止了，存在很多问题，比如，对于某些变量，我只是将其变为了二元分类变量，损失了很多信息。后面考虑使用决策树和随机森林等算法重新进行分类，并且打算再花些时间，建立一个验证数据集，收集30个左右我没有看过的番剧，看一看真实的效果如何。
+
+这篇博客就到此为止了，这是我花时间最多的一篇博客了。
+
+```{r}
+sessionInfo()
+```
+

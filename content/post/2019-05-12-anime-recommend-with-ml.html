@@ -1,0 +1,2904 @@
+---
+title: 使用机器学习给自己推荐番剧：first try
+date: '2019-05-12'
+categories:
+  - R
+tags:
+  - 机器学习
+slug: anime-recommend-with-ml
+output:
+  blogdown::html_page:
+    toc: yes
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#a.">A.关于数据</a></li>
+<li><a href="#b.">B.数据探索</a><ul>
+<li><a href="#b1.">b1.番名</a></li>
+<li><a href="#b2.">b2.季数</a></li>
+<li><a href="#b3.">b3.集数</a></li>
+<li><a href="#b4.">b4.年份</a></li>
+<li><a href="#b5.">b5.季节</a></li>
+<li><a href="#b6.">b6.来源</a></li>
+<li><a href="#b7.">b7.类别</a></li>
+<li><a href="#b8.">b8.制作公司</a></li>
+<li><a href="#b9.">b9.评分及人数</a></li>
+<li><a href="#extra-1.mal">extra 1.个人、豆瓣与MAL的对比</a></li>
+<li><a href="#b0.">b0.声优</a></li>
+<li><a href="#extra-2.">extra 2.声优关系网络</a></li>
+</ul></li>
+<li><a href="#c.">C.建模与评估</a><ul>
+<li><a href="#c1.">c1.清洗数据</a></li>
+<li><a href="#c2.">c2.创建训练数据集和测试数据集</a></li>
+<li><a href="#c3.">c3.朴素贝叶斯算法</a></li>
+<li><a href="#c4.">c4.规则学习算法</a></li>
+</ul></li>
+<li><a href="#d.">D.局限于展望</a></li>
+</ul>
+</div>
+
+<p>花费许多时间学到的东西自然是要用一用的，如果工作中用不到的话，那就用来为生活增添些许乐趣吧。</p>
+<p>看番多年，难免遇到烂番，既浪费时间，又影响心情；另外，有些优秀的番剧，可能因为某些原因，与自己失之交臂。要是能在自己看过的番剧的基础上，建立一个模型，帮自己避免烂番，发掘好番，那真是再好不过了。于是我就把自己近年来看过的番剧整理了一下，收集了若干相关信息，做成了excel表格，作为建立模型的原材料。数据是手动整理的，花费的时间比我预计的多很多，但在整理的过程中，也引发了不少回忆，所以也算不上是浪费时间。</p>
+<div id="a." class="section level1">
+<h1>A.关于数据</h1>
+<p>数据就是我看番的记录，不全，但应该是足够用了。反应变量是我对某番剧的评分，从5分到10分，是离散数据，在这第一次尝试中，计划将其变为二元分类数据，即5分到7分为不推荐，8分到10分为推荐。预测变量有十来个，包括番剧的年代、类型、制作公司、声优和网站评分等信息，在第一次尝试中，计划把数据弄成稀疏矩阵，使用朴素贝叶斯算法和规则学习算法来进行分类。</p>
+<p>在查看数据之前，先载入分析需要用到的包：</p>
+<pre class="r"><code>library(tidyverse)
+library(readxl)
+library(here)
+library(ggthemes)
+library(corrplot)
+library(tidytext)
+library(widyr)
+library(igraph)
+library(ggraph)
+library(e1071)
+library(RWeka)
+library(gmodels)</code></pre>
+<p>然后导入数据，并进行初步的清洗：</p>
+<pre class="r"><code>anime &lt;- read_xlsx(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;anime_record.xlsx&#39;)) %&gt;%
+  mutate_all(str_remove_all, pattern = &#39;\U00A0&#39;) %&gt;% # 去掉不间断空格&lt;U+00A0&gt;
+  select(-record_time) %&gt;%
+  mutate(studio = str_remove(studio, &#39;,.*&#39;)) %&gt;%
+  mutate_at(vars(c(&#39;season_number&#39;, &#39;episode&#39;, &#39;year&#39;, &#39;rating&#39;, 
+                   &#39;db_number&#39;, &#39;mal_number&#39;)), as.integer) %&gt;% 
+  mutate_at(vars(c(&#39;db_rating&#39;, &#39;mal_rating&#39;)), as.numeric)</code></pre>
+<p>看一下数据的情况：</p>
+<pre class="r"><code>glimpse(anime)</code></pre>
+<pre><code>## Observations: 186
+## Variables: 15
+## $ name          &lt;chr&gt; &quot;新世纪福音战士&quot;, &quot;钢之炼金术师&quot;, &quot;妖精的旋律&quot;, &quot;蔷薇少女&quot;, &quot;地狱少女&quot;, &quot;蔷...
+## $ series        &lt;chr&gt; &quot;新世纪福音战士&quot;, &quot;钢之炼金术师&quot;, &quot;妖精的旋律&quot;, &quot;蔷薇少女&quot;, &quot;地狱少女&quot;, &quot;蔷...
+## $ season_number &lt;int&gt; 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, ...
+## $ episode       &lt;int&gt; 26, 51, 13, 12, 26, 12, 24, 24, 14, 24, 26, 25, ...
+## $ year          &lt;int&gt; 1995, 2003, 2004, 2004, 2005, 2005, 2005, 2006, ...
+## $ season        &lt;chr&gt; &quot;秋&quot;, &quot;秋&quot;, &quot;夏&quot;, &quot;秋&quot;, &quot;秋&quot;, &quot;秋&quot;, &quot;秋&quot;, &quot;冬&quot;, &quot;春&quot;, &quot;春&quot;...
+## $ origin        &lt;chr&gt; &quot;原创&quot;, &quot;漫改&quot;, &quot;漫改&quot;, &quot;漫改&quot;, &quot;原创&quot;, &quot;漫改&quot;, &quot;轻改&quot;, &quot;游改&quot;, ...
+## $ genra         &lt;chr&gt; &quot;Action,Dementia,Drama,Mecha,Psychological,Sci-F...
+## $ studio        &lt;chr&gt; &quot;Gainax&quot;, &quot;Bones&quot;, &quot;Arms&quot;, &quot;Nomad&quot;, &quot;Studio Deen...
+## $ rating        &lt;int&gt; 8, 8, 8, 7, 7, 7, 7, 7, 10, 8, 7, 10, 10, 9, 6, ...
+## $ db_rating     &lt;dbl&gt; 9.4, 9.2, 8.2, 7.7, 7.8, 8.0, 7.4, 7.7, 8.5, 8.9...
+## $ db_number     &lt;int&gt; 69782, 48049, 13862, 6478, 17827, 2626, 12445, 2...
+## $ mal_rating    &lt;dbl&gt; 8.33, 8.27, 7.71, 7.52, 7.73, 7.72, 7.63, 7.49, ...
+## $ mal_number    &lt;int&gt; 416593, 538905, 562900, 77500, 90143, 48980, 193...
+## $ cast          &lt;chr&gt; &quot;绪方惠美/林原惠美/三石琴乃/宫村优子/山口由里子/立木文彦/清川元梦/山寺宏一/关智一/岩永...</code></pre>
+<p>可以看到，共有186行数据，15列变量。下面简单介绍下变量：</p>
+<ul>
+<li><p><strong>name</strong>：番剧的名称；</p></li>
+<li><p><strong>series</strong>：番剧的系列名，也就是番剧第一季的名字；</p></li>
+<li><p><strong>season_number</strong>：番剧的季数；</p></li>
+<li><p><strong>episode</strong>：番剧的总集数；</p></li>
+<li><p><strong>year</strong>：番剧首播的年份；</p></li>
+<li><p><strong>season</strong>：番剧首播的季节；</p></li>
+<li><p><strong>origin</strong>；番剧的来源，即由什么而改编；</p></li>
+<li><p><strong>genra</strong>：番剧的类型；</p></li>
+<li><p><strong>studio</strong>：番剧的制作公司；</p></li>
+<li><p><strong>rating</strong>；我个人对番剧的评分，即反应变量；</p></li>
+<li><p><strong>db_rating</strong>：豆瓣上对番剧的评分；</p></li>
+<li><p><strong>db_number</strong>：豆瓣上对番剧评分的人数；</p></li>
+<li><p><strong>mal_rating</strong>：MAL上对番剧的评分；</p></li>
+<li><p><strong>mal_number</strong>：MAL上对番剧评分的人数；</p></li>
+<li><p><strong>cast</strong>：番剧的声优</p></li>
+</ul>
+<p>其实还有很多其他信息可以收集的，如监督、配乐、原画、作者、销量等信息，但我都没有记录，因为觉得这些信息对我看不看某个番剧没有太大的影响（毕竟人方面主要还是看声优，监督是谁，一般并不关心；而销量也没怎么关注过）。</p>
+<p>变量介绍到此，下面开始对数据进行探索。</p>
+</div>
+<div id="b." class="section level1">
+<h1>B.数据探索</h1>
+<p>探索前说一下缺失值的问题。整份数据中只有2个缺失值，是《死亡笔记》的豆瓣评分和豆瓣人数，因为被和谐的原因，竟然在豆瓣上连个条目都没有。不过，在最后建模的时候，我也没有用到这两个变量，所以这个问题不算个问题。</p>
+<p>在后面的数据探索中，我频繁地使用同样的几行代码对数据进行统计，为了节省代码，就先写了个函数：</p>
+<pre class="r"><code>my_awesome_summary &lt;- function(data) {
+  data %&gt;% summarise(N = n(), rating = mean(rating), 
+            db_rating = mean(db_rating, na.rm = TRUE), 
+            db_number = mean(db_number, na.rm = TRUE),
+            mal_rating = mean(mal_rating), mal_number = mean(mal_number))
+}</code></pre>
+<p>该函数会在分类的基础上，计算各类别的个数及若干变量的平均值。当然，最好不要用<code>my_awesome_summary</code>这种函数名。</p>
+<div id="b1." class="section level3">
+<h3>b1.番名</h3>
+<p>番名肯定会对我决定看不看某个番产生一定的影响，在中二的年代，《死亡笔记》《反叛的鲁路修》这样的名字，确实很有吸引力。不过，我不知道该如何使用这一变量，所以没有在后面的模型中用到。但这一变量倒在清洗数据时发挥了一定的作用。</p>
+</div>
+<div id="b2." class="section level3">
+<h3>b2.季数</h3>
+<p>先看一下按季数进行分类的情况：</p>
+<pre class="r"><code>anime %&gt;% group_by(season_number) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">season_number</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">125</td>
+<td align="right">7.55</td>
+<td align="right">8.18</td>
+<td align="right">17152.02</td>
+<td align="right">7.85</td>
+<td align="right">242829.1</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">46</td>
+<td align="right">7.78</td>
+<td align="right">8.35</td>
+<td align="right">10009.17</td>
+<td align="right">8.00</td>
+<td align="right">184294.9</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">10</td>
+<td align="right">7.40</td>
+<td align="right">7.95</td>
+<td align="right">11612.10</td>
+<td align="right">7.88</td>
+<td align="right">108821.9</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">3</td>
+<td align="right">7.33</td>
+<td align="right">7.80</td>
+<td align="right">17342.00</td>
+<td align="right">7.27</td>
+<td align="right">50593.0</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">1</td>
+<td align="right">9.00</td>
+<td align="right">9.50</td>
+<td align="right">26317.00</td>
+<td align="right">8.63</td>
+<td align="right">38075.0</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">1</td>
+<td align="right">9.00</td>
+<td align="right">9.50</td>
+<td align="right">19896.00</td>
+<td align="right">8.71</td>
+<td align="right">31475.0</td>
+</tr>
+</tbody>
+</table>
+<p>超过3季的番很少，实际上，也就只有《夏目友人帐》作到了第六季。考虑将第2季及后续的合并在一起，与第1季进行对比：</p>
+<pre class="r"><code>anime %&gt;% mutate(season_state = ifelse(season_number == 1, &#39;first&#39;, &#39;second+&#39;)) %&gt;% 
+  group_by(season_state) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">season_state</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">first</td>
+<td align="right">125</td>
+<td align="right">7.55</td>
+<td align="right">8.18</td>
+<td align="right">17152.02</td>
+<td align="right">7.85</td>
+<td align="right">242829.1</td>
+</tr>
+<tr class="even">
+<td align="left">second+</td>
+<td align="right">61</td>
+<td align="right">7.74</td>
+<td align="right">8.29</td>
+<td align="right">11062.00</td>
+<td align="right">7.97</td>
+<td align="right">160444.5</td>
+</tr>
+</tbody>
+</table>
+<p>从评分来看，后续的番剧确实要比第1季的番剧要好一些，因此我有一个猜测，即如果某个番剧出了续集，则它更值得观看。筛选一下数据，进行对比：</p>
+<pre class="r"><code>anime %&gt;% 
+  mutate(season_more = ifelse(series %in% (anime %&gt;% filter(season_number &gt; 1) %&gt;% 
+                                             pull(series) %&gt;% unique()), &#39;yes&#39;, &#39;no&#39;)) %&gt;% 
+  group_by(season_more) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">season_more</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">no</td>
+<td align="right">82</td>
+<td align="right">7.40</td>
+<td align="right">8.11</td>
+<td align="right">14753.23</td>
+<td align="right">7.81</td>
+<td align="right">202685.0</td>
+</tr>
+<tr class="even">
+<td align="left">yes</td>
+<td align="right">104</td>
+<td align="right">7.78</td>
+<td align="right">8.30</td>
+<td align="right">15448.27</td>
+<td align="right">7.96</td>
+<td align="right">226159.4</td>
+</tr>
+</tbody>
+</table>
+<p>这样一对比就更明显了，但有一点需要注意，就是数据中的某个“没有”后续的番剧可能并不是没有后续，只是我没有去看。</p>
+<p>第一个变量提取出来了，即有无后续。</p>
+</div>
+<div id="b3." class="section level3">
+<h3>b3.集数</h3>
+<p>下面看下集数变量的情况：</p>
+<pre class="r"><code>anime %&gt;% group_by(episode) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">episode</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">4</td>
+<td align="right">1</td>
+<td align="right">7.00</td>
+<td align="right">8.60</td>
+<td align="right">6007.00</td>
+<td align="right">8.03</td>
+<td align="right">183539.0</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">1</td>
+<td align="right">7.00</td>
+<td align="right">7.30</td>
+<td align="right">2778.00</td>
+<td align="right">6.60</td>
+<td align="right">10205.0</td>
+</tr>
+<tr class="odd">
+<td align="right">10</td>
+<td align="right">4</td>
+<td align="right">6.75</td>
+<td align="right">7.95</td>
+<td align="right">4844.50</td>
+<td align="right">7.73</td>
+<td align="right">212081.0</td>
+</tr>
+<tr class="even">
+<td align="right">11</td>
+<td align="right">6</td>
+<td align="right">8.17</td>
+<td align="right">8.75</td>
+<td align="right">25299.67</td>
+<td align="right">8.27</td>
+<td align="right">180340.3</td>
+</tr>
+<tr class="odd">
+<td align="right">12</td>
+<td align="right">74</td>
+<td align="right">7.46</td>
+<td align="right">8.08</td>
+<td align="right">11506.42</td>
+<td align="right">7.72</td>
+<td align="right">172649.2</td>
+</tr>
+<tr class="even">
+<td align="right">13</td>
+<td align="right">40</td>
+<td align="right">7.62</td>
+<td align="right">8.41</td>
+<td align="right">16667.53</td>
+<td align="right">7.98</td>
+<td align="right">175268.0</td>
+</tr>
+<tr class="odd">
+<td align="right">14</td>
+<td align="right">2</td>
+<td align="right">10.00</td>
+<td align="right">8.65</td>
+<td align="right">17240.50</td>
+<td align="right">7.61</td>
+<td align="right">262674.5</td>
+</tr>
+<tr class="even">
+<td align="right">15</td>
+<td align="right">1</td>
+<td align="right">8.00</td>
+<td align="right">8.60</td>
+<td align="right">22429.00</td>
+<td align="right">8.35</td>
+<td align="right">403140.0</td>
+</tr>
+<tr class="odd">
+<td align="right">16</td>
+<td align="right">2</td>
+<td align="right">7.00</td>
+<td align="right">7.05</td>
+<td align="right">3839.00</td>
+<td align="right">7.00</td>
+<td align="right">105944.5</td>
+</tr>
+<tr class="even">
+<td align="right">21</td>
+<td align="right">1</td>
+<td align="right">7.00</td>
+<td align="right">8.50</td>
+<td align="right">9951.00</td>
+<td align="right">7.66</td>
+<td align="right">65534.0</td>
+</tr>
+<tr class="odd">
+<td align="right">22</td>
+<td align="right">4</td>
+<td align="right">8.00</td>
+<td align="right">8.33</td>
+<td align="right">24685.50</td>
+<td align="right">8.30</td>
+<td align="right">425028.2</td>
+</tr>
+<tr class="even">
+<td align="right">23</td>
+<td align="right">2</td>
+<td align="right">9.50</td>
+<td align="right">9.00</td>
+<td align="right">14174.00</td>
+<td align="right">8.39</td>
+<td align="right">289716.0</td>
+</tr>
+<tr class="odd">
+<td align="right">24</td>
+<td align="right">22</td>
+<td align="right">7.68</td>
+<td align="right">8.20</td>
+<td align="right">15641.68</td>
+<td align="right">8.00</td>
+<td align="right">272950.6</td>
+</tr>
+<tr class="even">
+<td align="right">25</td>
+<td align="right">11</td>
+<td align="right">8.36</td>
+<td align="right">8.48</td>
+<td align="right">28003.55</td>
+<td align="right">8.37</td>
+<td align="right">453407.4</td>
+</tr>
+<tr class="odd">
+<td align="right">26</td>
+<td align="right">11</td>
+<td align="right">6.64</td>
+<td align="right">7.66</td>
+<td align="right">13373.00</td>
+<td align="right">7.71</td>
+<td align="right">109467.4</td>
+</tr>
+<tr class="even">
+<td align="right">37</td>
+<td align="right">1</td>
+<td align="right">10.00</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+<td align="right">8.66</td>
+<td align="right">1139551.0</td>
+</tr>
+<tr class="odd">
+<td align="right">51</td>
+<td align="right">1</td>
+<td align="right">8.00</td>
+<td align="right">9.20</td>
+<td align="right">48049.00</td>
+<td align="right">8.27</td>
+<td align="right">538905.0</td>
+</tr>
+<tr class="even">
+<td align="right">52</td>
+<td align="right">1</td>
+<td align="right">7.00</td>
+<td align="right">9.00</td>
+<td align="right">838.00</td>
+<td align="right">7.60</td>
+<td align="right">6491.0</td>
+</tr>
+<tr class="odd">
+<td align="right">64</td>
+<td align="right">1</td>
+<td align="right">10.00</td>
+<td align="right">9.60</td>
+<td align="right">53720.00</td>
+<td align="right">9.24</td>
+<td align="right">862938.0</td>
+</tr>
+</tbody>
+</table>
+<p>集数的类型还挺多的，我对此进行了简化，将超过20集的视为长篇，不足20集的视为短篇。这里其实并没有真正的长篇，毕竟最长的也才64集（钢炼FA），不过我没有把看过的长篇统计在内，所以这么称呼也可以吧：</p>
+<pre class="r"><code>anime %&gt;% mutate(episode = ifelse(episode &lt; 20, &#39;short&#39;, &#39;long&#39;),
+                 episode = factor(episode, levels = c(&#39;short&#39;, &#39;long&#39;))) %&gt;% 
+  group_by(episode) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">episode</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">short</td>
+<td align="right">131</td>
+<td align="right">7.55</td>
+<td align="right">8.20</td>
+<td align="right">13455.92</td>
+<td align="right">7.81</td>
+<td align="right">175963.8</td>
+</tr>
+<tr class="even">
+<td align="left">long</td>
+<td align="right">55</td>
+<td align="right">7.76</td>
+<td align="right">8.25</td>
+<td align="right">19239.02</td>
+<td align="right">8.08</td>
+<td align="right">310718.2</td>
+</tr>
+</tbody>
+</table>
+<p>在我的评分中，长篇的确实更好一些，但其实这也挺危险的，因为万一是个长篇的烂番的话，那可真是让人加倍的烦躁了。</p>
+<p>第二个变量为是否是长篇。</p>
+</div>
+<div id="b4." class="section level3">
+<h3>b4.年份</h3>
+<p>还是先看一下各年份的情况：</p>
+<pre class="r"><code>anime %&gt;% group_by(year) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">year</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1995</td>
+<td align="right">1</td>
+<td align="right">8.00</td>
+<td align="right">9.40</td>
+<td align="right">69782.00</td>
+<td align="right">8.33</td>
+<td align="right">416593.00</td>
+</tr>
+<tr class="even">
+<td align="right">2003</td>
+<td align="right">1</td>
+<td align="right">8.00</td>
+<td align="right">9.20</td>
+<td align="right">48049.00</td>
+<td align="right">8.27</td>
+<td align="right">538905.00</td>
+</tr>
+<tr class="odd">
+<td align="right">2004</td>
+<td align="right">2</td>
+<td align="right">7.50</td>
+<td align="right">7.95</td>
+<td align="right">10170.00</td>
+<td align="right">7.62</td>
+<td align="right">320200.00</td>
+</tr>
+<tr class="even">
+<td align="right">2005</td>
+<td align="right">3</td>
+<td align="right">7.00</td>
+<td align="right">7.73</td>
+<td align="right">10966.00</td>
+<td align="right">7.69</td>
+<td align="right">110749.00</td>
+</tr>
+<tr class="odd">
+<td align="right">2006</td>
+<td align="right">6</td>
+<td align="right">8.67</td>
+<td align="right">8.46</td>
+<td align="right">26425.20</td>
+<td align="right">8.16</td>
+<td align="right">433357.33</td>
+</tr>
+<tr class="even">
+<td align="right">2007</td>
+<td align="right">5</td>
+<td align="right">8.00</td>
+<td align="right">8.16</td>
+<td align="right">14301.60</td>
+<td align="right">7.52</td>
+<td align="right">226445.60</td>
+</tr>
+<tr class="odd">
+<td align="right">2008</td>
+<td align="right">8</td>
+<td align="right">8.38</td>
+<td align="right">8.59</td>
+<td align="right">28915.62</td>
+<td align="right">8.33</td>
+<td align="right">288890.50</td>
+</tr>
+<tr class="even">
+<td align="right">2009</td>
+<td align="right">11</td>
+<td align="right">8.09</td>
+<td align="right">8.55</td>
+<td align="right">21519.36</td>
+<td align="right">7.95</td>
+<td align="right">218160.18</td>
+</tr>
+<tr class="odd">
+<td align="right">2010</td>
+<td align="right">6</td>
+<td align="right">7.33</td>
+<td align="right">8.00</td>
+<td align="right">17073.00</td>
+<td align="right">7.91</td>
+<td align="right">329771.33</td>
+</tr>
+<tr class="even">
+<td align="right">2011</td>
+<td align="right">11</td>
+<td align="right">7.91</td>
+<td align="right">8.39</td>
+<td align="right">27114.55</td>
+<td align="right">8.12</td>
+<td align="right">285201.36</td>
+</tr>
+<tr class="odd">
+<td align="right">2012</td>
+<td align="right">14</td>
+<td align="right">7.50</td>
+<td align="right">8.26</td>
+<td align="right">17267.93</td>
+<td align="right">7.91</td>
+<td align="right">251625.21</td>
+</tr>
+<tr class="even">
+<td align="right">2013</td>
+<td align="right">13</td>
+<td align="right">7.23</td>
+<td align="right">8.03</td>
+<td align="right">12966.00</td>
+<td align="right">7.77</td>
+<td align="right">217733.46</td>
+</tr>
+<tr class="odd">
+<td align="right">2014</td>
+<td align="right">15</td>
+<td align="right">7.53</td>
+<td align="right">8.18</td>
+<td align="right">15401.33</td>
+<td align="right">7.87</td>
+<td align="right">314657.53</td>
+</tr>
+<tr class="even">
+<td align="right">2015</td>
+<td align="right">20</td>
+<td align="right">7.40</td>
+<td align="right">7.88</td>
+<td align="right">9747.45</td>
+<td align="right">7.68</td>
+<td align="right">197773.05</td>
+</tr>
+<tr class="odd">
+<td align="right">2016</td>
+<td align="right">15</td>
+<td align="right">7.60</td>
+<td align="right">8.38</td>
+<td align="right">16410.53</td>
+<td align="right">8.11</td>
+<td align="right">241646.60</td>
+</tr>
+<tr class="even">
+<td align="right">2017</td>
+<td align="right">16</td>
+<td align="right">7.69</td>
+<td align="right">8.28</td>
+<td align="right">11513.88</td>
+<td align="right">7.99</td>
+<td align="right">170416.75</td>
+</tr>
+<tr class="odd">
+<td align="right">2018</td>
+<td align="right">38</td>
+<td align="right">7.34</td>
+<td align="right">8.11</td>
+<td align="right">7271.58</td>
+<td align="right">7.72</td>
+<td align="right">84959.74</td>
+</tr>
+<tr class="even">
+<td align="right">2019</td>
+<td align="right">1</td>
+<td align="right">9.00</td>
+<td align="right">9.70</td>
+<td align="right">15215.00</td>
+<td align="right">9.00</td>
+<td align="right">45057.00</td>
+</tr>
+</tbody>
+</table>
+<p>数据中的旧番挺少的，主要是因为我是对我网盘里有资源的番剧进行的整理，而很多旧番，已经找不到资源了。另外，2018年的番剧，我竟然看了38部，看来去年是挺焦虑的，需要大量看番来缓解。不过，那年番剧的整理质量似乎挺差的，高质量的番剧，主要还是集中在2008年前后。</p>
+<p>同样为了简化，我将2015年设为节点，之前的归类为旧番，剩下的归类为新番。看一下分类后的情况：</p>
+<pre class="r"><code>anime %&gt;% mutate(year = ifelse(year &lt; 2015, &#39;old&#39;, &#39;new&#39;),
+                 year = factor(year, levels = c(&#39;old&#39;, &#39;new&#39;))) %&gt;% 
+  group_by(year) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">year</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">old</td>
+<td align="right">96</td>
+<td align="right">7.74</td>
+<td align="right">8.28</td>
+<td align="right">19839.66</td>
+<td align="right">7.94</td>
+<td align="right">276670.8</td>
+</tr>
+<tr class="even">
+<td align="left">new</td>
+<td align="right">90</td>
+<td align="right">7.48</td>
+<td align="right">8.15</td>
+<td align="right">10187.38</td>
+<td align="right">7.84</td>
+<td align="right">150892.8</td>
+</tr>
+</tbody>
+</table>
+<p>番还是老的香啊！</p>
+<p>第三个变量就是是否为旧番了。</p>
+</div>
+<div id="b5." class="section level3">
+<h3>b5.季节</h3>
+<p>番剧一般都是在1月、4月、7月和10月开始播出，对应冬番、春番、夏番和秋番。先看一下各季节的番剧情况：</p>
+<pre class="r"><code>anime %&gt;% group_by(season) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">season</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">春</td>
+<td align="right">54</td>
+<td align="right">7.70</td>
+<td align="right">8.21</td>
+<td align="right">16097.13</td>
+<td align="right">7.88</td>
+<td align="right">240018.5</td>
+</tr>
+<tr class="even">
+<td align="left">冬</td>
+<td align="right">41</td>
+<td align="right">7.59</td>
+<td align="right">8.37</td>
+<td align="right">13337.20</td>
+<td align="right">8.00</td>
+<td align="right">185731.2</td>
+</tr>
+<tr class="odd">
+<td align="left">秋</td>
+<td align="right">55</td>
+<td align="right">7.58</td>
+<td align="right">8.12</td>
+<td align="right">14144.80</td>
+<td align="right">7.89</td>
+<td align="right">218163.4</td>
+</tr>
+<tr class="even">
+<td align="left">夏</td>
+<td align="right">36</td>
+<td align="right">7.56</td>
+<td align="right">8.18</td>
+<td align="right">17270.64</td>
+<td align="right">7.78</td>
+<td align="right">210160.7</td>
+</tr>
+</tbody>
+</table>
+<p>就我个人的评分而言，似乎是春番更好一些，但实际上，我看番是以补为主，以追为辅，大部分的情况下，我都意识不到这部番当年是在哪个季节里播出的，所以这个变量就先不用了。</p>
+</div>
+<div id="b6." class="section level3">
+<h3>b6.来源</h3>
+<p>来源主要包括漫画、轻小说、游戏和原创，也有个别来源不明的以及由正统小说改编的，放进了其他类别里（有一个小说改编的，我错误的放进了轻改里，但忘了是哪个了）。看一下各来源的情况：</p>
+<pre class="r"><code>anime %&gt;% group_by(origin) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">origin</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">漫改</td>
+<td align="right">90</td>
+<td align="right">7.77</td>
+<td align="right">8.52</td>
+<td align="right">17356.28</td>
+<td align="right">7.92</td>
+<td align="right">192463.5</td>
+</tr>
+<tr class="even">
+<td align="left">其他</td>
+<td align="right">5</td>
+<td align="right">7.20</td>
+<td align="right">8.04</td>
+<td align="right">5778.80</td>
+<td align="right">7.70</td>
+<td align="right">66330.2</td>
+</tr>
+<tr class="odd">
+<td align="left">轻改</td>
+<td align="right">58</td>
+<td align="right">7.40</td>
+<td align="right">7.88</td>
+<td align="right">10436.43</td>
+<td align="right">7.86</td>
+<td align="right">244139.0</td>
+</tr>
+<tr class="even">
+<td align="left">游改</td>
+<td align="right">10</td>
+<td align="right">7.90</td>
+<td align="right">8.18</td>
+<td align="right">16663.90</td>
+<td align="right">7.88</td>
+<td align="right">282510.7</td>
+</tr>
+<tr class="odd">
+<td align="left">原创</td>
+<td align="right">23</td>
+<td align="right">7.52</td>
+<td align="right">7.92</td>
+<td align="right">19829.43</td>
+<td align="right">7.90</td>
+<td align="right">239227.0</td>
+</tr>
+</tbody>
+</table>
+<p>我看的番剧有一半是由漫画改编的，我对这些番剧的评分也还不错，但是，我几乎从来没有因为看过某个漫画或轻小说而去看某个动画的（没有时间啊），也不会因为看了某个番剧，觉得好看，而去追原作的（一拳超人是个例外），所以这个变量对我看不看某个番剧应该也没啥太大的影响，先放弃了。</p>
+</div>
+<div id="b7." class="section level3">
+<h3>b7.类别</h3>
+<p>番剧类别一共由30多种，先看下整体的情况：</p>
+<pre class="r"><code>anime %&gt;% separate_rows(genra, sep = &#39;,&#39;) %&gt;% 
+  group_by(genra) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  arrange(-N) %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">genra</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Comedy</td>
+<td align="right">92</td>
+<td align="right">7.55</td>
+<td align="right">8.30</td>
+<td align="right">12362.05</td>
+<td align="right">7.82</td>
+<td align="right">192869.58</td>
+</tr>
+<tr class="even">
+<td align="left">Action</td>
+<td align="right">70</td>
+<td align="right">7.61</td>
+<td align="right">8.09</td>
+<td align="right">17106.83</td>
+<td align="right">7.93</td>
+<td align="right">292958.14</td>
+</tr>
+<tr class="odd">
+<td align="left">School</td>
+<td align="right">60</td>
+<td align="right">7.45</td>
+<td align="right">8.14</td>
+<td align="right">13528.15</td>
+<td align="right">7.79</td>
+<td align="right">213940.98</td>
+</tr>
+<tr class="even">
+<td align="left">Slice of Life</td>
+<td align="right">58</td>
+<td align="right">7.78</td>
+<td align="right">8.40</td>
+<td align="right">17216.45</td>
+<td align="right">7.90</td>
+<td align="right">159906.62</td>
+</tr>
+<tr class="odd">
+<td align="left">Supernatural</td>
+<td align="right">58</td>
+<td align="right">7.74</td>
+<td align="right">8.36</td>
+<td align="right">19662.47</td>
+<td align="right">8.11</td>
+<td align="right">269174.21</td>
+</tr>
+<tr class="even">
+<td align="left">Drama</td>
+<td align="right">54</td>
+<td align="right">7.94</td>
+<td align="right">8.41</td>
+<td align="right">24999.26</td>
+<td align="right">8.09</td>
+<td align="right">279575.81</td>
+</tr>
+<tr class="odd">
+<td align="left">Romance</td>
+<td align="right">47</td>
+<td align="right">7.40</td>
+<td align="right">7.99</td>
+<td align="right">11517.55</td>
+<td align="right">7.76</td>
+<td align="right">240592.87</td>
+</tr>
+<tr class="even">
+<td align="left">Fantasy</td>
+<td align="right">45</td>
+<td align="right">7.76</td>
+<td align="right">8.26</td>
+<td align="right">21097.58</td>
+<td align="right">8.11</td>
+<td align="right">285569.42</td>
+</tr>
+<tr class="odd">
+<td align="left">Sci-Fi</td>
+<td align="right">33</td>
+<td align="right">7.79</td>
+<td align="right">7.93</td>
+<td align="right">14952.12</td>
+<td align="right">7.78</td>
+<td align="right">216789.27</td>
+</tr>
+<tr class="even">
+<td align="left">Seinen</td>
+<td align="right">30</td>
+<td align="right">7.37</td>
+<td align="right">8.20</td>
+<td align="right">11977.47</td>
+<td align="right">7.66</td>
+<td align="right">167865.30</td>
+</tr>
+<tr class="odd">
+<td align="left">Mystery</td>
+<td align="right">29</td>
+<td align="right">7.90</td>
+<td align="right">8.46</td>
+<td align="right">17869.39</td>
+<td align="right">8.02</td>
+<td align="right">277079.72</td>
+</tr>
+<tr class="even">
+<td align="left">Shounen</td>
+<td align="right">25</td>
+<td align="right">8.04</td>
+<td align="right">8.75</td>
+<td align="right">21719.50</td>
+<td align="right">8.21</td>
+<td align="right">338354.80</td>
+</tr>
+<tr class="odd">
+<td align="left">Magic</td>
+<td align="right">24</td>
+<td align="right">7.42</td>
+<td align="right">7.97</td>
+<td align="right">14309.79</td>
+<td align="right">7.95</td>
+<td align="right">263051.46</td>
+</tr>
+<tr class="even">
+<td align="left">Adventure</td>
+<td align="right">20</td>
+<td align="right">7.60</td>
+<td align="right">8.48</td>
+<td align="right">12175.30</td>
+<td align="right">8.18</td>
+<td align="right">346767.65</td>
+</tr>
+<tr class="odd">
+<td align="left">Psychological</td>
+<td align="right">20</td>
+<td align="right">7.65</td>
+<td align="right">8.21</td>
+<td align="right">19453.47</td>
+<td align="right">7.88</td>
+<td align="right">315613.35</td>
+</tr>
+<tr class="even">
+<td align="left">SuperPower</td>
+<td align="right">17</td>
+<td align="right">8.24</td>
+<td align="right">8.42</td>
+<td align="right">25527.41</td>
+<td align="right">8.19</td>
+<td align="right">400225.71</td>
+</tr>
+<tr class="odd">
+<td align="left">Parody</td>
+<td align="right">16</td>
+<td align="right">7.69</td>
+<td align="right">8.05</td>
+<td align="right">9403.25</td>
+<td align="right">7.61</td>
+<td align="right">183292.19</td>
+</tr>
+<tr class="even">
+<td align="left">Military</td>
+<td align="right">12</td>
+<td align="right">8.25</td>
+<td align="right">8.36</td>
+<td align="right">29216.67</td>
+<td align="right">8.11</td>
+<td align="right">403922.33</td>
+</tr>
+<tr class="odd">
+<td align="left">Ecchi</td>
+<td align="right">11</td>
+<td align="right">6.82</td>
+<td align="right">7.67</td>
+<td align="right">8229.73</td>
+<td align="right">7.63</td>
+<td align="right">247873.27</td>
+</tr>
+<tr class="even">
+<td align="left">Horror</td>
+<td align="right">10</td>
+<td align="right">7.00</td>
+<td align="right">7.64</td>
+<td align="right">15405.70</td>
+<td align="right">7.48</td>
+<td align="right">266667.10</td>
+</tr>
+<tr class="odd">
+<td align="left">Mecha</td>
+<td align="right">10</td>
+<td align="right">7.40</td>
+<td align="right">7.35</td>
+<td align="right">19267.20</td>
+<td align="right">7.50</td>
+<td align="right">246206.90</td>
+</tr>
+<tr class="even">
+<td align="left">Game</td>
+<td align="right">9</td>
+<td align="right">7.44</td>
+<td align="right">7.73</td>
+<td align="right">9294.67</td>
+<td align="right">7.77</td>
+<td align="right">389259.67</td>
+</tr>
+<tr class="odd">
+<td align="left">Harem</td>
+<td align="right">7</td>
+<td align="right">6.57</td>
+<td align="right">7.20</td>
+<td align="right">5682.29</td>
+<td align="right">7.24</td>
+<td align="right">154537.57</td>
+</tr>
+<tr class="even">
+<td align="left">Historical</td>
+<td align="right">7</td>
+<td align="right">8.14</td>
+<td align="right">8.81</td>
+<td align="right">7680.57</td>
+<td align="right">8.28</td>
+<td align="right">89261.43</td>
+</tr>
+<tr class="odd">
+<td align="left">Music</td>
+<td align="right">7</td>
+<td align="right">7.00</td>
+<td align="right">7.97</td>
+<td align="right">12224.00</td>
+<td align="right">7.89</td>
+<td align="right">186041.71</td>
+</tr>
+<tr class="even">
+<td align="left">Shoujo</td>
+<td align="right">6</td>
+<td align="right">9.00</td>
+<td align="right">9.45</td>
+<td align="right">52054.00</td>
+<td align="right">8.61</td>
+<td align="right">69487.67</td>
+</tr>
+<tr class="odd">
+<td align="left">Thriller</td>
+<td align="right">6</td>
+<td align="right">8.83</td>
+<td align="right">8.78</td>
+<td align="right">23380.00</td>
+<td align="right">8.50</td>
+<td align="right">486415.83</td>
+</tr>
+<tr class="even">
+<td align="left">Space</td>
+<td align="right">5</td>
+<td align="right">7.00</td>
+<td align="right">7.04</td>
+<td align="right">1733.00</td>
+<td align="right">7.00</td>
+<td align="right">35079.80</td>
+</tr>
+<tr class="odd">
+<td align="left">Police</td>
+<td align="right">3</td>
+<td align="right">8.67</td>
+<td align="right">8.40</td>
+<td align="right">18267.00</td>
+<td align="right">8.20</td>
+<td align="right">588147.67</td>
+</tr>
+<tr class="even">
+<td align="left">Dementia</td>
+<td align="right">2</td>
+<td align="right">7.50</td>
+<td align="right">8.45</td>
+<td align="right">37566.50</td>
+<td align="right">7.83</td>
+<td align="right">233431.00</td>
+</tr>
+<tr class="odd">
+<td align="left">Josei</td>
+<td align="right">2</td>
+<td align="right">9.00</td>
+<td align="right">9.45</td>
+<td align="right">8624.00</td>
+<td align="right">8.73</td>
+<td align="right">44417.50</td>
+</tr>
+<tr class="even">
+<td align="left">Shoujo Ai</td>
+<td align="right">2</td>
+<td align="right">7.00</td>
+<td align="right">7.70</td>
+<td align="right">3674.50</td>
+<td align="right">7.07</td>
+<td align="right">40518.50</td>
+</tr>
+<tr class="odd">
+<td align="left">Sports</td>
+<td align="right">2</td>
+<td align="right">7.50</td>
+<td align="right">8.90</td>
+<td align="right">8259.50</td>
+<td align="right">7.83</td>
+<td align="right">52953.00</td>
+</tr>
+<tr class="even">
+<td align="left">Vampire</td>
+<td align="right">2</td>
+<td align="right">7.50</td>
+<td align="right">8.85</td>
+<td align="right">13636.50</td>
+<td align="right">8.56</td>
+<td align="right">296321.00</td>
+</tr>
+</tbody>
+</table>
+<p>我看的最多的几个类别的喜剧（Comedy）、动作（Action）、校园（School）、日常（Slice of Life）和超自然（Super Natural），但我评分最高的几个类别是军事（Military）、超能力（Super Power）和少年（Shounen）（仅统计个数超过 10的），如果不统计一下的话，我自己都不知道。另外，我最不喜欢的是后宫（Harem）。记得有次跟hj师妹聊番剧，我说我最喜欢的是《凉宫春日的忧郁》，她（似乎很鄙夷地）跟我说，她不喜欢这种男性向的后宫番。首先，我想说，《凉宫》不是后宫番啊；其次，我也很讨厌后宫番啊！</p>
+<p>计划将这一变量转换成稀疏矩阵，并去掉个数出现太少的类别。</p>
+</div>
+<div id="b8." class="section level3">
+<h3>b8.制作公司</h3>
+<p>我看的番剧共涉及到将近50个制作公司，还是先看一下整体的情况：</p>
+<pre class="r"><code>anime %&gt;%  
+  group_by(studio) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  arrange(-N) %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">studio</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A-1 Pictures</td>
+<td align="right">16</td>
+<td align="right">7.31</td>
+<td align="right">7.71</td>
+<td align="right">15227.56</td>
+<td align="right">7.81</td>
+<td align="right">317868.50</td>
+</tr>
+<tr class="even">
+<td align="left">J.C. Staff</td>
+<td align="right">15</td>
+<td align="right">7.27</td>
+<td align="right">7.87</td>
+<td align="right">11284.93</td>
+<td align="right">7.68</td>
+<td align="right">140272.27</td>
+</tr>
+<tr class="odd">
+<td align="left">Kyoto Animation</td>
+<td align="right">13</td>
+<td align="right">8.38</td>
+<td align="right">8.63</td>
+<td align="right">17731.00</td>
+<td align="right">8.04</td>
+<td align="right">259475.31</td>
+</tr>
+<tr class="even">
+<td align="left">Studio Deen</td>
+<td align="right">12</td>
+<td align="right">7.25</td>
+<td align="right">8.17</td>
+<td align="right">10774.08</td>
+<td align="right">7.84</td>
+<td align="right">135950.00</td>
+</tr>
+<tr class="odd">
+<td align="left">Mad house</td>
+<td align="right">8</td>
+<td align="right">8.38</td>
+<td align="right">8.46</td>
+<td align="right">14708.00</td>
+<td align="right">8.30</td>
+<td align="right">442931.00</td>
+</tr>
+<tr class="even">
+<td align="left">Shaft</td>
+<td align="right">8</td>
+<td align="right">7.38</td>
+<td align="right">8.43</td>
+<td align="right">12112.88</td>
+<td align="right">7.99</td>
+<td align="right">202859.38</td>
+</tr>
+<tr class="odd">
+<td align="left">Bones</td>
+<td align="right">7</td>
+<td align="right">8.86</td>
+<td align="right">9.31</td>
+<td align="right">30097.43</td>
+<td align="right">8.68</td>
+<td align="right">474203.29</td>
+</tr>
+<tr class="even">
+<td align="left">Brain’s Base</td>
+<td align="right">7</td>
+<td align="right">8.43</td>
+<td align="right">9.06</td>
+<td align="right">45882.00</td>
+<td align="right">8.45</td>
+<td align="right">184809.14</td>
+</tr>
+<tr class="odd">
+<td align="left">Sunrise</td>
+<td align="right">7</td>
+<td align="right">7.86</td>
+<td align="right">8.23</td>
+<td align="right">20527.71</td>
+<td align="right">8.08</td>
+<td align="right">293667.14</td>
+</tr>
+<tr class="even">
+<td align="left">Production I.G</td>
+<td align="right">6</td>
+<td align="right">7.67</td>
+<td align="right">8.30</td>
+<td align="right">14079.50</td>
+<td align="right">7.86</td>
+<td align="right">166226.17</td>
+</tr>
+<tr class="odd">
+<td align="left">White Fox</td>
+<td align="right">6</td>
+<td align="right">8.33</td>
+<td align="right">8.53</td>
+<td align="right">13787.50</td>
+<td align="right">8.26</td>
+<td align="right">266070.67</td>
+</tr>
+<tr class="even">
+<td align="left">Lerche</td>
+<td align="right">5</td>
+<td align="right">7.20</td>
+<td align="right">7.86</td>
+<td align="right">8175.40</td>
+<td align="right">7.78</td>
+<td align="right">184249.20</td>
+</tr>
+<tr class="odd">
+<td align="left">Shuka</td>
+<td align="right">5</td>
+<td align="right">8.40</td>
+<td align="right">9.04</td>
+<td align="right">13336.60</td>
+<td align="right">8.34</td>
+<td align="right">87420.00</td>
+</tr>
+<tr class="even">
+<td align="left">SilverLink.</td>
+<td align="right">5</td>
+<td align="right">7.40</td>
+<td align="right">8.44</td>
+<td align="right">6791.80</td>
+<td align="right">7.81</td>
+<td align="right">149994.60</td>
+</tr>
+<tr class="odd">
+<td align="left">ufotable</td>
+<td align="right">5</td>
+<td align="right">8.20</td>
+<td align="right">8.84</td>
+<td align="right">21870.60</td>
+<td align="right">8.34</td>
+<td align="right">271011.80</td>
+</tr>
+<tr class="even">
+<td align="left">Wit Studio</td>
+<td align="right">5</td>
+<td align="right">8.20</td>
+<td align="right">8.64</td>
+<td align="right">34170.60</td>
+<td align="right">8.05</td>
+<td align="right">405481.40</td>
+</tr>
+<tr class="odd">
+<td align="left">Doga Kobo</td>
+<td align="right">4</td>
+<td align="right">7.25</td>
+<td align="right">7.97</td>
+<td align="right">19771.00</td>
+<td align="right">7.63</td>
+<td align="right">132846.75</td>
+</tr>
+<tr class="even">
+<td align="left">StudioPierrot</td>
+<td align="right">4</td>
+<td align="right">6.75</td>
+<td align="right">7.32</td>
+<td align="right">19858.75</td>
+<td align="right">7.25</td>
+<td align="right">385754.25</td>
+</tr>
+<tr class="odd">
+<td align="left">AIC Build</td>
+<td align="right">3</td>
+<td align="right">7.33</td>
+<td align="right">7.40</td>
+<td align="right">8502.67</td>
+<td align="right">7.42</td>
+<td align="right">251730.00</td>
+</tr>
+<tr class="even">
+<td align="left">Diomedea</td>
+<td align="right">3</td>
+<td align="right">7.00</td>
+<td align="right">7.37</td>
+<td align="right">3347.67</td>
+<td align="right">7.22</td>
+<td align="right">66933.67</td>
+</tr>
+<tr class="odd">
+<td align="left">feel.</td>
+<td align="right">3</td>
+<td align="right">7.67</td>
+<td align="right">8.77</td>
+<td align="right">11638.67</td>
+<td align="right">8.31</td>
+<td align="right">155367.33</td>
+</tr>
+<tr class="even">
+<td align="left">Gonzo</td>
+<td align="right">3</td>
+<td align="right">7.00</td>
+<td align="right">7.33</td>
+<td align="right">1005.67</td>
+<td align="right">6.68</td>
+<td align="right">7201.67</td>
+</tr>
+<tr class="odd">
+<td align="left">Sate light</td>
+<td align="right">3</td>
+<td align="right">5.67</td>
+<td align="right">5.73</td>
+<td align="right">999.33</td>
+<td align="right">6.83</td>
+<td align="right">17787.33</td>
+</tr>
+<tr class="even">
+<td align="left">Clover Works</td>
+<td align="right">2</td>
+<td align="right">6.00</td>
+<td align="right">8.05</td>
+<td align="right">8494.00</td>
+<td align="right">7.62</td>
+<td align="right">108598.50</td>
+</tr>
+<tr class="odd">
+<td align="left">David Production</td>
+<td align="right">2</td>
+<td align="right">7.50</td>
+<td align="right">8.95</td>
+<td align="right">22642.50</td>
+<td align="right">7.71</td>
+<td align="right">44781.00</td>
+</tr>
+<tr class="even">
+<td align="left">Geno Studio</td>
+<td align="right">2</td>
+<td align="right">7.50</td>
+<td align="right">8.85</td>
+<td align="right">1280.00</td>
+<td align="right">7.97</td>
+<td align="right">33665.00</td>
+</tr>
+<tr class="odd">
+<td align="left">Kinema Citrus</td>
+<td align="right">2</td>
+<td align="right">8.00</td>
+<td align="right">8.85</td>
+<td align="right">6844.50</td>
+<td align="right">8.39</td>
+<td align="right">142476.00</td>
+</tr>
+<tr class="even">
+<td align="left">Nomad</td>
+<td align="right">2</td>
+<td align="right">7.00</td>
+<td align="right">7.85</td>
+<td align="right">4552.00</td>
+<td align="right">7.62</td>
+<td align="right">63240.00</td>
+</tr>
+<tr class="odd">
+<td align="left">P.A. Works</td>
+<td align="right">2</td>
+<td align="right">8.00</td>
+<td align="right">8.65</td>
+<td align="right">13699.50</td>
+<td align="right">8.35</td>
+<td align="right">400245.50</td>
+</tr>
+<tr class="even">
+<td align="left">Seven</td>
+<td align="right">2</td>
+<td align="right">7.00</td>
+<td align="right">8.10</td>
+<td align="right">7988.50</td>
+<td align="right">7.48</td>
+<td align="right">94999.50</td>
+</tr>
+<tr class="odd">
+<td align="left">Shin-Ei Animation</td>
+<td align="right">2</td>
+<td align="right">7.50</td>
+<td align="right">8.70</td>
+<td align="right">6996.50</td>
+<td align="right">7.78</td>
+<td align="right">73195.50</td>
+</tr>
+<tr class="even">
+<td align="left">Xebec</td>
+<td align="right">2</td>
+<td align="right">7.00</td>
+<td align="right">7.35</td>
+<td align="right">2025.50</td>
+<td align="right">7.28</td>
+<td align="right">81748.50</td>
+</tr>
+<tr class="odd">
+<td align="left">8bit</td>
+<td align="right">1</td>
+<td align="right">7.00</td>
+<td align="right">8.10</td>
+<td align="right">7069.00</td>
+<td align="right">8.37</td>
+<td align="right">78138.00</td>
+</tr>
+<tr class="even">
+<td align="left">AIC</td>
+<td align="right">1</td>
+<td align="right">6.00</td>
+<td align="right">6.70</td>
+<td align="right">691.00</td>
+<td align="right">7.44</td>
+<td align="right">26658.00</td>
+</tr>
+<tr class="odd">
+<td align="left">Arms</td>
+<td align="right">1</td>
+<td align="right">8.00</td>
+<td align="right">8.20</td>
+<td align="right">13862.00</td>
+<td align="right">7.71</td>
+<td align="right">562900.00</td>
+</tr>
+<tr class="even">
+<td align="left">C-Station</td>
+<td align="right">1</td>
+<td align="right">7.00</td>
+<td align="right">9.30</td>
+<td align="right">3409.00</td>
+<td align="right">8.33</td>
+<td align="right">73442.00</td>
+</tr>
+<tr class="odd">
+<td align="left">Gainax</td>
+<td align="right">1</td>
+<td align="right">8.00</td>
+<td align="right">9.40</td>
+<td align="right">69782.00</td>
+<td align="right">8.33</td>
+<td align="right">416593.00</td>
+</tr>
+<tr class="even">
+<td align="left">Imagin</td>
+<td align="right">1</td>
+<td align="right">8.00</td>
+<td align="right">8.10</td>
+<td align="right">12540.00</td>
+<td align="right">8.33</td>
+<td align="right">249632.00</td>
+</tr>
+<tr class="odd">
+<td align="left">Kamikaze Douga</td>
+<td align="right">1</td>
+<td align="right">7.00</td>
+<td align="right">7.50</td>
+<td align="right">5351.00</td>
+<td align="right">7.33</td>
+<td align="right">50269.00</td>
+</tr>
+<tr class="even">
+<td align="left">Orange</td>
+<td align="right">1</td>
+<td align="right">8.00</td>
+<td align="right">8.90</td>
+<td align="right">17278.00</td>
+<td align="right">8.46</td>
+<td align="right">79433.00</td>
+</tr>
+<tr class="odd">
+<td align="left">Pierrot Plus</td>
+<td align="right">1</td>
+<td align="right">7.00</td>
+<td align="right">7.10</td>
+<td align="right">1525.00</td>
+<td align="right">6.71</td>
+<td align="right">14046.00</td>
+</tr>
+<tr class="even">
+<td align="left">Studio 3Hz</td>
+<td align="right">1</td>
+<td align="right">7.00</td>
+<td align="right">7.40</td>
+<td align="right">1648.00</td>
+<td align="right">7.30</td>
+<td align="right">101380.00</td>
+</tr>
+<tr class="odd">
+<td align="left">Tatsunoko Production</td>
+<td align="right">1</td>
+<td align="right">8.00</td>
+<td align="right">8.00</td>
+<td align="right">9768.00</td>
+<td align="right">7.52</td>
+<td align="right">196840.00</td>
+</tr>
+<tr class="even">
+<td align="left">TMS Entertainment</td>
+<td align="right">1</td>
+<td align="right">8.00</td>
+<td align="right">8.80</td>
+<td align="right">15681.00</td>
+<td align="right">8.05</td>
+<td align="right">99415.00</td>
+</tr>
+<tr class="odd">
+<td align="left">TNK</td>
+<td align="right">1</td>
+<td align="right">6.00</td>
+<td align="right">7.10</td>
+<td align="right">15272.00</td>
+<td align="right">5.95</td>
+<td align="right">242096.00</td>
+</tr>
+<tr class="even">
+<td align="left">Trigger</td>
+<td align="right">1</td>
+<td align="right">6.00</td>
+<td align="right">6.80</td>
+<td align="right">1352.00</td>
+<td align="right">7.27</td>
+<td align="right">115457.00</td>
+</tr>
+<tr class="odd">
+<td align="left">TROYCA</td>
+<td align="right">1</td>
+<td align="right">7.00</td>
+<td align="right">7.40</td>
+<td align="right">5314.00</td>
+<td align="right">7.46</td>
+<td align="right">62885.00</td>
+</tr>
+</tbody>
+</table>
+<p>看的最多的三个制作公司分别是A-1，节操社（J.C. Staff）和京阿尼（Kyoto Animation），没想到我竟然看了那么多节操社的作品。为了更直观的对比，我选择个数超过5的11个公司，对评分进行了可视化：</p>
+<pre class="r"><code>anime %&gt;%  
+  group_by(studio) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  filter(N &gt; 5) %&gt;% 
+  gather(rater, score, c(&#39;rating&#39;, &#39;db_rating&#39;, &#39;mal_rating&#39;)) %&gt;% 
+  select(studio, rater, score) %&gt;% 
+  ggplot(aes(studio, score, fill = rater)) + 
+  geom_col(aes(group = rater), position = &#39;dodge&#39;) + 
+  scale_x_discrete(labels = c(&#39;A-1\nPictures&#39;, &#39;Bones&#39;, &quot;Brain&#39;s\nBase&quot;, &#39;J.C.\nStaff&#39;,
+                              &#39;Kyoto\nAnimation&#39;, &#39;Mad\nhouse&#39;, &#39;Production\nI.G&#39;,
+                              &#39;Shaft&#39;, &#39;Studio\nDeen&#39;, &#39;Sunrise&#39;, &#39;White\nFox&#39;)) + 
+  scale_y_continuous(breaks = 1:10, labels = 1:10) + 
+  coord_cartesian(ylim = 1:10) + 
+  scale_fill_manual(values = c(&#39;#009E73&#39;, &#39;#E69F00&#39;, &#39;#56B4E9&#39;),
+                    labels = c(&#39;豆瓣评分&#39;, &#39;MAL评分&#39;, &#39;个人评分&#39;)) + 
+  labs(x = &#39;&#39;, y = &#39;&#39;, fill = &#39;&#39;) + 
+  theme_tufte() + 
+  theme(legend.position = &#39;top&#39;)</code></pre>
+<p><img src="/post/2019-05-12-anime-recommend-with-ml_files/figure-html/unnamed-chunk-16-1.png" width="2100" /></p>
+<p>可以看到，骨头社（Bones）的评价是最高的，而节操社的评价是最低的。如果某个番剧是骨头社、京阿尼、疯房子（Mad House）或者白狐社（White Fox）制作的，我基本上就可以放心的观看了（我对这几个公司的评分都要高于MAL上的评分）。</p>
+<p>同上，也计划将这一变量转换成稀疏矩阵，并去掉个数出现太少的制作公司。</p>
+</div>
+<div id="b9." class="section level3">
+<h3>b9.评分及人数</h3>
+<p>3个评分变量和2个人数变量都是数值型，其中我的个人评分是反应变量，就是最终想通过模型预测的变量，而另外4个变量之间会有较高的相关，考虑只使用其中1个变量。先看一下相关的情况：</p>
+<pre class="r"><code>corrplot(cor(anime[, 10:14], use = &#39;complete.obs&#39;), 
+         method = &#39;number&#39;, type = &#39;upper&#39;)</code></pre>
+<p><img src="/post/2019-05-12-anime-recommend-with-ml_files/figure-html/unnamed-chunk-17-1.png" width="2100" /></p>
+<p>3个评分之间都由很高的相关，鉴于此，计划只使用豆瓣评分和MAL评分其中之一作为预测变量。在后面建模的时候，发现用豆瓣评分建立的模型不如使用MAL评分建立的模型要好，因此就只使用MAL的评分了，将其评分的中位数设为节点，大于中位数的视为推荐，小于中位数的视为不推荐。至于评分人数，跟我的评分相关也不低，但都低于相应的评分与我的评分之间的相关，因此就不使用了。对于我的评分，这次先处理为二元分类变量，将5-7分设为“不推荐”，而将8-10分设为“推荐”，作为反应变量的标签。</p>
+</div>
+<div id="extra-1.mal" class="section level3">
+<h3>extra 1.个人、豆瓣与MAL的对比</h3>
+<p>虽然我个人的评分于豆瓣评分、MAL评分都有很高的相关，但还是有一定的差异的。首先来看看我心中最好的番剧（即我评为10分的番剧）和豆瓣上、MAL上最好的番剧有什么不同：</p>
+<pre class="r"><code>anime %&gt;% filter(rating == 10) %&gt;% 
+  select(name, rating) %&gt;% 
+  bind_cols(anime %&gt;% arrange(-db_rating) %&gt;% 
+              select(db_name = name, db_rating) %&gt;% slice(1:10)) %&gt;% 
+  bind_cols(anime %&gt;% arrange(-mal_rating) %&gt;% 
+              select(mal_name = name, mal_rating) %&gt;% slice(1:10)) %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">rating</th>
+<th align="left">db_name</th>
+<th align="right">db_rating</th>
+<th align="left">mal_name</th>
+<th align="right">mal_rating</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">凉宫春日的忧郁</td>
+<td align="right">10</td>
+<td align="left">灵能百分百Ⅱ</td>
+<td align="right">9.7</td>
+<td align="left">钢之炼金术师FA</td>
+<td align="right">9.24</td>
+</tr>
+<tr class="even">
+<td align="left">反叛的鲁路修</td>
+<td align="right">10</td>
+<td align="left">钢之炼金术师FA</td>
+<td align="right">9.6</td>
+<td align="left">命运石之门</td>
+<td align="right">9.13</td>
+</tr>
+<tr class="odd">
+<td align="left">死亡笔记</td>
+<td align="right">10</td>
+<td align="left">夏目友人帐第三季</td>
+<td align="right">9.5</td>
+<td align="left">灵能百分百Ⅱ</td>
+<td align="right">9.00</td>
+</tr>
+<tr class="even">
+<td align="left">团子大家族</td>
+<td align="right">10</td>
+<td align="left">夏目友人帐第四季</td>
+<td align="right">9.5</td>
+<td align="left">团子大家族 第二季</td>
+<td align="right">8.99</td>
+</tr>
+<tr class="odd">
+<td align="left">反叛的鲁路修 R2</td>
+<td align="right">10</td>
+<td align="left">夏目友人帐第五季</td>
+<td align="right">9.5</td>
+<td align="left">反叛的鲁路修 R2</td>
+<td align="right">8.94</td>
+</tr>
+<tr class="even">
+<td align="left">团子大家族 第二季</td>
+<td align="right">10</td>
+<td align="left">昭和元禄落语心中助六再临篇</td>
+<td align="right">9.5</td>
+<td align="left">来自深渊</td>
+<td align="right">8.87</td>
+</tr>
+<tr class="odd">
+<td align="left">钢之炼金术师FA</td>
+<td align="right">10</td>
+<td align="left">夏目友人帐第六季</td>
+<td align="right">9.5</td>
+<td align="left">四月是你的谎言</td>
+<td align="right">8.86</td>
+</tr>
+<tr class="even">
+<td align="left">凉宫春日的忧郁 2009</td>
+<td align="right">10</td>
+<td align="left">进击的巨人第三季1</td>
+<td align="right">9.5</td>
+<td align="left">昭和元禄落语心中助六再临篇</td>
+<td align="right">8.84</td>
+</tr>
+<tr class="odd">
+<td align="left">命运石之门</td>
+<td align="right">10</td>
+<td align="left">新世纪福音战士</td>
+<td align="right">9.4</td>
+<td align="left">反叛的鲁路修</td>
+<td align="right">8.77</td>
+</tr>
+<tr class="even">
+<td align="left">一拳超人</td>
+<td align="right">10</td>
+<td align="left">夏目友人帐 第二季</td>
+<td align="right">9.4</td>
+<td align="left">物语系列第二季</td>
+<td align="right">8.77</td>
+</tr>
+</tbody>
+</table>
+<p>可以看到，豆瓣上几乎是夏目的天下，跟我只重了钢炼FA一个。灵能2我也很喜欢，但感觉还是跟一拳超人差了一个档次。我的十佳跟MAL的十佳有5个重叠，对于物语系列能排到前10，甚感意外。</p>
+<p>再来看看评分的整体分布：</p>
+<pre class="r"><code>anime %&gt;% gather(rating, value, c(&#39;rating&#39;, &#39;db_rating&#39;, &#39;mal_rating&#39;)) %&gt;% 
+  select(rating, value) %&gt;% 
+  ggplot(aes(value, fill = rating)) + 
+  geom_density(alpha = .8) +
+  scale_x_continuous(breaks = 4:10, labels = 4:10) + 
+  scale_fill_manual(values = c(&#39;#009E73&#39;, &#39;#E69F00&#39;, &#39;#56B4E9&#39;),
+                    labels = c(&#39;豆瓣评分&#39;, &#39;MAL评分&#39;, &#39;个人评分&#39;)) + 
+  labs(x = &#39;&#39;, y = &#39;&#39;, fill = &#39;&#39;) + 
+  theme_tufte() + 
+  theme(legend.position = &#39;top&#39;)</code></pre>
+<p><img src="/post/2019-05-12-anime-recommend-with-ml_files/figure-html/unnamed-chunk-19-1.png" width="2100" /></p>
+<p>我的评分大部分都是7分或8分，7分就是那种看不看两可的感觉，而8分就是很值得一看了。MAL上的评分集中在7分和9分之间，很少有能在MAL上拿到9分以上的番剧；而豆瓣上的评分则稍微分散一些，峰值出现在9分左右，看来豆瓣上的用户倾向于给出高分，但这也是因为豆瓣上给番剧评分的用户远少于MAL上的用户：</p>
+<pre class="r"><code>anime %&gt;% gather(number, value, c(&#39;db_number&#39;, &#39;mal_number&#39;)) %&gt;% 
+  select(number, value) %&gt;% 
+  ggplot(aes(value, fill = number)) + 
+  geom_histogram(show.legend = FALSE) +
+  scale_x_continuous(labels = scales::comma) + 
+  scale_fill_manual(values = c(&#39;#009E73&#39;, &#39;#E69F00&#39;)) + 
+  labs(x = &#39;&#39;, y = &#39;&#39;, fill = &#39;&#39;) + 
+  facet_wrap(~ number, nrow = 2, scales = &#39;free&#39;,
+             labeller = as_labeller(c(&#39;db_number&#39; = &#39;豆瓣人数&#39;, 
+                                      &#39;mal_number&#39; = &#39;MAL人数&#39;))) + 
+  theme_tufte() + 
+  theme(legend.position = &#39;top&#39;)</code></pre>
+<p><img src="/post/2019-05-12-anime-recommend-with-ml_files/figure-html/unnamed-chunk-20-1.png" width="2100" /></p>
+<p>但从趋势上来看，还是差不多的。</p>
+</div>
+<div id="b0." class="section level3">
+<h3>b0.声优</h3>
+<p>最后一个变量是声优。虽然只收集了不到200个番剧，但声优数却有600多。先看一下主要声优的情况（仅统计参演超过10部的声优）：</p>
+<pre class="r"><code>anime %&gt;% separate_rows(cast, sep = &#39;/&#39;) %&gt;% 
+  group_by(cast) %&gt;% 
+  my_awesome_summary() %&gt;% 
+  filter(N &gt; 10) %&gt;% arrange(-rating) %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">cast</th>
+<th align="right">N</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">关智一</td>
+<td align="right">12</td>
+<td align="right">8.75</td>
+<td align="right">9.06</td>
+<td align="right">27225.92</td>
+<td align="right">8.52</td>
+<td align="right">326825.7</td>
+</tr>
+<tr class="even">
+<td align="left">浪川大辅</td>
+<td align="right">11</td>
+<td align="right">8.45</td>
+<td align="right">8.68</td>
+<td align="right">25943.91</td>
+<td align="right">8.28</td>
+<td align="right">323097.7</td>
+</tr>
+<tr class="odd">
+<td align="left">细谷佳正</td>
+<td align="right">12</td>
+<td align="right">8.42</td>
+<td align="right">8.97</td>
+<td align="right">27083.75</td>
+<td align="right">8.27</td>
+<td align="right">371816.4</td>
+</tr>
+<tr class="even">
+<td align="left">大原沙耶香</td>
+<td align="right">11</td>
+<td align="right">8.36</td>
+<td align="right">8.75</td>
+<td align="right">21912.09</td>
+<td align="right">8.33</td>
+<td align="right">272202.0</td>
+</tr>
+<tr class="odd">
+<td align="left">小林优</td>
+<td align="right">13</td>
+<td align="right">8.31</td>
+<td align="right">8.69</td>
+<td align="right">21555.23</td>
+<td align="right">8.11</td>
+<td align="right">237782.9</td>
+</tr>
+<tr class="even">
+<td align="left">石田彰</td>
+<td align="right">18</td>
+<td align="right">8.28</td>
+<td align="right">8.84</td>
+<td align="right">35076.67</td>
+<td align="right">8.27</td>
+<td align="right">151272.8</td>
+</tr>
+<tr class="odd">
+<td align="left">小山力也</td>
+<td align="right">11</td>
+<td align="right">8.09</td>
+<td align="right">8.40</td>
+<td align="right">20032.91</td>
+<td align="right">7.87</td>
+<td align="right">217325.6</td>
+</tr>
+<tr class="even">
+<td align="left">三宅健太</td>
+<td align="right">12</td>
+<td align="right">8.08</td>
+<td align="right">8.27</td>
+<td align="right">20692.25</td>
+<td align="right">8.04</td>
+<td align="right">369599.2</td>
+</tr>
+<tr class="odd">
+<td align="left">神谷浩史</td>
+<td align="right">25</td>
+<td align="right">8.08</td>
+<td align="right">8.79</td>
+<td align="right">27032.56</td>
+<td align="right">8.27</td>
+<td align="right">239633.2</td>
+</tr>
+<tr class="even">
+<td align="left">小野大辅</td>
+<td align="right">18</td>
+<td align="right">8.00</td>
+<td align="right">8.55</td>
+<td align="right">20281.28</td>
+<td align="right">7.89</td>
+<td align="right">213190.6</td>
+</tr>
+<tr class="odd">
+<td align="left">中村悠一</td>
+<td align="right">22</td>
+<td align="right">7.95</td>
+<td align="right">8.14</td>
+<td align="right">20212.82</td>
+<td align="right">7.92</td>
+<td align="right">298512.9</td>
+</tr>
+<tr class="even">
+<td align="left">梶裕贵</td>
+<td align="right">25</td>
+<td align="right">7.92</td>
+<td align="right">8.50</td>
+<td align="right">20228.08</td>
+<td align="right">8.10</td>
+<td align="right">323644.1</td>
+</tr>
+<tr class="odd">
+<td align="left">樱井孝宏</td>
+<td align="right">20</td>
+<td align="right">7.90</td>
+<td align="right">8.48</td>
+<td align="right">22061.85</td>
+<td align="right">8.14</td>
+<td align="right">319606.4</td>
+</tr>
+<tr class="even">
+<td align="left">中田让治</td>
+<td align="right">13</td>
+<td align="right">7.85</td>
+<td align="right">8.35</td>
+<td align="right">17024.69</td>
+<td align="right">7.96</td>
+<td align="right">229432.1</td>
+</tr>
+<tr class="odd">
+<td align="left">诹访部顺一</td>
+<td align="right">13</td>
+<td align="right">7.85</td>
+<td align="right">8.24</td>
+<td align="right">17122.31</td>
+<td align="right">7.84</td>
+<td align="right">163293.1</td>
+</tr>
+<tr class="even">
+<td align="left">井上麻里奈</td>
+<td align="right">16</td>
+<td align="right">7.81</td>
+<td align="right">8.47</td>
+<td align="right">17329.00</td>
+<td align="right">7.96</td>
+<td align="right">317493.6</td>
+</tr>
+<tr class="odd">
+<td align="left">宫野真守</td>
+<td align="right">21</td>
+<td align="right">7.76</td>
+<td align="right">8.31</td>
+<td align="right">16738.55</td>
+<td align="right">8.01</td>
+<td align="right">338401.7</td>
+</tr>
+<tr class="even">
+<td align="left">田村由加莉</td>
+<td align="right">12</td>
+<td align="right">7.75</td>
+<td align="right">8.16</td>
+<td align="right">16199.75</td>
+<td align="right">7.83</td>
+<td align="right">248854.1</td>
+</tr>
+<tr class="odd">
+<td align="left">植田佳奈</td>
+<td align="right">12</td>
+<td align="right">7.75</td>
+<td align="right">8.51</td>
+<td align="right">18014.50</td>
+<td align="right">8.05</td>
+<td align="right">239926.1</td>
+</tr>
+<tr class="even">
+<td align="left">福山润</td>
+<td align="right">19</td>
+<td align="right">7.74</td>
+<td align="right">8.49</td>
+<td align="right">16092.37</td>
+<td align="right">8.13</td>
+<td align="right">253515.6</td>
+</tr>
+<tr class="odd">
+<td align="left">佐仓绫音</td>
+<td align="right">19</td>
+<td align="right">7.74</td>
+<td align="right">8.18</td>
+<td align="right">10453.89</td>
+<td align="right">7.87</td>
+<td align="right">194947.5</td>
+</tr>
+<tr class="even">
+<td align="left">泽城美雪</td>
+<td align="right">25</td>
+<td align="right">7.72</td>
+<td align="right">8.35</td>
+<td align="right">18715.68</td>
+<td align="right">8.01</td>
+<td align="right">211165.4</td>
+</tr>
+<tr class="odd">
+<td align="left">新井里美</td>
+<td align="right">14</td>
+<td align="right">7.71</td>
+<td align="right">7.91</td>
+<td align="right">13257.64</td>
+<td align="right">7.70</td>
+<td align="right">209135.7</td>
+</tr>
+<tr class="even">
+<td align="left">花泽香菜</td>
+<td align="right">25</td>
+<td align="right">7.68</td>
+<td align="right">8.26</td>
+<td align="right">15851.72</td>
+<td align="right">8.00</td>
+<td align="right">261241.5</td>
+</tr>
+<tr class="odd">
+<td align="left">伊藤静</td>
+<td align="right">12</td>
+<td align="right">7.67</td>
+<td align="right">8.38</td>
+<td align="right">13296.50</td>
+<td align="right">7.96</td>
+<td align="right">171365.3</td>
+</tr>
+<tr class="even">
+<td align="left">早见沙织</td>
+<td align="right">14</td>
+<td align="right">7.64</td>
+<td align="right">8.24</td>
+<td align="right">20426.71</td>
+<td align="right">8.10</td>
+<td align="right">267863.5</td>
+</tr>
+<tr class="odd">
+<td align="left">川澄绫子</td>
+<td align="right">11</td>
+<td align="right">7.64</td>
+<td align="right">8.29</td>
+<td align="right">18295.00</td>
+<td align="right">7.93</td>
+<td align="right">196957.9</td>
+</tr>
+<tr class="even">
+<td align="left">木村良平</td>
+<td align="right">11</td>
+<td align="right">7.64</td>
+<td align="right">8.31</td>
+<td align="right">19371.82</td>
+<td align="right">8.11</td>
+<td align="right">210926.9</td>
+</tr>
+<tr class="odd">
+<td align="left">下野纮</td>
+<td align="right">11</td>
+<td align="right">7.64</td>
+<td align="right">8.13</td>
+<td align="right">17083.45</td>
+<td align="right">7.87</td>
+<td align="right">239582.9</td>
+</tr>
+<tr class="even">
+<td align="left">悠木碧</td>
+<td align="right">16</td>
+<td align="right">7.62</td>
+<td align="right">8.45</td>
+<td align="right">16303.12</td>
+<td align="right">8.07</td>
+<td align="right">357969.2</td>
+</tr>
+<tr class="odd">
+<td align="left">喜多村英梨</td>
+<td align="right">13</td>
+<td align="right">7.62</td>
+<td align="right">8.49</td>
+<td align="right">14083.85</td>
+<td align="right">8.18</td>
+<td align="right">339427.3</td>
+</tr>
+<tr class="even">
+<td align="left">加藤英美里</td>
+<td align="right">12</td>
+<td align="right">7.58</td>
+<td align="right">8.04</td>
+<td align="right">11545.83</td>
+<td align="right">8.06</td>
+<td align="right">244129.2</td>
+</tr>
+<tr class="odd">
+<td align="left">松冈祯丞</td>
+<td align="right">12</td>
+<td align="right">7.58</td>
+<td align="right">8.25</td>
+<td align="right">15437.83</td>
+<td align="right">8.01</td>
+<td align="right">339119.0</td>
+</tr>
+<tr class="even">
+<td align="left">逢坂良太</td>
+<td align="right">11</td>
+<td align="right">7.55</td>
+<td align="right">7.84</td>
+<td align="right">17280.18</td>
+<td align="right">7.86</td>
+<td align="right">277002.1</td>
+</tr>
+<tr class="odd">
+<td align="left">冈本信彦</td>
+<td align="right">15</td>
+<td align="right">7.53</td>
+<td align="right">8.19</td>
+<td align="right">16826.20</td>
+<td align="right">7.93</td>
+<td align="right">228771.8</td>
+</tr>
+<tr class="even">
+<td align="left">杉田智和</td>
+<td align="right">21</td>
+<td align="right">7.52</td>
+<td align="right">8.23</td>
+<td align="right">13374.81</td>
+<td align="right">7.68</td>
+<td align="right">149927.9</td>
+</tr>
+<tr class="odd">
+<td align="left">能登麻美子</td>
+<td align="right">18</td>
+<td align="right">7.50</td>
+<td align="right">7.94</td>
+<td align="right">12636.78</td>
+<td align="right">7.83</td>
+<td align="right">197120.6</td>
+</tr>
+<tr class="even">
+<td align="left">佐藤聪美</td>
+<td align="right">12</td>
+<td align="right">7.50</td>
+<td align="right">8.22</td>
+<td align="right">9852.75</td>
+<td align="right">7.81</td>
+<td align="right">166250.3</td>
+</tr>
+<tr class="odd">
+<td align="left">钉宫理惠</td>
+<td align="right">13</td>
+<td align="right">7.46</td>
+<td align="right">8.08</td>
+<td align="right">16001.85</td>
+<td align="right">7.80</td>
+<td align="right">303504.1</td>
+</tr>
+<tr class="even">
+<td align="left">日笠阳子</td>
+<td align="right">11</td>
+<td align="right">7.45</td>
+<td align="right">8.40</td>
+<td align="right">13392.18</td>
+<td align="right">7.97</td>
+<td align="right">206685.2</td>
+</tr>
+<tr class="odd">
+<td align="left">堀江由衣</td>
+<td align="right">11</td>
+<td align="right">7.36</td>
+<td align="right">8.32</td>
+<td align="right">14453.00</td>
+<td align="right">8.10</td>
+<td align="right">281930.8</td>
+</tr>
+<tr class="even">
+<td align="left">竹达彩奈</td>
+<td align="right">11</td>
+<td align="right">7.36</td>
+<td align="right">7.89</td>
+<td align="right">15388.18</td>
+<td align="right">7.66</td>
+<td align="right">340554.2</td>
+</tr>
+<tr class="odd">
+<td align="left">石川界人</td>
+<td align="right">14</td>
+<td align="right">7.29</td>
+<td align="right">7.66</td>
+<td align="right">10563.36</td>
+<td align="right">7.47</td>
+<td align="right">205135.0</td>
+</tr>
+<tr class="even">
+<td align="left">茅野爱衣</td>
+<td align="right">14</td>
+<td align="right">7.21</td>
+<td align="right">8.05</td>
+<td align="right">18157.86</td>
+<td align="right">8.08</td>
+<td align="right">270272.0</td>
+</tr>
+<tr class="odd">
+<td align="left">井口裕香</td>
+<td align="right">15</td>
+<td align="right">7.07</td>
+<td align="right">7.81</td>
+<td align="right">8491.73</td>
+<td align="right">7.87</td>
+<td align="right">239696.8</td>
+</tr>
+</tbody>
+</table>
+<p>关智一以绝对的优势排在了第一名，看来只要有他出演，质量就可以得到保证。那看看他出演了哪些番剧吧：</p>
+<pre class="r"><code>anime %&gt;% filter(str_detect(cast, &#39;关智一&#39;)) %&gt;% 
+  select(name, rating, db_rating, db_number, mal_rating, mal_number) %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">新世纪福音战士</td>
+<td align="right">8</td>
+<td align="right">9.4</td>
+<td align="right">69782</td>
+<td align="right">8.33</td>
+<td align="right">416593</td>
+</tr>
+<tr class="even">
+<td align="left">青之文学</td>
+<td align="right">8</td>
+<td align="right">8.7</td>
+<td align="right">16481</td>
+<td align="right">7.82</td>
+<td align="right">40803</td>
+</tr>
+<tr class="odd">
+<td align="left">命运石之门</td>
+<td align="right">10</td>
+<td align="right">9.3</td>
+<td align="right">39302</td>
+<td align="right">9.13</td>
+<td align="right">653578</td>
+</tr>
+<tr class="even">
+<td align="left">命运之夜前传</td>
+<td align="right">9</td>
+<td align="right">9.1</td>
+<td align="right">38651</td>
+<td align="right">8.42</td>
+<td align="right">426719</td>
+</tr>
+<tr class="odd">
+<td align="left">命运之夜前传第二期</td>
+<td align="right">9</td>
+<td align="right">9.1</td>
+<td align="right">30630</td>
+<td align="right">8.64</td>
+<td align="right">356533</td>
+</tr>
+<tr class="even">
+<td align="left">心理测量者</td>
+<td align="right">8</td>
+<td align="right">8.8</td>
+<td align="right">26766</td>
+<td align="right">8.43</td>
+<td align="right">428052</td>
+</tr>
+<tr class="odd">
+<td align="left">命运之夜 无限剑制</td>
+<td align="right">8</td>
+<td align="right">8.6</td>
+<td align="right">20634</td>
+<td align="right">8.31</td>
+<td align="right">301393</td>
+</tr>
+<tr class="even">
+<td align="left">命运之夜 无限剑制 第二季</td>
+<td align="right">8</td>
+<td align="right">8.3</td>
+<td align="right">13787</td>
+<td align="right">8.39</td>
+<td align="right">254243</td>
+</tr>
+<tr class="odd">
+<td align="left">一拳超人</td>
+<td align="right">10</td>
+<td align="right">9.3</td>
+<td align="right">45526</td>
+<td align="right">8.70</td>
+<td align="right">836549</td>
+</tr>
+<tr class="even">
+<td align="left">昭和元禄落语心中</td>
+<td align="right">9</td>
+<td align="right">9.4</td>
+<td align="right">12574</td>
+<td align="right">8.62</td>
+<td align="right">55045</td>
+</tr>
+<tr class="odd">
+<td align="left">昭和元禄落语心中助六再临篇</td>
+<td align="right">9</td>
+<td align="right">9.5</td>
+<td align="right">4674</td>
+<td align="right">8.84</td>
+<td align="right">33790</td>
+</tr>
+<tr class="even">
+<td align="left">命运石之门0</td>
+<td align="right">9</td>
+<td align="right">9.2</td>
+<td align="right">7904</td>
+<td align="right">8.59</td>
+<td align="right">118610</td>
+</tr>
+</tbody>
+</table>
+<p>但我目前最喜欢的声优是神谷浩史，在我看的番剧中，他出现的次数也是最多的，来看看他的情况：</p>
+<pre class="r"><code>anime %&gt;% filter(str_detect(cast, &#39;神谷浩史&#39;)) %&gt;% 
+  select(name, rating, db_rating, db_number, mal_rating, mal_number) %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">rating</th>
+<th align="right">db_rating</th>
+<th align="right">db_number</th>
+<th align="right">mal_rating</th>
+<th align="right">mal_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">再见，绝望先生</td>
+<td align="right">8</td>
+<td align="right">8.5</td>
+<td align="right">14684</td>
+<td align="right">7.96</td>
+<td align="right">93182</td>
+</tr>
+<tr class="even">
+<td align="left">夏目友人帐</td>
+<td align="right">9</td>
+<td align="right">9.3</td>
+<td align="right">106587</td>
+<td align="right">8.38</td>
+<td align="right">118354</td>
+</tr>
+<tr class="odd">
+<td align="left">夏目友人帐 第二季</td>
+<td align="right">9</td>
+<td align="right">9.4</td>
+<td align="right">64594</td>
+<td align="right">8.61</td>
+<td align="right">84469</td>
+</tr>
+<tr class="even">
+<td align="left">化物语</td>
+<td align="right">8</td>
+<td align="right">8.6</td>
+<td align="right">22429</td>
+<td align="right">8.35</td>
+<td align="right">403140</td>
+</tr>
+<tr class="odd">
+<td align="left">无头骑士异闻录</td>
+<td align="right">8</td>
+<td align="right">8.7</td>
+<td align="right">38140</td>
+<td align="right">8.26</td>
+<td align="right">412301</td>
+</tr>
+<tr class="even">
+<td align="left">天使的心跳</td>
+<td align="right">7</td>
+<td align="right">7.9</td>
+<td align="right">18793</td>
+<td align="right">8.28</td>
+<td align="right">714781</td>
+</tr>
+<tr class="odd">
+<td align="left">夏目友人帐第三季</td>
+<td align="right">9</td>
+<td align="right">9.5</td>
+<td align="right">51257</td>
+<td align="right">8.64</td>
+<td align="right">75891</td>
+</tr>
+<tr class="even">
+<td align="left">伪物语</td>
+<td align="right">7</td>
+<td align="right">8.5</td>
+<td align="right">9086</td>
+<td align="right">8.20</td>
+<td align="right">246841</td>
+</tr>
+<tr class="odd">
+<td align="left">夏目友人帐第四季</td>
+<td align="right">9</td>
+<td align="right">9.5</td>
+<td align="right">43673</td>
+<td align="right">8.71</td>
+<td align="right">68662</td>
+</tr>
+<tr class="even">
+<td align="left">猫物语（黑）</td>
+<td align="right">7</td>
+<td align="right">8.6</td>
+<td align="right">6007</td>
+<td align="right">8.03</td>
+<td align="right">183539</td>
+</tr>
+<tr class="odd">
+<td align="left">进击的巨人</td>
+<td align="right">9</td>
+<td align="right">8.9</td>
+<td align="right">97544</td>
+<td align="right">8.47</td>
+<td align="right">1078647</td>
+</tr>
+<tr class="even">
+<td align="left">物语系列第二季</td>
+<td align="right">7</td>
+<td align="right">9.1</td>
+<td align="right">4844</td>
+<td align="right">8.77</td>
+<td align="right">189502</td>
+</tr>
+<tr class="odd">
+<td align="left">命运之夜 无限剑制</td>
+<td align="right">8</td>
+<td align="right">8.6</td>
+<td align="right">20634</td>
+<td align="right">8.31</td>
+<td align="right">301393</td>
+</tr>
+<tr class="even">
+<td align="left">七大罪</td>
+<td align="right">7</td>
+<td align="right">8.4</td>
+<td align="right">7072</td>
+<td align="right">8.23</td>
+<td align="right">497232</td>
+</tr>
+<tr class="odd">
+<td align="left">无头骑士异闻录 承</td>
+<td align="right">8</td>
+<td align="right">8.8</td>
+<td align="right">9448</td>
+<td align="right">8.09</td>
+<td align="right">151912</td>
+</tr>
+<tr class="even">
+<td align="left">命运之夜 无限剑制 第二季</td>
+<td align="right">8</td>
+<td align="right">8.3</td>
+<td align="right">13787</td>
+<td align="right">8.39</td>
+<td align="right">254243</td>
+</tr>
+<tr class="odd">
+<td align="left">那就是声优</td>
+<td align="right">7</td>
+<td align="right">7.2</td>
+<td align="right">1290</td>
+<td align="right">7.08</td>
+<td align="right">13365</td>
+</tr>
+<tr class="even">
+<td align="left">无头骑士异闻录 转</td>
+<td align="right">8</td>
+<td align="right">8.7</td>
+<td align="right">5982</td>
+<td align="right">8.08</td>
+<td align="right">115729</td>
+</tr>
+<tr class="odd">
+<td align="left">进击！巨人中学校</td>
+<td align="right">7</td>
+<td align="right">7.5</td>
+<td align="right">1283</td>
+<td align="right">7.06</td>
+<td align="right">45391</td>
+</tr>
+<tr class="even">
+<td align="left">无头骑士异闻录 结</td>
+<td align="right">8</td>
+<td align="right">8.7</td>
+<td align="right">5040</td>
+<td align="right">8.17</td>
+<td align="right">99909</td>
+</tr>
+<tr class="odd">
+<td align="left">齐木楠雄的灾难</td>
+<td align="right">8</td>
+<td align="right">9.3</td>
+<td align="right">37064</td>
+<td align="right">8.55</td>
+<td align="right">109573</td>
+</tr>
+<tr class="even">
+<td align="left">夏目友人帐第五季</td>
+<td align="right">9</td>
+<td align="right">9.5</td>
+<td align="right">26317</td>
+<td align="right">8.63</td>
+<td align="right">38075</td>
+</tr>
+<tr class="odd">
+<td align="left">进击的巨人第二季</td>
+<td align="right">9</td>
+<td align="right">9.2</td>
+<td align="right">31939</td>
+<td align="right">8.43</td>
+<td align="right">471478</td>
+</tr>
+<tr class="even">
+<td align="left">夏目友人帐第六季</td>
+<td align="right">9</td>
+<td align="right">9.5</td>
+<td align="right">19896</td>
+<td align="right">8.71</td>
+<td align="right">31475</td>
+</tr>
+<tr class="odd">
+<td align="left">进击的巨人第三季1</td>
+<td align="right">9</td>
+<td align="right">9.5</td>
+<td align="right">18424</td>
+<td align="right">8.47</td>
+<td align="right">191745</td>
+</tr>
+</tbody>
+</table>
+<p>卡米亚真是出演了不少热门番剧。</p>
+<p>这一变量也是转换成稀疏矩阵，并去掉出现次数太少的声优。</p>
+</div>
+<div id="extra-2." class="section level3">
+<h3>extra 2.声优关系网络</h3>
+<p>这种图挺难画好看的，花了不少时间来调整：</p>
+<pre class="r"><code>anime %&gt;% separate_rows(cast, sep = &#39;/&#39;) %&gt;% 
+  group_by(name) %&gt;% 
+  mutate(linenumber = group_indices()) %&gt;% 
+  pairwise_count(cast, linenumber) %&gt;% 
+  group_by(item1, item2) %&gt;% 
+  count(sort = TRUE) %&gt;% 
+  ungroup() %&gt;% 
+  filter(n &gt; 4) %&gt;% 
+  graph_from_data_frame() %&gt;% 
+  ggraph(layout = &quot;fr&quot;) + 
+  geom_edge_link(aes(alpha = n, width = n), color = &#39;grey50&#39;) +
+  scale_edge_width(range = c(.5, 2)) +
+  geom_node_point(color = &#39;#D55E00&#39;, size = 4) +
+  geom_node_text(aes(label = name), size = 2, color = &#39;black&#39;) + 
+  theme_void() + 
+  theme(legend.position = &#39;&#39;)</code></pre>
+<p><img src="/post/2019-05-12-anime-recommend-with-ml_files/figure-html/unnamed-chunk-24-1.png" width="2100" /></p>
+<p>仔细看的话，可以看到不少有意思的地方，但这不是主题，略过。</p>
+</div>
+</div>
+<div id="c." class="section level1">
+<h1>C.建模与评估</h1>
+<p>数据都探索完了，接下来就可以建立模型，进行分类了。</p>
+<div id="c1." class="section level3">
+<h3>c1.清洗数据</h3>
+<p>不过首先还是应该对数据进行清洗，需要清洗的地方前面以前都提到了：</p>
+<pre class="r"><code>anime_clean &lt;- anime %&gt;%   
+  mutate(season_more = ifelse(series %in% (anime %&gt;% filter(season_number &gt; 1) %&gt;% 
+                                             pull(series) %&gt;% unique()), 1, 0),
+         lengthy = ifelse(episode &gt; 20, 1, 0),
+         old = ifelse(year &lt; 2015, 1, 0),
+         mal_recommand = ifelse(mal_rating &gt; median(mal_rating), 1, 0),
+         recommend = ifelse(rating &gt; 7, 1, 0),
+         recommend = factor(recommend, levels = c(1, 0), 
+                            labels = c(&#39;recommend&#39;, &#39;not recommend&#39;))) %&gt;% 
+  bind_cols(anime %&gt;% mutate(row = row_number()) %&gt;% 
+              separate_rows(genra, sep = &#39;,&#39;) %&gt;% 
+              cast_sparse(row, genra) %&gt;% 
+              as.matrix() %&gt;% 
+              as_tibble() %&gt;% 
+              select(which(colSums(.) &gt; 9)),
+            anime %&gt;% mutate(row = row_number()) %&gt;% 
+              cast_sparse(row, studio) %&gt;% 
+              as.matrix() %&gt;% 
+              as_tibble() %&gt;% 
+              select(which(colSums(.) &gt; 4)),
+            anime %&gt;% mutate(row = row_number()) %&gt;% 
+              separate_rows(cast, sep = &#39;/&#39;) %&gt;% 
+              cast_sparse(row, cast) %&gt;% 
+              as.matrix() %&gt;% 
+              as_tibble() %&gt;% 
+              select(which(colSums(.) &gt; 4))) %&gt;% 
+  select(recommend, everything()) %&gt;% 
+  select(-3:-16) %&gt;% 
+  mutate_if(is.numeric, factor, levels = c(0, 1), labels = c(&#39;No&#39;, &#39;Yes&#39;))</code></pre>
+<p>这大概是我接触R以来写的最长的一段数据清洗的代码了，<code>tidyverse</code>化的R代码，真是越看越好看。现在的数据共有182个变量：</p>
+<pre class="r"><code>dim(anime_clean)</code></pre>
+<pre><code>## [1] 186 182</code></pre>
+</div>
+<div id="c2." class="section level3">
+<h3>c2.创建训练数据集和测试数据集</h3>
+<p>然后将数据分为训练集和测试集，训练集包括124行数据，测试集包括剩余的62行数据：</p>
+<pre class="r"><code>set.seed(0509)
+anime_train &lt;- anime_clean %&gt;% sample_n(124)
+anime_test &lt;- anime_clean %&gt;% setdiff(anime_train)</code></pre>
+</div>
+<div id="c3." class="section level3">
+<h3>c3.朴素贝叶斯算法</h3>
+<p>先试试朴素贝叶斯算法：</p>
+<pre class="r"><code>anime_class &lt;- naiveBayes(anime_train[, -1], anime_train$recommend)
+anime_pred &lt;- predict(anime_class, anime_test[, -1])
+
+CrossTable(anime_pred, anime_test$recommend, prop.chisq = FALSE, 
+           dnn = c(&#39;predicted&#39;, &#39;actual&#39;))</code></pre>
+<pre><code>## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## |           N / Row Total |
+## |           N / Col Total |
+## |         N / Table Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  62 
+## 
+##  
+##               | actual 
+##     predicted |     recommend | not recommend |     Row Total | 
+## --------------|---------------|---------------|---------------|
+##     recommend |            28 |             3 |            31 | 
+##               |         0.903 |         0.097 |         0.500 | 
+##               |         0.800 |         0.111 |               | 
+##               |         0.452 |         0.048 |               | 
+## --------------|---------------|---------------|---------------|
+## not recommend |             7 |            24 |            31 | 
+##               |         0.226 |         0.774 |         0.500 | 
+##               |         0.200 |         0.889 |               | 
+##               |         0.113 |         0.387 |               | 
+## --------------|---------------|---------------|---------------|
+##  Column Total |            35 |            27 |            62 | 
+##               |         0.565 |         0.435 |               | 
+## --------------|---------------|---------------|---------------|
+## 
+## </code></pre>
+<p>结果似乎还不错，有3个不推荐的分类为了推荐，另有7个推荐的分类为了不推荐。比起错过好番，我更怕遇到烂番，因为我稍微有些强迫症，一旦看了某个番剧，就会把它坚持看完，哪怕它再烂。看看是哪些番剧分类错了吧：</p>
+<pre class="r"><code>anime_test %&gt;% bind_cols(predict = anime_pred) %&gt;% 
+  select(name, recommend, predict) %&gt;% 
+  filter(recommend != predict) %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="left">recommend</th>
+<th align="left">predict</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">再见，绝望先生</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="even">
+<td align="left">我的妹妹不可能那么可爱</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="odd">
+<td align="left">我的妹妹不可能那么可爱第二季</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="even">
+<td align="left">甲铁城的卡巴内瑞</td>
+<td align="left">not recommend</td>
+<td align="left">recommend</td>
+</tr>
+<tr class="odd">
+<td align="left">齐木楠雄的灾难</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="even">
+<td align="left">暗杀教室Q</td>
+<td align="left">not recommend</td>
+<td align="left">recommend</td>
+</tr>
+<tr class="odd">
+<td align="left">擅长捉弄的高木同学</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="even">
+<td align="left">卫宫家今天的饭</td>
+<td align="left">not recommend</td>
+<td align="left">recommend</td>
+</tr>
+<tr class="odd">
+<td align="left">MegaloBox</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="even">
+<td align="left">千绪的通学路</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+</tbody>
+</table>
+<p>暗杀教室Q作为暗杀教室的衍生剧，其实还蛮好看的，我评分的时候其实也在犹豫。有几个错的挺离谱的，比如MegaloBox，那真是强烈推荐啊；而甲铁城的卡巴内瑞，那真是强烈不推荐啊！</p>
+</div>
+<div id="c4." class="section level3">
+<h3>c4.规则学习算法</h3>
+<p>再试试规则学习算法：</p>
+<pre class="r"><code>anime_JRip &lt;- JRip(recommend ~ ., data = anime_train[, -2])
+anime_pred &lt;- predict(anime_JRip, anime_test[, -1:-2])
+
+CrossTable(anime_pred, anime_test$recommend, prop.chisq = FALSE, 
+           dnn = c(&#39;predicted&#39;, &#39;actual&#39;))</code></pre>
+<pre><code>## 
+##  
+##    Cell Contents
+## |-------------------------|
+## |                       N |
+## |           N / Row Total |
+## |           N / Col Total |
+## |         N / Table Total |
+## |-------------------------|
+## 
+##  
+## Total Observations in Table:  62 
+## 
+##  
+##               | actual 
+##     predicted |     recommend | not recommend |     Row Total | 
+## --------------|---------------|---------------|---------------|
+##     recommend |            29 |             3 |            32 | 
+##               |         0.906 |         0.094 |         0.516 | 
+##               |         0.829 |         0.111 |               | 
+##               |         0.468 |         0.048 |               | 
+## --------------|---------------|---------------|---------------|
+## not recommend |             6 |            24 |            30 | 
+##               |         0.200 |         0.800 |         0.484 | 
+##               |         0.171 |         0.889 |               | 
+##               |         0.097 |         0.387 |               | 
+## --------------|---------------|---------------|---------------|
+##  Column Total |            35 |            27 |            62 | 
+##               |         0.565 |         0.435 |               | 
+## --------------|---------------|---------------|---------------|
+## 
+## </code></pre>
+<p>结果跟朴素贝叶斯算法差不多，只是在FN上少了1个。看下在规则学习算法下，哪些番剧被分类错了吧：</p>
+<pre class="r"><code>anime_test %&gt;% bind_cols(predict = anime_pred) %&gt;% 
+  select(name, recommend, predict) %&gt;% 
+  filter(recommend != predict) %&gt;% 
+  knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="left">recommend</th>
+<th align="left">predict</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">轻音少女 第二季</td>
+<td align="left">not recommend</td>
+<td align="left">recommend</td>
+</tr>
+<tr class="even">
+<td align="left">我的妹妹不可能那么可爱</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="odd">
+<td align="left">我的妹妹不可能那么可爱第二季</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="even">
+<td align="left">游戏人生</td>
+<td align="left">not recommend</td>
+<td align="left">recommend</td>
+</tr>
+<tr class="odd">
+<td align="left">东京喰种</td>
+<td align="left">not recommend</td>
+<td align="left">recommend</td>
+</tr>
+<tr class="even">
+<td align="left">刀剑神域Ⅱ</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="odd">
+<td align="left">擅长捉弄的高木同学</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="even">
+<td align="left">工作细胞</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+<tr class="odd">
+<td align="left">千绪的通学路</td>
+<td align="left">recommend</td>
+<td align="left">not recommend</td>
+</tr>
+</tbody>
+</table>
+<p>有4个番剧，两种算法都分类错了，看来应该找找原因，但是对于俺妹系列，我似乎应该把对它们的评分改了。另外，这一算法的一个严重错误是对工作细胞的分类，这么火的番剧，怎么可能不推荐呢？</p>
+</div>
+</div>
+<div id="d." class="section level1">
+<h1>D.局限于展望</h1>
+<p>第一次尝试就到此为止了，存在很多问题，比如，对于某些变量，我只是将其变为了二元分类变量，损失了很多信息。后面考虑使用决策树和随机森林等算法重新进行分类，并且打算再花些时间，建立一个验证数据集，收集30个左右我没有看过的番剧，看一看真实的效果如何。</p>
+<p>这篇博客就到此为止了，这是我花时间最多的一篇博客了。</p>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.5.3 (2019-03-11)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 17134)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=Chinese (Simplified)_China.936 
+## [2] LC_CTYPE=Chinese (Simplified)_China.936   
+## [3] LC_MONETARY=Chinese (Simplified)_China.936
+## [4] LC_NUMERIC=C                              
+## [5] LC_TIME=Chinese (Simplified)_China.936    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] gmodels_2.18.1  RWeka_0.4-40    e1071_1.7-1     ggraph_1.0.2   
+##  [5] igraph_1.2.4    widyr_0.1.1     tidytext_0.2.0  corrplot_0.84  
+##  [9] ggthemes_4.1.1  here_0.1        readxl_1.3.1    forcats_0.4.0  
+## [13] stringr_1.4.0   dplyr_0.8.0.1   purrr_0.3.2     readr_1.3.1    
+## [17] tidyr_0.8.3     tibble_2.1.1    ggplot2_3.1.0   tidyverse_1.2.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] viridis_0.5.1     httr_1.4.0        jsonlite_1.6     
+##  [4] viridisLite_0.3.0 modelr_0.1.4      gtools_3.8.1     
+##  [7] assertthat_0.2.1  highr_0.8         cellranger_1.1.0 
+## [10] yaml_2.2.0        ggrepel_0.8.0     pillar_1.3.1     
+## [13] backports_1.1.3   lattice_0.20-38   glue_1.3.1       
+## [16] digest_0.6.18     polyclip_1.10-0   rvest_0.3.2      
+## [19] colorspace_1.4-1  htmltools_0.3.6   Matrix_1.2-15    
+## [22] plyr_1.8.4        pkgconfig_2.0.2   broom_0.5.1      
+## [25] haven_2.1.0       bookdown_0.9      scales_1.0.0     
+## [28] gdata_2.18.0      tweenr_1.0.1      ggforce_0.2.1    
+## [31] generics_0.0.2    farver_1.1.0      withr_2.1.2      
+## [34] lazyeval_0.2.2    cli_1.1.0         magrittr_1.5     
+## [37] crayon_1.3.4      evaluate_0.13     tokenizers_0.2.1 
+## [40] janeaustenr_0.1.5 fansi_0.4.0       nlme_3.1-137     
+## [43] SnowballC_0.6.0   MASS_7.3-51.1     xml2_1.2.0       
+## [46] class_7.3-15      blogdown_0.11     tools_3.5.3      
+## [49] RWekajars_3.9.3-1 hms_0.4.2         munsell_0.5.0    
+## [52] compiler_3.5.3    rlang_0.3.3       grid_3.5.3       
+## [55] rstudioapi_0.10   labeling_0.3      rmarkdown_1.12   
+## [58] gtable_0.3.0      R6_2.4.0          gridExtra_2.3    
+## [61] lubridate_1.7.4   knitr_1.22        utf8_1.1.4       
+## [64] rprojroot_1.3-2   rJava_0.9-11      stringi_1.4.3    
+## [67] Rcpp_1.0.1        tidyselect_0.2.5  xfun_0.6</code></pre>
+</div>

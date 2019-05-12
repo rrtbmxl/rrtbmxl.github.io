@@ -366,16 +366,22 @@ the Bias-Variance Tradeoff](http://www.r2d3.us/visual-intro-to-machine-learning-
 
 ### Map
 
- - [Bitcoin (World Map) Bubbles](https://rud.is/b/2018/01/18/bitcoin-world-map-bubbles/)（181114）一张关于比特币网络的非常漂亮的地图。
-
+ - [Bitcoin (World Map) Bubbles](https://rud.is/b/2018/01/18/bitcoin-world-map-bubbles/) (181114; 190509)  
+ 一张关于比特币网络的非常漂亮的地图。
+ 
+ - [Three ways of visualizing a graph on a map](https://datascience.blog.wzb.eu/2018/05/31/three-ways-of-visualizing-a-graph-on-a-map/) (190509)  
+ 介绍了几种在R中绘制地图的方法，主要是利用`ggraph`解决了分别设定曲线和点的大小的问题。
+ 
 ### Scatter Plot
 
  - [Pretty scatter plots with ggplot2](https://drsimonj.svbtle.com/pretty-scatter-plots-with-ggplot2)（181113）隐藏了两个比较高端的技巧。
 
 ### Theory
 
- - [Introduction to Data Visualization – Theory, R & ggplot2](https://www.stoltzmaniac.com/data-visualization-part-1/)（181113）给出了好图、坏图和丑图的标准。
-
- - [10 tips for making your R graphics look their best](https://blog.revolutionanalytics.com/2009/01/10-tips-for-making-your-r-graphics-look-their-best.html)（181113）很老的文章了，但有几条tips还值得一看。
+ - [10 tips for making your R graphics look their best](https://blog.revolutionanalytics.com/2009/01/10-tips-for-making-your-r-graphics-look-their-best.html) (181113; 190511)  
+ 很老的文章了，但有几条tips还是很有用的。
+ 
+ - [Visualizations That Really Work](https://hbr.org/2016/06/visualizations-that-really-work) (190511)  
+ 介绍了可视化的四种类型，并举了相应的例子。非常棒的文章，等水平提高后再看一下，应该会收获更多。
  
  

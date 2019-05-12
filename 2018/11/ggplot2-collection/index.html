@@ -825,6 +825,28 @@ s.setAttribute('data-timestamp', +new Date());
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="/2019/05/anime-recommend-with-ml/">
+                <h3 class="media-heading">使用机器学习给自己推荐番剧：first try</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  May 5, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">A.关于数据B.数据探索b1.番名b2.季数b3.集数b4.年份b5.季节b6.来源b7.类别b8.制作公司b9.评分及人数extra 1.个人、豆瓣与MAL的对比b0.声优extra 2.声优关系网络C.建模与评估c1.清洗数据c2.创建训练数据集和测试数据集c3.朴素贝叶斯算法c4.规则学习算法D.局限于展望花费许多时间学到的东西自然是要用一用的，如果工作中用不到的话，那就用来为生活增添些许乐趣吧。
+看番多年，难免遇到烂番，既浪费时间，又影响心情；另外，有些优秀的番剧，可能因为某些原因，与自己失之交臂。要是能在自己看过的番剧的基础上，建立一个模型，帮自己避免烂番，发掘好番，那真是再好不过了。于是我就把自己近年来看过的番剧整理了一下，收集了若干相关信息，做成了excel表格，作为建立模型的原材料。数据是手动整理的，花费的时间比我预计的多很多，但在整理的过程中，也引发了不少回忆，所以也算不上是浪费时间。
+A.关于数据数据就是我看番的记录，不全，但应该是足够用了。反应变量是我对某番剧的评分，从5分到10分，是离散数据，在这第一次尝试中，计划将其变为二元分类数据，即5分到7分为不推荐，8分到10分为推荐。预测变量有十来个，包括番剧的年代、类型、制作公司、声优和网站评分等信息，在第一次尝试中，计划把数据弄成稀疏矩阵，使用朴素贝叶斯算法和规则学习算法来进行分类。
+在查看数据之前，先载入分析需要用到的包：
+library(tidyverse)library(readxl)library(here)library(ggthemes)library(corrplot)library(tidytext)library(widyr)library(igraph)library(ggraph)library(e1071)library(RWeka)library(gmodels)然后导入数据，并进行初步的清洗：
+anime &lt;- read_xlsx(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;anime_record.xlsx&#39;)) %&gt;%mutate_all(str_remove_all, pattern = &#39;\U00A0&#39;) %&gt;% # 去掉不间断空格&lt;U+00A0&gt;select(-record_time) %&gt;%mutate(studio = str_remove(studio, &#39;,.*&#39;)) %&gt;%mutate_at(vars(c(&#39;season_number&#39;, &#39;episode&#39;, &#39;year&#39;, &#39;rating&#39;, &#39;db_number&#39;, &#39;mal_number&#39;)), as.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="/2019/04/mlr-note-nb/">
                 <h3 class="media-heading">《机器学习与R语言》学习笔记02：朴素贝叶斯</h3>
               </a>
@@ -1044,27 +1066,6 @@ iris %&gt;% group_by(Species) %&gt;% summarise(avg_sl = mean(Sepal.Length), se =
             <hr>
           </div>
         
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="/2018/11/text-analysis-for-tianlong/">
-                <h3 class="media-heading">利用文本分析对比两版本天龙八部</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Nov 11, 2018
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">今年三月份，为了掌握文本分析技术，特意找了两个版本《天龙八部》的txt文件作为数据而进行练习，但可能被其他事情给耽搁了，当时只完成了一部分。前几天金老去世，令人不胜感概，于是想把这个《天龙八部》的文本分析完成，也算是以自己的方式表达对大师的怀念。
-首先还是载入相关的包，这次的包有点多：
-library(tidyverse)library(readxl)library(tidytext)library(jiebaR)library(ggthemes)library(widyr)library(igraph)library(ggraph)然后将两个版本的小说文本导入，顺便导入了主要人物的人名，因为这次分析是以分析主要人物为主：
-tl_new &lt;- read_lines(&#39;tl_new.txt&#39;)tl_old &lt;- read_lines(&#39;tl_old.txt&#39;)tl_main &lt;- read_lines(&#39;tl_main.txt&#39;) %&gt;% .[-1]因为每个人的称呼不止一个，如乔帮主、萧大王、姊夫等等，都是指萧峰一个人，所以为了统一人名，还要做一些替换工作：
-tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)tl_old_tran &lt;- tl_old %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉儿)&#39;, &#39;段誉&#39;) %&gt;%str_replace_all(&#39;(乔峰)|(乔帮主)|(姊夫)|(萧大王)&#39;, &#39;萧峰&#39;) %&gt;% str_replace_all(&#39;(梦郎)|(小和尚)&#39;, &#39;虚竹&#39;) %&gt;% str_replace_all(&#39;(南海鳄神)|(岳老二)&#39;, &#39;岳老三&#39;) %&gt;% str_replace_all(&#39;带头大哥&#39;, &#39;玄慈&#39;) %&gt;% str_replace_all(&#39;延庆太子&#39;, &#39;段延庆&#39;) %&gt;% str_replace_all(&#39;白长老&#39;, &#39;白世镜&#39;) %&gt;% str_replace_all(&#39;全舵主&#39;, &#39;全冠清&#39;) %&gt;% str_replace_all(&#39;甘宝宝&#39;, &#39;钟夫人&#39;) %&gt;% str_replace_all(&#39;小康&#39;, &#39;马夫人&#39;) %&gt;% str_replace_all(&#39;灵儿&#39;, &#39;钟灵&#39;) %&gt;% str_replace_all(&#39;(星宿老怪)|(星宿老仙)&#39;, &#39;丁春秋&#39;) %&gt;% str_replace_all(&#39;庄聚贤&#39;, &#39;游坦之&#39;) %&gt;% str_replace_all(&#39;(慕容公子)|(表哥)&#39;, &#39;慕容复&#39;) %&gt;% str_replace_all(&#39;国师&#39;, &#39;鸠摩智&#39;) %&gt;% str_replace_all(&#39;表妹&#39;, &#39;王语嫣&#39;) %&gt;% str_replace_all(&#39;(婉妹)|(木姊姊)&#39;, &#39;木婉清&#39;) %&gt;% str_replace_all(&#39;(郡主)|(小师妹)&#39;, &#39;阿紫&#39;) %&gt;% str_replace_all(&#39;段王爷&#39;, &#39;段正淳&#39;)上面的替换工作并不全，比如，同样是段郞，有时可能是指段誉，有时可能是指段正淳，这就需要具体的情境，才能判断出来这个词指的是谁，但这个工作太麻烦了，这里就放弃了。</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
       </div>
     </div>
     <div class="modal-footer">
@@ -1072,7 +1073,7 @@ tl_new_tran &lt;- tl_new %&gt;% str_replace_all(&#39;(段公子)|(哥哥)|(誉�
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         14 posts found
+         15 posts found
       </p>
     </div>
   </div>
