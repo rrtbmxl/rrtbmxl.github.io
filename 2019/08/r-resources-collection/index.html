@@ -22,7 +22,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="Hugo 0.54.0 with theme Tranquilpeak 0.4.3-BETA">
-    <title>《机器学习与R语言》学习笔记01：kNN</title>
+    <title>R语言学习资源总结</title>
     <meta name="author" content="孟祥良">
     <meta name="keywords" content="">
 
@@ -30,30 +30,39 @@
     
 
     
-    <meta name="description" content="通过将《机器学习与R语言》一书中的代码tidyverse化，来学习这本书。
-书中第一个例子是利用kNN算法来诊断乳腺癌。
-首先载入需要用到的包：
-library(tidyverse) # 清洗数据library(here) # 设置数据文件路径library(knitr) # 呈现更好看的表格library(kableExtra) # 同上library(class) # 使用包中的knn()函数library(gmodels) # 使用包中的CrossTable()函数然后导入数据并清洗：
-wbcd &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;01-wisc_bc_data.csv&#39;)) %&gt;% select(-id) %&gt;% mutate(diagnosis = factor(diagnosis, levels = c(&#39;B&#39;, &#39;M&#39;),labels = c(&#39;Benign&#39;, &#39;Malignant&#39;))) %&gt;% mutate_if(is.numeric, ~ (.x - min(.x)) / (max(.x) - min(.x)))首先使用here函数找到数据文件的路径，然后使用read_csv函数将其读入R中；随后通过select函数将id变量去掉；然后利用mutate函数将diagnosis变量改为因子型；最后利用mutate_if函数，将所有数值型的变量进行min-max标准化，这里用到了公式化的匿名函数，可以使代码更为简练。此时的数据是这样的：
-wbcd %&gt;% head() %&gt;% kable() %&gt;% kable_styling(bootstrap_options = &quot;striped&quot;, font_size = 12) %&gt;%scroll_box(width = &quot;100%&quot;) diagnosisradius_meantexture_meanperimeter_meanarea_meansmoothness_meancompactness_meanconcavity_meanconcave points_meansymmetry_meanfractal_dimension_meanradius_setexture_seperimeter_searea_sesmoothness_secompactness_seconcavity_seconcave points_sesymmetry_sefractal_dimension_seradius_worsttexture_worstperimeter_worstarea_worstsmoothness_worstcompactness_worstconcavity_worstconcave points_worstsymmetry_worstfractal_dimension_worstMalignant0.">
-    <meta property="og:description" content="通过将《机器学习与R语言》一书中的代码tidyverse化，来学习这本书。
-书中第一个例子是利用kNN算法来诊断乳腺癌。
-首先载入需要用到的包：
-library(tidyverse) # 清洗数据library(here) # 设置数据文件路径library(knitr) # 呈现更好看的表格library(kableExtra) # 同上library(class) # 使用包中的knn()函数library(gmodels) # 使用包中的CrossTable()函数然后导入数据并清洗：
-wbcd &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;01-wisc_bc_data.csv&#39;)) %&gt;% select(-id) %&gt;% mutate(diagnosis = factor(diagnosis, levels = c(&#39;B&#39;, &#39;M&#39;),labels = c(&#39;Benign&#39;, &#39;Malignant&#39;))) %&gt;% mutate_if(is.numeric, ~ (.x - min(.x)) / (max(.x) - min(.x)))首先使用here函数找到数据文件的路径，然后使用read_csv函数将其读入R中；随后通过select函数将id变量去掉；然后利用mutate函数将diagnosis变量改为因子型；最后利用mutate_if函数，将所有数值型的变量进行min-max标准化，这里用到了公式化的匿名函数，可以使代码更为简练。此时的数据是这样的：
-wbcd %&gt;% head() %&gt;% kable() %&gt;% kable_styling(bootstrap_options = &quot;striped&quot;, font_size = 12) %&gt;%scroll_box(width = &quot;100%&quot;) diagnosisradius_meantexture_meanperimeter_meanarea_meansmoothness_meancompactness_meanconcavity_meanconcave points_meansymmetry_meanfractal_dimension_meanradius_setexture_seperimeter_searea_sesmoothness_secompactness_seconcavity_seconcave points_sesymmetry_sefractal_dimension_seradius_worsttexture_worstperimeter_worstarea_worstsmoothness_worstcompactness_worstconcavity_worstconcave points_worstsymmetry_worstfractal_dimension_worstMalignant0.">
+    <meta name="description" content="CommunicationConcept &amp; HistoryData AcquisitionMachine LearningOnlinebookProgramTidyverseWebsiteVisualizationBasicCollectionCommon PlotsExtensionMapModificationTheoryCommunicationStarting a Rmarkdown Blog with Blogdown &#43; Hugo &#43; Github (181110)
+看了好几篇介绍用blogdown搭建博客的文章，只有这一篇文章介绍的方法让我成功了。
+Adding GIF animations (190228; 190311)
+介绍了在blogdown中添加动图和生成动图的方法。
+Create Multiple Reports with RMarkdown (181129; 190311)
+使用Rmarkdown批量生成报告的教程，测试有效，非常实用。
+MANY REPORTS FROM 1 RMARKDOWN FILE (190311)
+另一篇使用Rmarkdown批量生成报告的教程，没有实际测试，但应该没问题。
+Happy collaboration with Rmd to docx (181110)">
+    <meta property="og:description" content="CommunicationConcept &amp; HistoryData AcquisitionMachine LearningOnlinebookProgramTidyverseWebsiteVisualizationBasicCollectionCommon PlotsExtensionMapModificationTheoryCommunicationStarting a Rmarkdown Blog with Blogdown &#43; Hugo &#43; Github (181110)
+看了好几篇介绍用blogdown搭建博客的文章，只有这一篇文章介绍的方法让我成功了。
+Adding GIF animations (190228; 190311)
+介绍了在blogdown中添加动图和生成动图的方法。
+Create Multiple Reports with RMarkdown (181129; 190311)
+使用Rmarkdown批量生成报告的教程，测试有效，非常实用。
+MANY REPORTS FROM 1 RMARKDOWN FILE (190311)
+另一篇使用Rmarkdown批量生成报告的教程，没有实际测试，但应该没问题。
+Happy collaboration with Rmd to docx (181110)">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="《机器学习与R语言》学习笔记01：kNN">
-    <meta property="og:url" content="/2019/04/mlr-note-knn/">
+    <meta property="og:title" content="R语言学习资源总结">
+    <meta property="og:url" content="/2019/08/r-resources-collection/">
     <meta property="og:site_name" content="RPG">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="RPG">
-    <meta name="twitter:description" content="通过将《机器学习与R语言》一书中的代码tidyverse化，来学习这本书。
-书中第一个例子是利用kNN算法来诊断乳腺癌。
-首先载入需要用到的包：
-library(tidyverse) # 清洗数据library(here) # 设置数据文件路径library(knitr) # 呈现更好看的表格library(kableExtra) # 同上library(class) # 使用包中的knn()函数library(gmodels) # 使用包中的CrossTable()函数然后导入数据并清洗：
-wbcd &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;01-wisc_bc_data.csv&#39;)) %&gt;% select(-id) %&gt;% mutate(diagnosis = factor(diagnosis, levels = c(&#39;B&#39;, &#39;M&#39;),labels = c(&#39;Benign&#39;, &#39;Malignant&#39;))) %&gt;% mutate_if(is.numeric, ~ (.x - min(.x)) / (max(.x) - min(.x)))首先使用here函数找到数据文件的路径，然后使用read_csv函数将其读入R中；随后通过select函数将id变量去掉；然后利用mutate函数将diagnosis变量改为因子型；最后利用mutate_if函数，将所有数值型的变量进行min-max标准化，这里用到了公式化的匿名函数，可以使代码更为简练。此时的数据是这样的：
-wbcd %&gt;% head() %&gt;% kable() %&gt;% kable_styling(bootstrap_options = &quot;striped&quot;, font_size = 12) %&gt;%scroll_box(width = &quot;100%&quot;) diagnosisradius_meantexture_meanperimeter_meanarea_meansmoothness_meancompactness_meanconcavity_meanconcave points_meansymmetry_meanfractal_dimension_meanradius_setexture_seperimeter_searea_sesmoothness_secompactness_seconcavity_seconcave points_sesymmetry_sefractal_dimension_seradius_worsttexture_worstperimeter_worstarea_worstsmoothness_worstcompactness_worstconcavity_worstconcave points_worstsymmetry_worstfractal_dimension_worstMalignant0.">
+    <meta name="twitter:description" content="CommunicationConcept &amp; HistoryData AcquisitionMachine LearningOnlinebookProgramTidyverseWebsiteVisualizationBasicCollectionCommon PlotsExtensionMapModificationTheoryCommunicationStarting a Rmarkdown Blog with Blogdown &#43; Hugo &#43; Github (181110)
+看了好几篇介绍用blogdown搭建博客的文章，只有这一篇文章介绍的方法让我成功了。
+Adding GIF animations (190228; 190311)
+介绍了在blogdown中添加动图和生成动图的方法。
+Create Multiple Reports with RMarkdown (181129; 190311)
+使用Rmarkdown批量生成报告的教程，测试有效，非常实用。
+MANY REPORTS FROM 1 RMARKDOWN FILE (190311)
+另一篇使用Rmarkdown批量生成报告的教程，没有实际测试，但应该没问题。
+Happy collaboration with Rmd to docx (181110)">
     
     
 
@@ -228,15 +237,15 @@ wbcd %&gt;% head() %&gt;% kable() %&gt;% kable_styling(bootstrap_options = &quot
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      《机器学习与R语言》学习笔记01：kNN
+      R语言学习资源总结
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-04-23T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-08-17T00:00:00Z">
         
-  April 23, 2019
+  August 17, 2019
 
       </time>
     
@@ -256,1212 +265,292 @@ wbcd %&gt;% head() %&gt;% kable() %&gt;% kable_styling(bootstrap_options = &quot
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
               
-<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
+<div id="TOC">
+<ul>
+<li><a href="#communication">Communication</a></li>
+<li><a href="#concept-history">Concept &amp; History</a></li>
+<li><a href="#data-acquisition">Data Acquisition</a></li>
+<li><a href="#machine-learning">Machine Learning</a></li>
+<li><a href="#onlinebook">Onlinebook</a></li>
+<li><a href="#program">Program</a></li>
+<li><a href="#tidyverse">Tidyverse</a></li>
+<li><a href="#website">Website</a></li>
+<li><a href="#visualization">Visualization</a><ul>
+<li><a href="#basic">Basic</a></li>
+<li><a href="#collection">Collection</a></li>
+<li><a href="#common-plots">Common Plots</a></li>
+<li><a href="#extension">Extension</a></li>
+<li><a href="#map">Map</a></li>
+<li><a href="#modification">Modification</a></li>
+<li><a href="#theory">Theory</a></li>
+</ul></li>
+</ul>
+</div>
 
-<p>通过将《机器学习与R语言》一书中的代码<code>tidyverse</code>化，来学习这本书。</p>
-<p>书中第一个例子是利用kNN算法来诊断乳腺癌。</p>
-<p>首先载入需要用到的包：</p>
-<pre class="r"><code>library(tidyverse) # 清洗数据
-library(here) # 设置数据文件路径
-library(knitr) # 呈现更好看的表格
-library(kableExtra) # 同上
-library(class) # 使用包中的knn()函数
-library(gmodels) # 使用包中的CrossTable()函数</code></pre>
-<p>然后导入数据并清洗：</p>
-<pre class="r"><code>wbcd &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;01-wisc_bc_data.csv&#39;)) %&gt;% 
-  select(-id) %&gt;% 
-  mutate(diagnosis = factor(diagnosis, levels = c(&#39;B&#39;, &#39;M&#39;),
-                            labels = c(&#39;Benign&#39;, &#39;Malignant&#39;))) %&gt;% 
-  mutate_if(is.numeric, ~ (.x - min(.x)) / (max(.x) - min(.x)))</code></pre>
-<p>首先使用<code>here</code>函数找到数据文件的路径，然后使用<code>read_csv</code>函数将其读入R中；随后通过<code>select</code>函数将id变量去掉；然后利用<code>mutate</code>函数将diagnosis变量改为因子型；最后利用<code>mutate_if</code>函数，将所有数值型的变量进行min-max标准化，这里用到了公式化的匿名函数，可以使代码更为简练。此时的数据是这样的：</p>
-<pre class="r"><code>wbcd %&gt;% head() %&gt;% 
-  kable() %&gt;% 
-  kable_styling(bootstrap_options = &quot;striped&quot;, font_size = 12) %&gt;%
-  scroll_box(width = &quot;100%&quot;) </code></pre>
-<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
-<table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;">
-diagnosis
-</th>
-<th style="text-align:right;">
-radius_mean
-</th>
-<th style="text-align:right;">
-texture_mean
-</th>
-<th style="text-align:right;">
-perimeter_mean
-</th>
-<th style="text-align:right;">
-area_mean
-</th>
-<th style="text-align:right;">
-smoothness_mean
-</th>
-<th style="text-align:right;">
-compactness_mean
-</th>
-<th style="text-align:right;">
-concavity_mean
-</th>
-<th style="text-align:right;">
-concave points_mean
-</th>
-<th style="text-align:right;">
-symmetry_mean
-</th>
-<th style="text-align:right;">
-fractal_dimension_mean
-</th>
-<th style="text-align:right;">
-radius_se
-</th>
-<th style="text-align:right;">
-texture_se
-</th>
-<th style="text-align:right;">
-perimeter_se
-</th>
-<th style="text-align:right;">
-area_se
-</th>
-<th style="text-align:right;">
-smoothness_se
-</th>
-<th style="text-align:right;">
-compactness_se
-</th>
-<th style="text-align:right;">
-concavity_se
-</th>
-<th style="text-align:right;">
-concave points_se
-</th>
-<th style="text-align:right;">
-symmetry_se
-</th>
-<th style="text-align:right;">
-fractal_dimension_se
-</th>
-<th style="text-align:right;">
-radius_worst
-</th>
-<th style="text-align:right;">
-texture_worst
-</th>
-<th style="text-align:right;">
-perimeter_worst
-</th>
-<th style="text-align:right;">
-area_worst
-</th>
-<th style="text-align:right;">
-smoothness_worst
-</th>
-<th style="text-align:right;">
-compactness_worst
-</th>
-<th style="text-align:right;">
-concavity_worst
-</th>
-<th style="text-align:right;">
-concave points_worst
-</th>
-<th style="text-align:right;">
-symmetry_worst
-</th>
-<th style="text-align:right;">
-fractal_dimension_worst
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Malignant
-</td>
-<td style="text-align:right;">
-0.5210374
-</td>
-<td style="text-align:right;">
-0.0226581
-</td>
-<td style="text-align:right;">
-0.5459885
-</td>
-<td style="text-align:right;">
-0.3637328
-</td>
-<td style="text-align:right;">
-0.5937528
-</td>
-<td style="text-align:right;">
-0.7920373
-</td>
-<td style="text-align:right;">
-0.7031396
-</td>
-<td style="text-align:right;">
-0.7311133
-</td>
-<td style="text-align:right;">
-0.6863636
-</td>
-<td style="text-align:right;">
-0.6055181
-</td>
-<td style="text-align:right;">
-0.3561470
-</td>
-<td style="text-align:right;">
-0.1204694
-</td>
-<td style="text-align:right;">
-0.3690336
-</td>
-<td style="text-align:right;">
-0.2738113
-</td>
-<td style="text-align:right;">
-0.1592956
-</td>
-<td style="text-align:right;">
-0.3513984
-</td>
-<td style="text-align:right;">
-0.1356818
-</td>
-<td style="text-align:right;">
-0.3006251
-</td>
-<td style="text-align:right;">
-0.3116452
-</td>
-<td style="text-align:right;">
-0.1830424
-</td>
-<td style="text-align:right;">
-0.6207755
-</td>
-<td style="text-align:right;">
-0.1415245
-</td>
-<td style="text-align:right;">
-0.6683102
-</td>
-<td style="text-align:right;">
-0.4506980
-</td>
-<td style="text-align:right;">
-0.6011358
-</td>
-<td style="text-align:right;">
-0.6192916
-</td>
-<td style="text-align:right;">
-0.5686102
-</td>
-<td style="text-align:right;">
-0.9120275
-</td>
-<td style="text-align:right;">
-0.5984624
-</td>
-<td style="text-align:right;">
-0.4188640
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Malignant
-</td>
-<td style="text-align:right;">
-0.6431445
-</td>
-<td style="text-align:right;">
-0.2725736
-</td>
-<td style="text-align:right;">
-0.6157833
-</td>
-<td style="text-align:right;">
-0.5015907
-</td>
-<td style="text-align:right;">
-0.2898799
-</td>
-<td style="text-align:right;">
-0.1817680
-</td>
-<td style="text-align:right;">
-0.2036082
-</td>
-<td style="text-align:right;">
-0.3487575
-</td>
-<td style="text-align:right;">
-0.3797980
-</td>
-<td style="text-align:right;">
-0.1413227
-</td>
-<td style="text-align:right;">
-0.1564367
-</td>
-<td style="text-align:right;">
-0.0825893
-</td>
-<td style="text-align:right;">
-0.1244405
-</td>
-<td style="text-align:right;">
-0.1256598
-</td>
-<td style="text-align:right;">
-0.1193867
-</td>
-<td style="text-align:right;">
-0.0813230
-</td>
-<td style="text-align:right;">
-0.0469697
-</td>
-<td style="text-align:right;">
-0.2538360
-</td>
-<td style="text-align:right;">
-0.0845388
-</td>
-<td style="text-align:right;">
-0.0911101
-</td>
-<td style="text-align:right;">
-0.6069015
-</td>
-<td style="text-align:right;">
-0.3035714
-</td>
-<td style="text-align:right;">
-0.5398177
-</td>
-<td style="text-align:right;">
-0.4352143
-</td>
-<td style="text-align:right;">
-0.3475533
-</td>
-<td style="text-align:right;">
-0.1545634
-</td>
-<td style="text-align:right;">
-0.1929712
-</td>
-<td style="text-align:right;">
-0.6391753
-</td>
-<td style="text-align:right;">
-0.2335896
-</td>
-<td style="text-align:right;">
-0.2228781
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Malignant
-</td>
-<td style="text-align:right;">
-0.6014956
-</td>
-<td style="text-align:right;">
-0.3902604
-</td>
-<td style="text-align:right;">
-0.5957432
-</td>
-<td style="text-align:right;">
-0.4494168
-</td>
-<td style="text-align:right;">
-0.5143089
-</td>
-<td style="text-align:right;">
-0.4310165
-</td>
-<td style="text-align:right;">
-0.4625117
-</td>
-<td style="text-align:right;">
-0.6356859
-</td>
-<td style="text-align:right;">
-0.5095960
-</td>
-<td style="text-align:right;">
-0.2112468
-</td>
-<td style="text-align:right;">
-0.2296216
-</td>
-<td style="text-align:right;">
-0.0943025
-</td>
-<td style="text-align:right;">
-0.1803704
-</td>
-<td style="text-align:right;">
-0.1629218
-</td>
-<td style="text-align:right;">
-0.1508312
-</td>
-<td style="text-align:right;">
-0.2839547
-</td>
-<td style="text-align:right;">
-0.0967677
-</td>
-<td style="text-align:right;">
-0.3898466
-</td>
-<td style="text-align:right;">
-0.2056903
-</td>
-<td style="text-align:right;">
-0.1270055
-</td>
-<td style="text-align:right;">
-0.5563856
-</td>
-<td style="text-align:right;">
-0.3600746
-</td>
-<td style="text-align:right;">
-0.5084417
-</td>
-<td style="text-align:right;">
-0.3745085
-</td>
-<td style="text-align:right;">
-0.4835898
-</td>
-<td style="text-align:right;">
-0.3853751
-</td>
-<td style="text-align:right;">
-0.3597444
-</td>
-<td style="text-align:right;">
-0.8350515
-</td>
-<td style="text-align:right;">
-0.4037059
-</td>
-<td style="text-align:right;">
-0.2134330
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Malignant
-</td>
-<td style="text-align:right;">
-0.2100904
-</td>
-<td style="text-align:right;">
-0.3608387
-</td>
-<td style="text-align:right;">
-0.2335015
-</td>
-<td style="text-align:right;">
-0.1029056
-</td>
-<td style="text-align:right;">
-0.8113208
-</td>
-<td style="text-align:right;">
-0.8113613
-</td>
-<td style="text-align:right;">
-0.5656045
-</td>
-<td style="text-align:right;">
-0.5228628
-</td>
-<td style="text-align:right;">
-0.7762626
-</td>
-<td style="text-align:right;">
-1.0000000
-</td>
-<td style="text-align:right;">
-0.1390911
-</td>
-<td style="text-align:right;">
-0.1758752
-</td>
-<td style="text-align:right;">
-0.1266550
-</td>
-<td style="text-align:right;">
-0.0381548
-</td>
-<td style="text-align:right;">
-0.2514532
-</td>
-<td style="text-align:right;">
-0.5432151
-</td>
-<td style="text-align:right;">
-0.1429545
-</td>
-<td style="text-align:right;">
-0.3536655
-</td>
-<td style="text-align:right;">
-0.7281477
-</td>
-<td style="text-align:right;">
-0.2872048
-</td>
-<td style="text-align:right;">
-0.2483102
-</td>
-<td style="text-align:right;">
-0.3859275
-</td>
-<td style="text-align:right;">
-0.2413467
-</td>
-<td style="text-align:right;">
-0.0940081
-</td>
-<td style="text-align:right;">
-0.9154725
-</td>
-<td style="text-align:right;">
-0.8140117
-</td>
-<td style="text-align:right;">
-0.5486422
-</td>
-<td style="text-align:right;">
-0.8848797
-</td>
-<td style="text-align:right;">
-1.0000000
-</td>
-<td style="text-align:right;">
-0.7737111
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Malignant
-</td>
-<td style="text-align:right;">
-0.6298926
-</td>
-<td style="text-align:right;">
-0.1565776
-</td>
-<td style="text-align:right;">
-0.6309861
-</td>
-<td style="text-align:right;">
-0.4892895
-</td>
-<td style="text-align:right;">
-0.4303512
-</td>
-<td style="text-align:right;">
-0.3478928
-</td>
-<td style="text-align:right;">
-0.4639175
-</td>
-<td style="text-align:right;">
-0.5183897
-</td>
-<td style="text-align:right;">
-0.3782828
-</td>
-<td style="text-align:right;">
-0.1868155
-</td>
-<td style="text-align:right;">
-0.2338222
-</td>
-<td style="text-align:right;">
-0.0930649
-</td>
-<td style="text-align:right;">
-0.2205626
-</td>
-<td style="text-align:right;">
-0.1636876
-</td>
-<td style="text-align:right;">
-0.3323588
-</td>
-<td style="text-align:right;">
-0.1679184
-</td>
-<td style="text-align:right;">
-0.1436364
-</td>
-<td style="text-align:right;">
-0.3570752
-</td>
-<td style="text-align:right;">
-0.1361794
-</td>
-<td style="text-align:right;">
-0.1457996
-</td>
-<td style="text-align:right;">
-0.5197439
-</td>
-<td style="text-align:right;">
-0.1239339
-</td>
-<td style="text-align:right;">
-0.5069476
-</td>
-<td style="text-align:right;">
-0.3415749
-</td>
-<td style="text-align:right;">
-0.4373638
-</td>
-<td style="text-align:right;">
-0.1724151
-</td>
-<td style="text-align:right;">
-0.3194888
-</td>
-<td style="text-align:right;">
-0.5584192
-</td>
-<td style="text-align:right;">
-0.1575005
-</td>
-<td style="text-align:right;">
-0.1425948
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Malignant
-</td>
-<td style="text-align:right;">
-0.2588386
-</td>
-<td style="text-align:right;">
-0.2025702
-</td>
-<td style="text-align:right;">
-0.2679842
-</td>
-<td style="text-align:right;">
-0.1415058
-</td>
-<td style="text-align:right;">
-0.6786133
-</td>
-<td style="text-align:right;">
-0.4619962
-</td>
-<td style="text-align:right;">
-0.3697282
-</td>
-<td style="text-align:right;">
-0.4020378
-</td>
-<td style="text-align:right;">
-0.5186869
-</td>
-<td style="text-align:right;">
-0.5511794
-</td>
-<td style="text-align:right;">
-0.0807532
-</td>
-<td style="text-align:right;">
-0.1171322
-</td>
-<td style="text-align:right;">
-0.0687933
-</td>
-<td style="text-align:right;">
-0.0380801
-</td>
-<td style="text-align:right;">
-0.1970629
-</td>
-<td style="text-align:right;">
-0.2343107
-</td>
-<td style="text-align:right;">
-0.0927273
-</td>
-<td style="text-align:right;">
-0.2153817
-</td>
-<td style="text-align:right;">
-0.1937299
-</td>
-<td style="text-align:right;">
-0.1446596
-</td>
-<td style="text-align:right;">
-0.2682319
-</td>
-<td style="text-align:right;">
-0.3126333
-</td>
-<td style="text-align:right;">
-0.2639076
-</td>
-<td style="text-align:right;">
-0.1367479
-</td>
-<td style="text-align:right;">
-0.7127386
-</td>
-<td style="text-align:right;">
-0.4827837
-</td>
-<td style="text-align:right;">
-0.4277157
-</td>
-<td style="text-align:right;">
-0.5982818
-</td>
-<td style="text-align:right;">
-0.4770353
-</td>
-<td style="text-align:right;">
-0.4549390
-</td>
-</tr>
-</tbody>
-</table>
+<div id="communication" class="section level1">
+<h1>Communication</h1>
+<ul>
+<li><p><a href="https://talesofr.wordpress.com/2017/08/18/starting-a-rmarkdown-blog-with-bookdown-hugo-github/">Starting a Rmarkdown Blog with Blogdown + Hugo + Github</a> (181110)<br />
+看了好几篇介绍用<code>blogdown</code>搭建博客的文章，只有这一篇文章介绍的方法让我成功了。</p></li>
+<li><p><a href="https://blogdown-demo.rbind.io/2018/01/31/gif-animations/">Adding GIF animations</a> (190228; 190311)<br />
+介绍了在<code>blogdown</code>中添加动图和生成动图的方法。</p></li>
+<li><p><a href="https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html">Create Multiple Reports with RMarkdown</a> (181129; 190311)<br />
+使用<code>Rmarkdown</code>批量生成报告的教程，测试有效，非常实用。</p></li>
+<li><p><a href="https://scottishsnow.wordpress.com/2018/08/17/many-reports-from-1-rmarkdown-file/">MANY REPORTS FROM 1 RMARKDOWN FILE</a> (190311)<br />
+另一篇使用<code>Rmarkdown</code>批量生成报告的教程，没有实际测试，但应该没问题。</p></li>
+<li><p><a href="https://rmarkdown.rstudio.com/articles_docx.html">Happy collaboration with Rmd to docx</a> (181110)<br />
+因为工作中要写的报告基本上都是word文档，而写报告其实主要是在已有框架的基础上修改大量的短语和数字，很让人烦躁，于是就研究了下如何生成（至少半）自动化的word文档。</p></li>
+</ul>
 </div>
-<p>书中还提到了Z分数标准化，因为有现成的<code>scale</code>函数，所以代码会稍微简单：</p>
-<pre class="r"><code>wbcd &lt;- read_csv(here(&#39;data&#39;, &#39;01-wisc_bc_data.csv&#39;)) %&gt;% 
-  select(-id) %&gt;% 
-  mutate(diagnosis = factor(diagnosis, levels = c(&#39;B&#39;, &#39;M&#39;),
-                            labels = c(&#39;Benign&#39;, &#39;Malignant&#39;))) %&gt;% 
-  mutate_if(is.numeric, scale)</code></pre>
-<p>下一步是创建训练数据集和测试数据集。首先先设定一个随机种子，保证结果可以复现，然后利用<code>sample_n</code>函数从完整数据中随机选择469行作为训练数据集，并利用<code>setdiff</code>函数筛选出训练数据集的补集作为测试数据集；最后利用<code>pull</code>函数把标签提取出来：</p>
-<pre class="r"><code>set.seed(0412)
-wbcd_train &lt;- wbcd %&gt;% sample_n(469)
-wbcd_test &lt;- wbcd %&gt;% setdiff(wbcd_train)
-wbcd_train_labels &lt;- wbcd_train %&gt;% pull(1)
-wbcd_test_labels &lt;- wbcd_test %&gt;% pull(1)</code></pre>
-<p>数据已经整理好，可以建模了，但是在书中没有看到将数据集中的标签变量去掉的过程，所以在这里的模型中，我把两个数据集的标签变量都去掉了：</p>
-<pre class="r"><code>wbcd_test_pred &lt;- knn(train = wbcd_train[, -1], test = wbcd_test[, -1], 
-                      cl = wbcd_train_labels, k = 21)</code></pre>
-<p>看一下模型的性能：</p>
-<pre class="r"><code>CrossTable(wbcd_test_labels, wbcd_test_pred, prop.chisq = FALSE)</code></pre>
-<pre><code>## 
-##  
-##    Cell Contents
-## |-------------------------|
-## |                       N |
-## |           N / Row Total |
-## |           N / Col Total |
-## |         N / Table Total |
-## |-------------------------|
-## 
-##  
-## Total Observations in Table:  100 
-## 
-##  
-##                  | wbcd_test_pred 
-## wbcd_test_labels |    Benign | Malignant | Row Total | 
-## -----------------|-----------|-----------|-----------|
-##           Benign |        68 |         0 |        68 | 
-##                  |     1.000 |     0.000 |     0.680 | 
-##                  |     0.986 |     0.000 |           | 
-##                  |     0.680 |     0.000 |           | 
-## -----------------|-----------|-----------|-----------|
-##        Malignant |         1 |        31 |        32 | 
-##                  |     0.031 |     0.969 |     0.320 | 
-##                  |     0.014 |     1.000 |           | 
-##                  |     0.010 |     0.310 |           | 
-## -----------------|-----------|-----------|-----------|
-##     Column Total |        69 |        31 |       100 | 
-##                  |     0.690 |     0.310 |           | 
-## -----------------|-----------|-----------|-----------|
-## 
-## </code></pre>
-<p>跟书中的结果不一样，但也不错。</p>
-<p>最后，书中还使用不同的k值对模型进行了评估，但没有给出相应的代码，我这里补充了一下：</p>
-<pre class="r"><code>k &lt;- map(1:30, ~ knn(train = wbcd_train[, -1], test = wbcd_test[, -1], 
-         cl = wbcd_train_labels, k = .x)) %&gt;% 
-  enframe(name = &#39;k&#39;, value = &#39;prediction&#39;) %&gt;% 
-  unnest() %&gt;% 
-  mutate(label = rep(wbcd_test_labels, 30),
-         FN = prediction == &#39;Malignant&#39; &amp; label == &#39;Benign&#39;,
-         FP = prediction == &#39;Benign&#39; &amp; label == &#39;Malignant&#39;) %&gt;% 
-  group_by(k) %&gt;% 
-  summarise(FN = sum(FN), 
-            FP = sum(FP),
-            total = FN + FP)</code></pre>
-<p>首先利用<code>map</code>函数将1到30分别映射到模型的k参数上，此时得到了会是一个长度为30的列表；随后利用<code>enframe</code>函数将列表变为行数为30的数据框，这时value变量下的每一个元素都包含100个字符；随后利用<code>unnest</code>将value变量中的字符解放出来，使数据框的行数变为3000；剩余的代码就比较简单，不多描述。</p>
-<p>这时的数据是这样的：</p>
-<pre class="r"><code>k %&gt;% kable() %&gt;% 
-  kable_styling(bootstrap_options = &quot;striped&quot;, font_size = 12) %&gt;%
-  scroll_box(width = &quot;100%&quot;) </code></pre>
-<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
-<table class="table table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:right;">
-k
-</th>
-<th style="text-align:right;">
-FN
-</th>
-<th style="text-align:right;">
-FP
-</th>
-<th style="text-align:right;">
-total
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-4
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-13
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-14
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-16
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-17
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-18
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-19
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-22
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-23
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-24
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-25
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-26
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-27
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-28
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-29
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-30
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-</tbody>
-</table>
+<div id="concept-history" class="section level1">
+<h1>Concept &amp; History</h1>
+<ul>
+<li><p><a href="https://colinfay.me/explain-environments-eli5/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Explain R environments like I’m five</a> (181110; 190307)<br />
+介绍什么是R语言的环境，非常简单易懂。</p></li>
+<li><p><a href="https://digitheadslabnotebook.blogspot.com/2011/06/environments-in-r.html">Environments in R</a> (190128; 190408)<br />
+介绍了R中的环境和一些相关的内容，对于closure和namespace等概念还是无法理解。</p></li>
+<li><p><a href="https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/">stringsAsFactors: An unauthorized biography</a> (181110; 190408)<br />
+据说<code>stringsAsFactors</code>参数问题，是R语言历史上争论最激烈的问题。</p></li>
+<li><p><a href="https://colinfay.me/r-assignment/">Why do we use arrow as an assignment operator?</a> (181110; 190409)<br />
+介绍了R中使用<code>&lt;-</code>作赋值符的由来？</p></li>
+<li><p><a href="https://jozefhajnala.gitlab.io/r/r908-10-year-old-code/">Here’s why 2019 is a great year to start with R: A story of 10 year old R code then and now</a> (190114; 190410)<br />
+回顾了近十年R的发展历程。</p></li>
+</ul>
 </div>
-<p>可以看到，k值从11到17时的结果都很“完美”。</p>
+<div id="data-acquisition" class="section level1">
+<h1>Data Acquisition</h1>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/r-web-scraping-rvest?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Web Scraping in R: rvest Tutorial</a> (190103)<br />
+爬虫的入门教程，介绍了<code>rvest</code>包，只能爬静态网页。</p></li>
+<li><p><a href="https://velaco.github.io/how-to-scrape-data-from-javascript-websites-with-R/">How to Scrape Data from a JavaScript Website with R</a> (190103)<br />
+介绍了一种爬取动态网页（？）的方法，要用到<code>rvest</code>和<code>PhantomJS</code>包，我最终没有使用这种方法，因此也没有尝试。</p></li>
+<li><p><a href="https://datascienceplus.com/scraping-javascript-rendered-web-content-using-r/">Scraping Javascript-rendered web content using R</a> (190103)<br />
+跟上面那个好像差不多，也没有去试。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r">Web Scraping with R and PhantomJS</a> (190103)<br />
+还是同上。</p></li>
+<li><p><a href="http://ropensci.github.io/RSelenium/articles/basics.html">Basics·RSelenium/</a> (190103)<br />
+<code>RSelenium</code>包的官方网站，这个包可以用来爬取动态网页，我试了这种方法，成功了，其实就是用来模拟鼠标操作的。</p></li>
+<li><p><a href="https://ikashnitsky.github.io/2017/data-acquisition-one/">Data acquisition in R (1/4)</a>;<br />
+<a href="https://ikashnitsky.github.io/2017/data-acquisition-two/">Data acquisition in R (2/4)</a>;<br />
+<a href="https://ikashnitsky.github.io/2017/data-acquisition-three/">Data acquisition in R (3/4)</a> (190114)<br />
+介绍了一些数据的获取方法，似乎并不会有第四部分了。</p></li>
+<li><p><a href="https://cran.r-project.org/doc/manuals/r-release/R-data.html">R Data Import/Export</a>(190114)<br />
+介绍数据导入和导出的文档，内容似乎比较旧，而且很多也用不上，需要的时候可以参考一下。</p></li>
+</ul>
+</div>
+<div id="machine-learning" class="section level1">
+<h1>Machine Learning</h1>
+<ul>
+<li><p><a href="https://www.quantinsti.com/blog/machine-learning-basics?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Machine Learning Basics</a> (190319)<br />
+介绍了机器学习的历史，与深度学习和人工智能的关系，机器学习的原理和基本概念及对未来发展的展望，图文并茂。</p></li>
+<li><p><a href="https://semanti.ca/blog/?how-to-prepare-for-a-machine-learning-interview&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">How to Prepare for a Machine Learning Interview</a> (190313)<br />
+介绍如何应对机器学习的面试，后面列了一堆问题，几乎没有会的，但还是希望将来有一天能用上。</p></li>
+<li><p><a href="https://engmrk.com/feature-engineering-ver2/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Feature Engineering</a> (190325)<br />
+介绍了特征工程中可以采用的四种方法。</p></li>
+<li><p><a href="https://www.analyticsvidhya.com/blog/2017/09/common-machine-learning-algorithms/">Essentials of Machine Learning Algorithms (with Python and R Codes)</a> (190326)<br />
+介绍了一些常见的机器学习算法，和使用python和R跑这些模型的思路，以及相关的学习资源。</p></li>
+<li><p><a href="http://www.visiondummy.com/2014/04/curse-dimensionality-affect-classification/">The Curse of Dimensionality in classification</a> (190326)<br />
+介绍了变量过多时会产生的过度拟合问题，以及解决办法。虽然用了小猫小狗的图片，但还是没法全看懂。</p></li>
+<li><p><a href="https://semanti.ca/blog/?the-most-important-machine-learning-algorithms&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">The Most Important Machine Learning Algorithms</a> (190520)<br />
+介绍了一些机器学习算法的优缺点。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/machine-learning-in-r">Machine Learning in R for beginners</a> (190103; 190318)<br />
+以KNN算法介绍了机器学习的整个流程，简单易懂。最后部分还介绍一下了<code>caret</code>包。</p></li>
+<li><p><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/?from=%40&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">A visual introduction to machine learning</a> (190103; 190318);<br />
+<a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-2/?from=%40&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Model Tuning and the Bias-Variance Tradeoff</a> (190103; 190318)<br />
+系列文章，利用决策树算法对机器学习中的一些概念以及bias和variance之间的权衡进行了介绍，网页做得很酷炫，但跟R没有关系。似乎会有第三部分，但目前还没见到。</p></li>
+<li><p><a href="https://blog.datascienceheroes.com/introduction-to-machine-learning-for-non-developers/">Introduction to Machine Learning for non-developers</a> (190103; 190318)<br />
+利用随机森林算法简单介绍了下机器学习，虽然没有用到R，但最后推荐了一下R。</p></li>
+<li><p><a href="http://www.blopig.com/blog/2017/04/a-very-basic-introduction-to-random-forests-using-r/">A very basic introduction to Random Forests using R</a> (190103; 190318)<br />
+针对<code>iris</code>数据集通过R对随机森林算法进行了介绍。</p></li>
+<li><p><a href="https://datascienceplus.com/random-forests-in-r/">Random Forests in R</a> (190318)<br />
+简单介绍了一点随机森林的理论知识，并附了一个R的实例。</p></li>
+<li><p><a href="https://www.analyticsvidhya.com/blog/2015/06/solution-kaggle-competition-bike-sharing-demand/">Kaggle Bike Sharing Demand Prediction – How I got in top 5 percentile of participants?</a> (190326) 介绍了作者在kaggle上参与竞赛的完整流程。</p></li>
+<li><p><a href="https://www.tychobra.com/posts/claims-ml/">Machine Learning for Insurance Claims</a> (190328)<br />
+使用逻辑回归和<code>xgboost</code>对保险索赔分别进行了分类和预测，不懂背景知识，好像预测得不咋样啊，不过有个相关的<code>shiny</code>做的还挺不错的，有时间学习一下。</p></li>
+</ul>
+</div>
+<div id="onlinebook" class="section level1">
+<h1>Onlinebook</h1>
+<ul>
+<li><p><a href="https://r4ds.had.co.nz/">R for Data Science</a> (181107)<br />
+这本书应该是目前关于R语言数据分析的最好的一本书了，看过两遍，除了太偏向计算机专业和统计学专业的内容，都还好，虽然不建议从这本入门，但真正想学好R，肯定不能错过这本书。</p></li>
+<li><p><a href="https://style.tidyverse.org/">The tidyverse style guide</a> (181107)<br />
+跟上面的书配套的书，介绍了<code>tidyverse</code>的代码风格，是在<a href="https://google.github.io/styleguide/Rguide.xml">Google’s R Style Guide</a>的基础之上逐渐演变出来了，可以使代码看起来更美观，更有可读性。</p></li>
+<li><p><a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The Definitive Guide</a> (181107)<br />
+系统介绍<code>Rmarkdown</code>的书，主要是作为参考书，有选择性的阅读某些章节即可（然而我还是完整看了一遍）</p></li>
+<li><p><a href="http://www.gastonsanchez.com/r4strings/">Handling Strings with R</a> (181108)<br />
+介绍字符串处理的书，内容不多，也比较简单。</p></li>
+<li><p><a href="https://www.tidytextmining.com/">Text Mining with R</a> (181108)<br />
+介绍了几种文本分析的技术以及几个案例，我个人比较喜欢的一本书，喜欢文本挖掘的可以看看。</p></li>
+<li><p><a href="https://bookdown.org/yihui/blogdown/">blogdown: Creating Websites with R Markdown</a> (181108)<br />
+介绍如何用<code>blogdown</code>包搭建博客的书，然而我并没有通过这本书真正学会怎么搭博客，只是了解到了自己的知识有多么匮乏。</p></li>
+<li><p><a href="https://moderndive.com/index.html">An Introduction to Statistical and Data Sciences via R</a> (181108)<br />
+介绍了一些统计和<code>tidyverse</code>包的基本知识，非常简单，适合入门，但目前这本书还没有完成。</p></li>
+<li><p><a href="https://rkabacoff.github.io/datavis/">Data Visualization with R</a> (181108)<br />
+介绍了很多种图形的绘制方法，非常实用，如果早看到这本书，很多地方都不用我自己去研究了，强烈推荐。</p></li>
+<li><p><a href="http://socviz.co/">Data Visualization: A practical introduction</a> (181108)<br />
+挺久以前看的了，当时还没有完成，而且以前似乎不是叫现在这个名字。感觉没有上面那本书好，但有一章介绍了一些绘图的理论，值得一看。</p></li>
+<li><p><a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a> (181112)<br />
+两年前的书，部分内容已经过时了，但帮我补充了很多诸如<strong>Vectorized Operations</strong>，<strong>Lazy Evaluation</strong>，<strong>Scoping Rules</strong>的知识，另外也让我找到了之前想了很久都没想起来的<code>dput</code>函数。</p></li>
+<li><p><a href="https://bookdown.org/rdpeng/exdata/">Exploratory Data Analysis with R</a> (181130)<br />
+跟上面那本书是同一个作者，部分内容有重叠，虽然主要以<code>Base</code>绘图为主，但也介绍了<code>ggplot2</code>的一些内容，值得一看；另外，还有几章介绍了层次聚类、K均值聚类以及降维，基本上是没看懂。</p></li>
+<li><p><a href="https://bookdown.org/yihui/bookdown/">bookdown: Authoring Books and Technical Documents with R Markdown</a> (190128)<br />
+<code>bookdown</code>的文档，我应该是用不上，随便看看。</p></li>
+<li><p><a href="https://bookdown.org/">bookdown: Authoring Books and Technical Documents with R Markdown</a> (190128)<br />
+用<code>bookdown</code>写的书都会发布在这里，这一模块的大部分书都能在这里找到。</p></li>
+<li><p><a href="https://www.manning.com/books/r-in-action-second-edition?a_bid=5c2b1e1d&amp;a_aid=RiA2ed">R in Action, Second Edition</a> (190221)<br />
+《R语言实战》英文第二版的在线版，可以免费看。</p></li>
+<li><p><a href="https://bookdown.org/rdpeng/RProgDA/">Mastering Software Development in R</a> (190313)<br />
+介绍如何使用R进行开发的书，前两章主要讲了使用R编程的相关知识，后面两章分别介绍了如何使用R开发包和制图工具。很有启发性的一本书，之前不知道该如何实现的一些内容，现在有点思路了，但书中的内容很多都是点到即止，深入学习需要看更专门的书。</p></li>
+<li><p><a href="https://serialmentor.com/dataviz/">Fundamentals of Data Visualization</a> (190413)<br />
+人家手里的Aesthetic，才能称得上是Aesthetic啊！</p></li>
+<li><p><a href="https://jennybc.github.io/purrr-tutorial/index.html">Purrr tutorial</a> (190418)<br />
+<code>purrr</code>包的教程，主要事实际的例子，所以有些重复的地方。</p></li>
+</ul>
+</div>
+<div id="program" class="section level1">
+<h1>Program</h1>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r">A Tutorial on Loops in R - Usage and Alternatives</a> (190128)<br />
+介绍了<code>R</code>中的几种循环，包括<code>for</code>循环、<code>while</code>循环以及<code>repeat</code>循环，这也是头一次知道<code>R</code>里还有个<code>repeat</code>循环。</p></li>
+<li><p><a href="https://ibecav.github.io/betterfunctions/">Writing better R functions part one</a> (190221);<br />
+<a href="https://ibecav.github.io/betterfunctions2/">Writing better R functions part two</a> (190221)；<br />
+<a href="https://ibecav.github.io/betterfunctions3/">Writing better R functions part three</a> (190221)；<br />
+<a href="https://ibecav.github.io/betterfunctions4/">Writing better R functions part four</a> (190221) 通过一个实例，介绍了创建函数和完善函数的完整过程。看到第二部分就有点跟不上了，还是要通过自己的实际操作来掌握这些内容。</p></li>
+<li><p><a href="https://jcarroll.com.au/2018/10/06/adding-strings-in-r/">Adding strings in R</a> (190303)<br />
+通过编写一个用于连接字符的<code>+</code>函数，引出了很多有意思（而且看不太懂）的话题。</p></li>
+</ul>
+</div>
+<div id="tidyverse" class="section level1">
+<h1>Tidyverse</h1>
+<ul>
+<li><p><a href="https://www.datacamp.com/community/tutorials/tidyverse-tutorial-r">Getting Started with the Tidyverse: Tutorial</a> (181108)<br />
+简单介绍了一下<code>tidyverse</code>包中的几个主要函数，没啥难度，部分内容需要翻墙才能看到。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/pipe-r-tutorial#notuse">Pipes in R Tutorial For Beginners</a> (181108)<br />
+介绍了几种常见的管道函数（其实一种就够了），像我一样喜欢把代码都串起来的应该好好学学这个。</p></li>
+<li><p><a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Data Wrangling Part 1: Basic to Advanced Ways to Select Columns</a>；<br />
+<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-2/">Data Wrangling Part 2: Transforming your columns into the right shape</a>；<br />
+<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-3/">Data Wrangling Part 3: Basic and more advanced ways to filter rows</a>；<br />
+<a href="https://suzan.rbind.io/2018/04/dplyr-tutorial-4/">Data Wrangling Part 4: Summarizing and slicing your data</a> (181108)<br />
+系统介绍<code>dplyr</code>包的系列文章，非常值得一看。</p></li>
+<li><p><a href="https://statbandit.wordpress.com/2018/05/08/tidying-messy-excel-data-tidyxl/">TIDYING MESSY EXCEL DATA (TIDYXL)</a> (190128)<br />
+介绍了几种清洗excel数据表格的包。</p></li>
+</ul>
+</div>
+<div id="website" class="section level1">
+<h1>Website</h1>
+<ul>
+<li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a> (181108)<br />
+看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
+<li><p><a href="http://stat545.com/topics.html">stat545</a> (181108)<br />
+一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
+<li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a> (181208)<br />
+很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
+<li><p><a href="https://datacarpentry.org/R-ecology-lesson/index.html">Data Analysis and Visualization in R for Ecologists</a> (190114)<br />
+一个简单但实用的R教程网站，跟生态学好像也没啥太多的关系，有一部分数据库的内容还挺适合我的。</p></li>
+</ul>
+</div>
+<div id="visualization" class="section level1">
+<h1>Visualization</h1>
+<div id="basic" class="section level3">
+<h3>Basic</h3>
+<ul>
+<li><p><a href="http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/">Beautiful plotting in R: A ggplot2 cheatsheet</a> (181110)<br />
+非常不错的一个<code>ggplot2</code>基础教程，如果有不知道该如何实现的地方，可以来这篇文章查一查。</p></li>
+<li><p><a href="http://zevross.com/blog/2014/11/20/under-the-hood-of-ggplot2-graphics-in-r/">Under the hood of ggplot2 graphics in R</a> (181110)<br />
+上面那篇文章的作者的另一篇文章，没怎能看懂，先放着吧。</p></li>
+<li><p><a href="http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html">The Complete ggplot2 Tutorial - Part1 | Introduction To ggplot2</a> (190619)<br />
+介绍了<code>ggplot2</code>绘图的一些基本知识，比较有用的地方在于给出了取消科学记数法的方法以及对比了两种不同的坐标值数值limit。</p></li>
+<li><p><a href="http://r-statistics.co/Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html">The Complete ggplot2 Tutorial - Part 2 | How To Customize ggplot2</a> (190619)<br />
+上面那篇文章的第二部分，较为系统的介绍了如何定制<code>ggplot2</code>统计图。</p></li>
+</ul>
+</div>
+<div id="collection" class="section level3">
+<h3>Collection</h3>
+<ul>
+<li><p><a href="https://www.r-graph-gallery.com/">the R Graph Gallery</a> (181114)<br />
+汇总了很多可以用基础绘图工具和<code>ggplot2</code>绘制的图，附有相应的代码，可以说是非常棒的一个网站了。</p></li>
+<li><p>[How to Pick the Perfect Color Combination for Your Data Visualization] (<a href="https://blog.hubspot.com/marketing/color-combination-data-visualization" class="uri">https://blog.hubspot.com/marketing/color-combination-data-visualization</a>) (190629)<br />
+介绍了几个给统计图配色的网站。</p></li>
+</ul>
+</div>
+<div id="common-plots" class="section level3">
+<h3>Common Plots</h3>
+<ul>
+<li><p><a href="https://drsimonj.svbtle.com/pretty-histograms-with-ggplot2">Pretty histograms with ggplot2</a> (181113; 190306)<br />
+使用<code>ggplot2</code>绘制直方图的一个简单例子，同时介绍了针对连续性变量的颜色使用方法。</p></li>
+<li><p><a href="https://drsimonj.svbtle.com/pretty-scatter-plots-with-ggplot2">Pretty scatter plots with ggplot2</a> (181113; 190516)<br />
+介绍了散点图的绘制方法，值得学习的地方是提供了一种透明图的映射方法。</p></li>
+<li><p><a href="https://owi.usgs.gov/blog/boxplots/">Exploring ggplot2 boxplots - Defining limits and adjusting style</a> (190306)<br />
+非常详尽的箱线图绘制教程，不仅介绍了如何使用<code>ggplot2</code>绘制箱线图，还提供了很多针对图形进行调整的技术细节，值得仔细钻研一番。</p></li>
+<li><p><a href="https://dominikkoch.github.io/Bump-Chart/">Bump Chart</a> (181110; 190516)<br />
+介绍了一种叫<strong>Bump Chart</strong>的折线图画法，顺便提到了如何把国旗映射到图中。</p></li>
+<li><p><a href="https://drsimonj.svbtle.com/label-line-ends-in-time-series-with-ggplot2">Label line ends in time series with ggplot2</a> (181110; 190516)<br />
+利用<code>sec.axis</code>参数给折线图的终点处贴标签，这个方法应该还有其他的用处。</p></li>
+</ul>
+</div>
+<div id="extension" class="section level3">
+<h3>Extension</h3>
+<ul>
+<li><p><a href="http://www.ggplot2-exts.org/">ggplot2 extensions</a> (181113)<br />
+介绍了基于<code>ggplot2</code>的一些扩展包。</p></li>
+<li><p><a href="http://gallery.htmlwidgets.org/">htmlwidgets for R</a> (181113)<br />
+R的一些可视化方面（也不全是）的扩展包。</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/googleVis/vignettes/googleVis_examples.html">googleVis examples</a> (181114)<br />
+<code>gppgleVis</code>包的例子介绍，这些图都很漂亮，有时间一定要研究一下这个包。</p></li>
+<li><p><a href="https://guangchuangyu.github.io/2018/04/setting-ggplot2-background-with-ggbackground/">setting ggplot2 background with ggbackground</a> (181110)<br />
+给<code>ggplot2</code>作的图加个背景。</p></li>
+<li><p><a href="https://www.mango-solutions.com/blog/putting-the-cat-in-scatterplot">PUTTING THE CAT IN SCATTERPLOT</a> (181113)<br />
+把猫的图片放进了散点图里，挺有意思。</p></li>
+<li><p><a href="https://www.data-imaginist.com/2017/i-made-a-3d-movie/">I made a 3D movie with ggplot2 once - here’s how I did it</a> (181113)<br />
+没有标题说的那么夸张，只是做了个3D动图（然而也很厉害了）。</p></li>
+<li><p><a href="http://www.questionflow.org/2018/03/06/tao-of-tidygraph/">Tao of Tidygraph</a> (181114)<br />
+使用<code>tidygraph</code>包对一本名为<strong>Tao Te Programming</strong>的书进行了<strong>network analysis</strong>，可惜这本书并不能免费获得。</p></li>
+<li><p>[Infographic-style charts using the R waffle package] (<a href="https://nsaunders.wordpress.com/2017/09/08/infographic-style-charts-using-the-r-waffle-package/" class="uri">https://nsaunders.wordpress.com/2017/09/08/infographic-style-charts-using-the-r-waffle-package/</a>) (190629)<br />
+用<code>waffle</code>包绘制信息图。</p></li>
+</ul>
+</div>
+<div id="map" class="section level3">
+<h3>Map</h3>
+<ul>
+<li><p><a href="https://rud.is/b/2018/01/18/bitcoin-world-map-bubbles/">Bitcoin (World Map) Bubbles</a> (181114; 190509)<br />
+一张关于比特币网络的非常漂亮的地图。</p></li>
+<li><p><a href="https://datascience.blog.wzb.eu/2018/05/31/three-ways-of-visualizing-a-graph-on-a-map/">Three ways of visualizing a graph on a map</a> (190509)<br />
+介绍了几种在R中绘制地图的方法，主要是利用<code>ggraph</code>解决了分别设定曲线和点的大小的问题。</p></li>
+<li><p><a href="https://www.r-spatial.org//r/2018/10/25/ggplot2-sf.html#fnref:1">Drawing beautiful maps programmatically with R, sf and ggplot2 — Part 1: Basics</a> (190714)<br />
+<a href="https://www.r-spatial.org//r/2018/10/25/ggplot2-sf-2.html">Drawing beautiful maps programmatically with R, sf and ggplot2 — Part 2: Layers</a> (190714)<br />
+<a href="https://www.r-spatial.org//r/2018/10/25/ggplot2-sf-3.html">Drawing beautiful maps programmatically with R, sf and ggplot2 — Part 3: Layouts</a> (190714)<br />
+系列文章，介绍了如何使用<code>ggplot2</code>和<code>sf</code>包绘制地图。</p></li>
+</ul>
+</div>
+<div id="modification" class="section level3">
+<h3>Modification</h3>
+<ul>
+<li><p><a href="https://drsimonj.svbtle.com/ordering-categories-within-ggplot2-facets">Ordering categories within ggplot2 facets</a> (181110; 190516)<br />
+解决了分面后的柱形图的排序问题。</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/customizing-time-and-date-scales-in-ggplot2/">Customizing time and date scales in ggplot2</a> (181110; 190516)<br />
+较详细地讲解了坐标轴上时间标度的设置，也可以迁移到其他类型的标度。</p></li>
+<li><p><a href="https://shirinsplayground.netlify.com/2017/11/combine_point_boxplot_ggplot/">How to combine point and boxplots in timeline charts with ggplot2 facets</a> (181113; 190306)<br />
+利用分面把折线图+散点图与箱型图同时呈现在一起。</p></li>
+<li><p><a href="https://michaeltoth.me/you-need-to-start-branding-your-graphs-heres-how-with-ggplot.html">You Need to Start Branding Your Graphs. Here’s How, with ggplot!</a> (190516)<br />
+介绍了如何在数据分析图中添加图片，如公司logo。</p></li>
+<li><p><a href="https://www.statworx.com/blog/coordinate-systems-in-ggplot2-easily-overlooked-and-rather-underrated/">Coordinate systems in ggplot2: easily overlooked and rather underrated</a> (190516)<br />
+介绍了<code>ggplot2</code>中的坐标系统，最后有折线图转换成雷达图的方法。</p></li>
+<li><p><a href="https://buzzrbeeline.blog/2018/11/06/adding-different-annotation-to-each-facet-in-ggplot/">Adding different annotation to each facet in ggplot</a> (190714)<br />
+给分面后的图加注释。</p></li>
+</ul>
+</div>
+<div id="theory" class="section level3">
+<h3>Theory</h3>
+<ul>
+<li><p><a href="https://blog.revolutionanalytics.com/2009/01/10-tips-for-making-your-r-graphics-look-their-best.html">10 tips for making your R graphics look their best</a> (181113; 190511)<br />
+很老的文章了，但有几条tips还是很有用的。</p></li>
+<li><p><a href="https://hbr.org/2016/06/visualizations-that-really-work">Visualizations That Really Work</a> (190511)<br />
+介绍了可视化的四种类型，并举了相应的例子。非常棒的文章，等水平提高后再看一下，应该会收获更多。</p></li>
+</ul>
+</div>
+</div>
 
               
             </div>
@@ -1474,9 +563,7 @@ total
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
-
-  <a class="tag tag--primary tag--small" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>
+  <a class="tag tag--primary tag--small" href="/tags/%E6%95%99%E7%A8%8B/">教程</a>
 
                   </div>
                 
@@ -1489,7 +576,7 @@ total
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/mlr-note-nb/" data-tooltip="《机器学习与R语言》学习笔记02：朴素贝叶斯">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -1497,7 +584,7 @@ total
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/r-notebook-and-plan/" data-tooltip="R学习笔记及学习计划">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2019/05/anime-recommend-with-ml/" data-tooltip="使用机器学习给自己推荐番剧：first try">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -1515,19 +602,19 @@ total
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2019/04/mlr-note-knn/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2019/08/r-resources-collection/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2019/04/mlr-note-knn/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2019/08/r-resources-collection/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2019/04/mlr-note-knn/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2019/08/r-resources-collection/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -1587,7 +674,7 @@ s.setAttribute('data-timestamp', +new Date());
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/mlr-note-nb/" data-tooltip="《机器学习与R语言》学习笔记02：朴素贝叶斯">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -1595,7 +682,7 @@ s.setAttribute('data-timestamp', +new Date());
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2019/04/r-notebook-and-plan/" data-tooltip="R学习笔记及学习计划">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2019/05/anime-recommend-with-ml/" data-tooltip="使用机器学习给自己推荐番剧：first try">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -1613,19 +700,19 @@ s.setAttribute('data-timestamp', +new Date());
         </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2019/04/mlr-note-knn/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2019/08/r-resources-collection/">
               <i class="fa fa-facebook-official"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2019/04/mlr-note-knn/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2019/08/r-resources-collection/">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
         
           <li class="post-action hide-xs">
-            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2019/04/mlr-note-knn/">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2019/08/r-resources-collection/">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -1655,19 +742,19 @@ s.setAttribute('data-timestamp', +new Date());
   <ul class="share-options">
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2019%2F04%2Fmlr-note-knn%2F">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2019%2F08%2Fr-resources-collection%2F">
           <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2019%2F04%2Fmlr-note-knn%2F">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2019%2F08%2Fr-resources-collection%2F">
           <i class="fa fa-twitter"></i><span>Share on Twitter</span>
         </a>
       </li>
     
       <li class="share-option">
-        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2019%2F04%2Fmlr-note-knn%2F">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2019%2F08%2Fr-resources-collection%2F">
           <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
         </a>
       </li>
@@ -2008,9 +1095,9 @@ $(document).ready(function() {
     
       <script>
         var disqus_config = function () {
-          this.page.url = '\/2019\/04\/mlr-note-knn\/';
+          this.page.url = '\/2019\/08\/r-resources-collection\/';
           
-            this.page.identifier = '\/2019\/04\/mlr-note-knn\/'
+            this.page.identifier = '\/2019\/08\/r-resources-collection\/'
           
         };
         (function() {

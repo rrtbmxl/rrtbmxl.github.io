@@ -1,7 +1,7 @@
 ---
 title: R语言学习资源总结
 author: ''
-date: '2019-04-07'
+date: '2019-08-17'
 categories:
   - R
 tags:
@@ -15,67 +15,48 @@ output:
 
 <div id="TOC">
 <ul>
-<li><a href="#article">Article</a><ul>
-<li><a href="#concept">Concept</a></li>
-<li><a href="#history">History</a></li>
-</ul></li>
-<li><a href="#communication">Communication</a><ul>
-<li><a href="#blogdown">Blogdown</a></li>
-<li><a href="#report">Report</a></li>
-<li><a href="#shiny">Shiny</a></li>
-<li><a href="#word">Word</a></li>
-</ul></li>
-<li><a href="#machine-learning">Machine Learning</a><ul>
-<li><a href="#basics">Basics</a></li>
-<li><a href="#classification">Classification</a></li>
-<li><a href="#clustering">Clustering</a></li>
-<li><a href="#deep-learning">Deep Learning</a></li>
-<li><a href="#dimensionality-reduction">Dimensionality Reduction</a></li>
-<li><a href="#prediction">Prediction</a></li>
-</ul></li>
-<li><a href="#program">Program</a><ul>
-<li><a href="#evaluation">Evaluation</a></li>
-<li><a href="#function">Function</a></li>
-<li><a href="#loop">Loop</a></li>
-<li><a href="#pipe">Pipe</a></li>
-</ul></li>
-<li><a href="#tutorial">Tutorial</a><ul>
+<li><a href="#communication">Communication</a></li>
+<li><a href="#concept-history">Concept &amp; History</a></li>
 <li><a href="#data-acquisition">Data Acquisition</a></li>
+<li><a href="#machine-learning">Machine Learning</a></li>
 <li><a href="#onlinebook">Onlinebook</a></li>
+<li><a href="#program">Program</a></li>
 <li><a href="#tidyverse">Tidyverse</a></li>
 <li><a href="#website">Website</a></li>
-</ul></li>
 <li><a href="#visualization">Visualization</a><ul>
-<li><a href="#adjustment">Adjustment</a></li>
 <li><a href="#basic">Basic</a></li>
+<li><a href="#collection">Collection</a></li>
 <li><a href="#common-plots">Common Plots</a></li>
-<li><a href="#color">Color</a></li>
 <li><a href="#extension">Extension</a></li>
-<li><a href="#line-chart">Line Chart</a></li>
 <li><a href="#map">Map</a></li>
-<li><a href="#scatter-plot">Scatter Plot</a></li>
+<li><a href="#modification">Modification</a></li>
 <li><a href="#theory">Theory</a></li>
 </ul></li>
 </ul>
 </div>
 
-<p>总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。</p>
-<p>还要吐槽一下，不论是<code>tidyverse</code>还是<code>Rmarkdown</code>，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。</p>
-<div id="article" class="section level1">
-<h1>Article</h1>
-<p>收集了一些关于R的概念和历史的文章。</p>
-<div id="concept" class="section level3">
-<h3>Concept</h3>
+<div id="communication" class="section level1">
+<h1>Communication</h1>
+<ul>
+<li><p><a href="https://talesofr.wordpress.com/2017/08/18/starting-a-rmarkdown-blog-with-bookdown-hugo-github/">Starting a Rmarkdown Blog with Blogdown + Hugo + Github</a> (181110)<br />
+看了好几篇介绍用<code>blogdown</code>搭建博客的文章，只有这一篇文章介绍的方法让我成功了。</p></li>
+<li><p><a href="https://blogdown-demo.rbind.io/2018/01/31/gif-animations/">Adding GIF animations</a> (190228; 190311)<br />
+介绍了在<code>blogdown</code>中添加动图和生成动图的方法。</p></li>
+<li><p><a href="https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html">Create Multiple Reports with RMarkdown</a> (181129; 190311)<br />
+使用<code>Rmarkdown</code>批量生成报告的教程，测试有效，非常实用。</p></li>
+<li><p><a href="https://scottishsnow.wordpress.com/2018/08/17/many-reports-from-1-rmarkdown-file/">MANY REPORTS FROM 1 RMARKDOWN FILE</a> (190311)<br />
+另一篇使用<code>Rmarkdown</code>批量生成报告的教程，没有实际测试，但应该没问题。</p></li>
+<li><p><a href="https://rmarkdown.rstudio.com/articles_docx.html">Happy collaboration with Rmd to docx</a> (181110)<br />
+因为工作中要写的报告基本上都是word文档，而写报告其实主要是在已有框架的基础上修改大量的短语和数字，很让人烦躁，于是就研究了下如何生成（至少半）自动化的word文档。</p></li>
+</ul>
+</div>
+<div id="concept-history" class="section level1">
+<h1>Concept &amp; History</h1>
 <ul>
 <li><p><a href="https://colinfay.me/explain-environments-eli5/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Explain R environments like I’m five</a> (181110; 190307)<br />
 介绍什么是R语言的环境，非常简单易懂。</p></li>
 <li><p><a href="https://digitheadslabnotebook.blogspot.com/2011/06/environments-in-r.html">Environments in R</a> (190128; 190408)<br />
 介绍了R中的环境和一些相关的内容，对于closure和namespace等概念还是无法理解。</p></li>
-</ul>
-</div>
-<div id="history" class="section level3">
-<h3>History</h3>
-<ul>
 <li><p><a href="https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/">stringsAsFactors: An unauthorized biography</a> (181110; 190408)<br />
 据说<code>stringsAsFactors</code>参数问题，是R语言历史上争论最激烈的问题。</p></li>
 <li><p><a href="https://colinfay.me/r-assignment/">Why do we use arrow as an assignment operator?</a> (181110; 190409)<br />
@@ -84,46 +65,29 @@ output:
 回顾了近十年R的发展历程。</p></li>
 </ul>
 </div>
-</div>
-<div id="communication" class="section level1">
-<h1>Communication</h1>
-<p>这一部分包括与报告相关的内容，以及与<code>blogdown</code>和<code>shiny</code>相关的内容。</p>
-<div id="blogdown" class="section level3">
-<h3>Blogdown</h3>
+<div id="data-acquisition" class="section level1">
+<h1>Data Acquisition</h1>
 <ul>
-<li><p><a href="https://talesofr.wordpress.com/2017/08/18/starting-a-rmarkdown-blog-with-bookdown-hugo-github/">Starting a Rmarkdown Blog with Blogdown + Hugo + Github</a>（181110）看了好几篇介绍用<code>blogdown</code>搭建博客的文章，只有这一篇文章介绍的方法让我成功了。</p></li>
-<li><p><a href="https://blogdown-demo.rbind.io/2018/01/31/gif-animations/">Adding GIF animations</a> (190228; 190311)<br />
-介绍了在<code>blogdown</code>中添加动图和生成动图的方法。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/r-web-scraping-rvest?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Web Scraping in R: rvest Tutorial</a> (190103)<br />
+爬虫的入门教程，介绍了<code>rvest</code>包，只能爬静态网页。</p></li>
+<li><p><a href="https://velaco.github.io/how-to-scrape-data-from-javascript-websites-with-R/">How to Scrape Data from a JavaScript Website with R</a> (190103)<br />
+介绍了一种爬取动态网页（？）的方法，要用到<code>rvest</code>和<code>PhantomJS</code>包，我最终没有使用这种方法，因此也没有尝试。</p></li>
+<li><p><a href="https://datascienceplus.com/scraping-javascript-rendered-web-content-using-r/">Scraping Javascript-rendered web content using R</a> (190103)<br />
+跟上面那个好像差不多，也没有去试。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r">Web Scraping with R and PhantomJS</a> (190103)<br />
+还是同上。</p></li>
+<li><p><a href="http://ropensci.github.io/RSelenium/articles/basics.html">Basics·RSelenium/</a> (190103)<br />
+<code>RSelenium</code>包的官方网站，这个包可以用来爬取动态网页，我试了这种方法，成功了，其实就是用来模拟鼠标操作的。</p></li>
+<li><p><a href="https://ikashnitsky.github.io/2017/data-acquisition-one/">Data acquisition in R (1/4)</a>;<br />
+<a href="https://ikashnitsky.github.io/2017/data-acquisition-two/">Data acquisition in R (2/4)</a>;<br />
+<a href="https://ikashnitsky.github.io/2017/data-acquisition-three/">Data acquisition in R (3/4)</a> (190114)<br />
+介绍了一些数据的获取方法，似乎并不会有第四部分了。</p></li>
+<li><p><a href="https://cran.r-project.org/doc/manuals/r-release/R-data.html">R Data Import/Export</a>(190114)<br />
+介绍数据导入和导出的文档，内容似乎比较旧，而且很多也用不上，需要的时候可以参考一下。</p></li>
 </ul>
-</div>
-<div id="report" class="section level3">
-<h3>Report</h3>
-<p>这里的文章是关于使用<code>Rmarkdown</code>生成报告的。</p>
-<ul>
-<li><p><a href="https://www.reed.edu/data-at-reed/software/R/markdown_multiple_reports.html">Create Multiple Reports with RMarkdown</a> (181129; 190311)<br />
-使用<code>Rmarkdown</code>批量生成报告的教程，测试有效，非常实用。</p></li>
-<li><p><a href="https://scottishsnow.wordpress.com/2018/08/17/many-reports-from-1-rmarkdown-file/">MANY REPORTS FROM 1 RMARKDOWN FILE</a> (190311)<br />
-另一篇使用<code>Rmarkdown</code>批量生成报告的教程，没有实际测试，但应该没问题。</p></li>
-</ul>
-</div>
-<div id="shiny" class="section level3">
-<h3>Shiny</h3>
-<ul>
-<li><a href="http://shiny.rstudio.com/">Shiny</a>（181202）Shiny的官网，简单地看了下其中一个教程。</li>
-</ul>
-</div>
-<div id="word" class="section level3">
-<h3>Word</h3>
-<ul>
-<li><a href="https://rmarkdown.rstudio.com/articles_docx.html">Happy collaboration with Rmd to docx</a>（181110）因为工作中要写的报告基本上都是word文档，而写报告其实主要是在已有框架的基础上修改大量的短语和数字，很让人烦躁，于是就研究了下如何生成（至少半）自动化的word文档。</li>
-</ul>
-</div>
 </div>
 <div id="machine-learning" class="section level1">
 <h1>Machine Learning</h1>
-<p>这一部分收集了跟机器学习相关的文章和教程，虽然对这个领域很感兴趣，但目前还没有达到入门水平，希望哪天能有机会用到，而不是仅仅局限在看教程的阶段。</p>
-<div id="basics" class="section level3">
-<h3>Basics</h3>
 <ul>
 <li><p><a href="https://www.quantinsti.com/blog/machine-learning-basics?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Machine Learning Basics</a> (190319)<br />
 介绍了机器学习的历史，与深度学习和人工智能的关系，机器学习的原理和基本概念及对未来发展的展望，图文并茂。</p></li>
@@ -135,13 +99,8 @@ output:
 介绍了一些常见的机器学习算法，和使用python和R跑这些模型的思路，以及相关的学习资源。</p></li>
 <li><p><a href="http://www.visiondummy.com/2014/04/curse-dimensionality-affect-classification/">The Curse of Dimensionality in classification</a> (190326)<br />
 介绍了变量过多时会产生的过度拟合问题，以及解决办法。虽然用了小猫小狗的图片，但还是没法全看懂。</p></li>
-<li><p><a href="https://www.datacamp.com/community/tutorials/machine-deep-learning">Differences Between Machine Learning &amp; Deep Learning</a> (190327)<br />
-介绍了机器学习和深度学习相关的算法、应用以及两者之间的差别。</p></li>
-</ul>
-</div>
-<div id="classification" class="section level3">
-<h3>Classification</h3>
-<ul>
+<li><p><a href="https://semanti.ca/blog/?the-most-important-machine-learning-algorithms&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">The Most Important Machine Learning Algorithms</a> (190520)<br />
+介绍了一些机器学习算法的优缺点。</p></li>
 <li><p><a href="https://www.datacamp.com/community/tutorials/machine-learning-in-r">Machine Learning in R for beginners</a> (190103; 190318)<br />
 以KNN算法介绍了机器学习的整个流程，简单易懂。最后部分还介绍一下了<code>caret</code>包。</p></li>
 <li><p><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/?from=%40&amp;utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">A visual introduction to machine learning</a> (190103; 190318);<br />
@@ -153,222 +112,150 @@ output:
 针对<code>iris</code>数据集通过R对随机森林算法进行了介绍。</p></li>
 <li><p><a href="https://datascienceplus.com/random-forests-in-r/">Random Forests in R</a> (190318)<br />
 简单介绍了一点随机森林的理论知识，并附了一个R的实例。</p></li>
-<li><p><a href="https://www.analyticsvidhya.com/blog/2015/06/solution-kaggle-competition-bike-sharing-demand/">Kaggle Bike Sharing Demand Prediction – How I got in top 5 percentile of participants?</a> 190326<br />
-介绍了作者在kaggle上参与竞赛的完整流程。</p></li>
+<li><p><a href="https://www.analyticsvidhya.com/blog/2015/06/solution-kaggle-competition-bike-sharing-demand/">Kaggle Bike Sharing Demand Prediction – How I got in top 5 percentile of participants?</a> (190326) 介绍了作者在kaggle上参与竞赛的完整流程。</p></li>
 <li><p><a href="https://www.tychobra.com/posts/claims-ml/">Machine Learning for Insurance Claims</a> (190328)<br />
 使用逻辑回归和<code>xgboost</code>对保险索赔分别进行了分类和预测，不懂背景知识，好像预测得不咋样啊，不过有个相关的<code>shiny</code>做的还挺不错的，有时间学习一下。</p></li>
 </ul>
 </div>
-<div id="clustering" class="section level3">
-<h3>Clustering</h3>
+<div id="onlinebook" class="section level1">
+<h1>Onlinebook</h1>
 <ul>
-<li><p><a href="https://www.datacamp.com/community/tutorials/k-means-clustering-r?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">K-Means Clustering in R Tutorial</a> (190103; 190319)<br />
-介绍了一些关于聚类的概念，然后以Uber的一份数据采用K均值聚类算法进行了演示。对无监督学习的理解还不够深入，所以有个别地方没有看明白。</p></li>
-<li><p><a href="https://datascienceplus.com/using-mca-and-variable-clustering-in-r-for-insights-in-customer-attrition/">Using MCA and variable clustering in R for insights in customer attrition</a> (190321)<br />
-使用Multiple correspondence analysis方法和Variable clustering方法对顾客流失的影响因素进行了探索。虽然两种方法都是第一次听说，但看下来，也基本上都能明白，就是最后的代码写的太乱，有时间用tidyverse风格重写一遍看看。</p></li>
-<li><p><a href="https://www.inwt-statistics.com/read-blog/cluster-analysis-introduction.html">Cluster Analysis - Part 1: Introduction</a> (190325);<br />
-<a href="https://www.inwt-statistics.com/read-blog/cluster-analysis-hands-on.html">Cluster Analysis - Part 2: Hands On</a> (190325)<br />
-第一部分介绍了聚类的基本概念，第二部分使用k均值聚类对<code>mtcars</code>数据集进行了聚类分析。</p></li>
-<li><p><a href="https://chichacha.netlify.com/2018/11/12/utilizing-k-means-to-extract-colours-from-your-favourite-images/">UTILIZING K-MEANS TO EXTRACT COLOURS FROM YOUR FAVOURITE IMAGES</a> (190331)<br />
-使用K均值聚类从图片中提取颜色，可以用来做palette，同时也介绍了一些关于处理颜色的方法。</p></li>
-</ul>
-</div>
-<div id="deep-learning" class="section level3">
-<h3>Deep Learning</h3>
-<ul>
-<li><p><a href="https://towardsdatascience.com/a-weird-introduction-to-deep-learning-7828803693b0">A “weird” introduction to Deep Learning</a> (190324)<br />
-介绍了深度学习的一些理论、应用和资源，但愿哪天能用上。</p></li>
-<li><p><a href="http://blog.ephorie.de/understanding-the-magic-of-neural-networks">Understanding the Magic of Neural Networks</a> (190401)<br />
-拿小红帽的故事介绍了神经网络，同时也附有一个真实案例的代码。</p></li>
-<li><p><a href="https://towardsdatascience.com/the-most-intuitive-and-easiest-guide-for-artificial-neural-network-6a3f2bc0eecb">The Most Intuitive and Easiest Guide for Artificial Neural Network</a> (190402)；<br />
-<a href="https://towardsdatascience.com/the-most-intuitive-and-easiest-guide-for-convolutional-neural-network-3607be47480">The Most Intuitive and Easiest Guide for Convolutional Neural Network</a> (190402);<br />
-<a href="https://towardsdatascience.com/the-most-intuitive-and-easiest-guide-for-recurrent-neural-network-873c29da73c7">The Most Intuitive and Easiest Guide for Recurrent Neural Network</a> (190402)<br />
-介绍神经网络的一系列文章，第一篇介绍了人工神经网络，文章下面有上面那篇文章作者的留言；第二篇关于卷积神经网络的，缺一些必要知识，没有完全看懂；第三篇介绍循环神经网络，大部分都没看懂。</p></li>
-<li><p><a href="https://www.datacamp.com/community/tutorials/neural-network-models-r">Neural Network Models in R</a> (190403)<br />
-介绍了神经网络的一些基本概念，并带有一个很简单的例子。看过上面的三篇文章后，这篇就很简单的，而且发现上上篇文章的作者，也在这里留言了……</p></li>
-<li><p><a href="https://medium.freecodecamp.org/want-to-know-how-deep-learning-works-heres-a-quick-guide-for-everyone-1aedeca88076">Want to know how Deep Learning works? Here’s a quick guide for everyone.</a> (190403)<br />
-介绍了机器学习和深度学习的一些概念，以及一些学习资源，获得了40K的claps。</p></li>
-</ul>
-</div>
-<div id="dimensionality-reduction" class="section level3">
-<h3>Dimensionality Reduction</h3>
-<ul>
-<li><a href="http://blog.schochastics.net/post/dimensionality-reduction-methods/">DIMENSIONALITY REDUCTION METHODS USING FIFA 18 PLAYER DATA</a> (190329)<br />
-使用游戏FIFA18的球员数据，介绍了PCA、t-SNE和SOM三种降维方法。</li>
-</ul>
-</div>
-<div id="prediction" class="section level3">
-<h3>Prediction</h3>
-<ul>
-<li><p><a href="https://datascienceplus.com/linear-regression-from-scratch-in-r/">Linear Regression from Scratch in R</a> (190311)<br />
-本以为这篇文章是系统介绍线性回归的，实际上只说了多元线性模型中那些β参数的值是怎么算出来的。然而看完我也不知道为什么那个公式能把那些参数算出来，看来还要补一些数学知识。</p></li>
-<li><p><a href="https://www.brodrigues.co/blog/2018-11-25-tidy_cv/">A tutorial on tidy cross-validation with R</a> (190328)<br />
-使用随机森林算法对波士顿的房价进行了预测，介绍了<code>tidymodels</code>的使用以及使用贝叶斯优化超参数的方法。</p></li>
-<li><p><a href="https://www.datacamp.com/community/tutorials/tutorial-ridge-lasso-elastic-net">Regularization: Ridge, Lasso and Elastic Net</a> (190404)<br />
-看完ASL的相关章节后看的这篇教程，能看懂一点概念，但数学和代码就看不懂了。</p></li>
-</ul>
-</div>
-</div>
-<div id="program" class="section level1">
-<h1>Program</h1>
-<p>这一部分包括自编函数、循环、管道以及Non-standard evaluation相关的内容，对于最后这项内容，我目前（19年2月21日）只能说是理解了一点点，要是能实际应用一下，自己写几个robust的函数出来，也许就能理解了。</p>
-<div id="evaluation" class="section level3">
-<h3>Evaluation</h3>
-<ul>
-<li><p><a href="http://rpubs.com/hadley/157957">Non-standard evaluation</a>（190221）Hadley大神介绍Non-standard evaluation的文章，看不太懂。</p></li>
-<li><p><a href="https://edwinth.github.io/blog/dplyr-recipes/">Tidy evaluation, most common actions</a>（190221）;<a href="https://edwinth.github.io/blog/nse/">Non-standard evaluation, how tidy eval builds on base R</a>（190221）另一作者对上面文章做的总结和解读。</p></li>
-<li><p><a href="https://blog.revolutionanalytics.com/2017/12/introduction-to-seplyr.html">An introduction to seplyr</a>（190221）介绍了<code>seplyr</code>包，这个包实际上就是<code>dplyr</code>包的standard evaluation版本。</p></li>
-<li><p><a href="https://www.datacamp.com/community/tutorials/r-formula-tutorial">Formulas in R Tutorial</a>（190221）系统介绍R中公式使用的文章，也涉及到了evaluation，就放到了这一标题下。</p></li>
-</ul>
-</div>
-<div id="function" class="section level3">
-<h3>Function</h3>
-<ul>
-<li><p><a href="https://ibecav.github.io/betterfunctions/">Writing better R functions part one</a>（190221）；<a href="https://ibecav.github.io/betterfunctions2/">Writing better R functions part two</a>（190221）；<a href="https://ibecav.github.io/betterfunctions3/">Writing better R functions part three</a>（190221）；<a href="https://ibecav.github.io/betterfunctions4/">Writing better R functions part four</a>（190221）通过一个实例，介绍了创建函数和完善函数的完整过程。看到第二部分就有点跟不上了，还是要通过自己的实际操作来掌握这些内容。</p></li>
-<li><p><a href="https://jcarroll.com.au/2018/10/06/adding-strings-in-r/">Adding strings in R</a>（190303）通过编写一个用于连接字符的<code>+</code>函数，引出了很多有意思（而且看不太懂）的话题。</p></li>
-</ul>
-</div>
-<div id="loop" class="section level3">
-<h3>Loop</h3>
-<ul>
-<li><a href="https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r">A Tutorial on Loops in R - Usage and Alternatives</a>（190128）介绍了<code>R</code>中的几种循环，包括<code>for</code>循环、<code>while</code>循环以及<code>repeat</code>循环，这也是头一次知道<code>R</code>里还有个<code>repeat</code>循环。</li>
-</ul>
-</div>
-<div id="pipe" class="section level3">
-<h3>Pipe</h3>
-<ul>
-<li><p><a href="http://adolfoalvarez.cl/plumbers-chains-and-famous-painters-the-history-of-the-pipe-operator-in-r/">Plumbers, chains, and famous painters: The history of the pipe operator in R</a>（190221）介绍了管道函数的历史。</p></li>
-<li><p><a href="https://www.statworx.com/de/blog/show-me-your-pipe/">Show me your pipe!</a>（190221）关于管道函数的，但时间久了，忘了内容具体写的啥了。</p></li>
-<li><p><a href="https://drdoane.com/writing-pipe-friendly-functions/">WRITING PIPE-FRIENDLY FUNCTIONS</a>（190221）如何写出对管道函数更友好的函数，同上，也忘了内容写的啥了。</p></li>
-</ul>
-</div>
-</div>
-<div id="tutorial" class="section level1">
-<h1>Tutorial</h1>
-<p>这一部分主要包括Onlinebook、<code>Tidyverse</code>以及与学习R相关的Website三部分，19年之后加入了Data Acquisition和Machine Learning两部分，这两项内容是我一直都很想学的，但也一直都处于连入门都算不上的水平，1月底又加入了Program部分。</p>
-<div id="data-acquisition" class="section level3">
-<h3>Data Acquisition</h3>
-<ul>
-<li><p><a href="https://www.datacamp.com/community/tutorials/r-web-scraping-rvest?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Web Scraping in R: rvest Tutorial</a>（190103）爬虫的入门教程，介绍了<code>rvest</code>包，只能爬静态网页。</p></li>
-<li><p><a href="https://velaco.github.io/how-to-scrape-data-from-javascript-websites-with-R/">How to Scrape Data from a JavaScript Website with R</a>（190103）介绍了一种爬取动态网页（？）的方法，要用到<code>rvest</code>和<code>PhantomJS</code>包，我最终没有使用这种方法，因此也没有尝试。</p></li>
-<li><p><a href="https://datascienceplus.com/scraping-javascript-rendered-web-content-using-r/">Scraping Javascript-rendered web content using R</a>（190103）跟上面那个好像差不多，也没有去试。</p></li>
-<li><p><a href="https://www.datacamp.com/community/tutorials/scraping-javascript-generated-data-with-r">Web Scraping with R and PhantomJS</a>（190103）还是同上。</p></li>
-<li><p><a href="http://ropensci.github.io/RSelenium/articles/basics.html">Basics·RSelenium/</a>（190103）<code>RSelenium</code>包的官方网站，这个包可以用来爬取动态网页，我试了这种方法，成功了，其实就是用来模拟鼠标操作的。</p></li>
-<li><p><a href="https://ikashnitsky.github.io/2017/data-acquisition-one/">Data acquisition in R (1/4)</a>;<a href="https://ikashnitsky.github.io/2017/data-acquisition-two/">Data acquisition in R (2/4)</a>;<a href="https://ikashnitsky.github.io/2017/data-acquisition-three/">Data acquisition in R (3/4)</a>（190114）介绍了一些数据的获取方法，似乎并不会有第四部分了。</p></li>
-<li><p><a href="https://cran.r-project.org/doc/manuals/r-release/R-data.html">R Data Import/Export</a>（190114）介绍数据导入和导出的文档，内容似乎比较旧，而且很多也用不上，需要的时候可以参考一下。</p></li>
-</ul>
-</div>
-<div id="onlinebook" class="section level3">
-<h3>Onlinebook</h3>
-<p>这一模块收集了与R语言相关的在线书籍。通过读书学习，我们至少能又两种收获，一是把已觉知的未知转变为已知，二是把未觉知的未知转变为已觉知的未知，这两种收获在学习中都非常重要。《老子》中说：“为学日益，为道日损”，如果把两种收获分别视为一个分数的分子和分母的话，那为学日益，是增加了分子上的已知，即“有”，而为道日损，则是增加了分母上的未知，即“无”，当“损之又损”，将所有未知都纳入自己的觉知范围之内时，大概就能“无为”了吧。</p>
-<ul>
-<li><p><a href="https://r4ds.had.co.nz/">R for Data Science</a>（181107）这本书应该是目前关于R语言数据分析的最好的一本书了，看过两遍，除了太偏向计算机专业和统计学专业的内容，都还好，虽然不建议从这本入门，但真正想学好R，肯定不能错过这本书。</p></li>
-<li><p><a href="https://style.tidyverse.org/">The tidyverse style guide</a>（181107）跟上面的书配套的书，介绍了<code>tidyverse</code>的代码风格，是在<a href="https://google.github.io/styleguide/Rguide.xml">Google’s R Style Guide</a>的基础之上逐渐演变出来了，可以使代码看起来更美观，更有可读性。</p></li>
-<li><p><a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The Definitive Guide</a>（181107）系统介绍<code>Rmarkdown</code>的书，主要是作为参考书，有选择性的阅读某些章节即可（然而我还是完整看了一遍）</p></li>
-<li><p><a href="http://www.gastonsanchez.com/r4strings/">Handling Strings with R</a>（181108） 介绍字符串处理的书，内容不多，也比较简单。</p></li>
-<li><p><a href="https://www.tidytextmining.com/">Text Mining with R</a>（181108）介绍了几种文本分析的技术以及几个案例，我个人比较喜欢的一本书，喜欢文本挖掘的可以看看。</p></li>
-<li><p><a href="https://bookdown.org/yihui/blogdown/">blogdown: Creating Websites with R Markdown</a>（181108）介绍如何用<code>blogdown</code>包搭建博客的书，然而我并没有通过这本书真正学会怎么搭博客，只是了解到了自己的知识有多么匮乏。</p></li>
-<li><p><a href="https://moderndive.com/index.html">An Introduction to Statistical and Data Sciences via R</a>（181108）介绍了一些统计和<code>tidyverse</code>包的基本知识，非常简单，适合入门，但目前这本书还没有完成。</p></li>
-<li><p><a href="https://rkabacoff.github.io/datavis/">Data Visualization with R</a>（181108）介绍了很多种图形的绘制方法，非常实用，如果早看到这本书，很多地方都不用我自己去研究了，强烈推荐。</p></li>
-<li><p><a href="http://socviz.co/">Data Visualization: A practical introduction</a>（181108） 挺久以前看的了，当时还没有完成，而且以前似乎不是叫现在这个名字。感觉没有上面那本书好，但有一章介绍了一些绘图的理论，值得一看。</p></li>
-<li><p><a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a>（181112）两年前的书，部分内容已经过时了，但帮我补充了很多诸如<strong>Vectorized Operations</strong>，<strong>Lazy Evaluation</strong>，<strong>Scoping Rules</strong>的知识，另外也让我找到了之前想了很久都没想起来的<code>dput</code>函数。</p></li>
-<li><p><a href="https://bookdown.org/rdpeng/exdata/">Exploratory Data Analysis with R</a>（181130）跟上面那本书是同一个作者，部分内容有重叠，虽然主要以<code>Base</code>绘图为主，但也介绍了<code>ggplot2</code>的一些内容，值得一看；另外，还有几章介绍了层次聚类、K均值聚类以及降维，基本上是没看懂。</p></li>
-<li><p><a href="https://livebook.datascienceheroes.com/">Data Science Live Book</a>（181218）一个R包的文档扩展成的书，排版有点乱，不推荐看。</p></li>
-<li><p><a href="https://bookdown.org/yihui/bookdown/">bookdown: Authoring Books and Technical Documents with R Markdown</a>（190128）<code>bookdown</code>的文档，我应该是用不上，随便看看。</p></li>
-<li><p><a href="https://bookdown.org/">bookdown: Authoring Books and Technical Documents with R Markdown</a>（190128）用<code>bookdown</code>写的书都会发布在这里，这一模块的大部分书都能在这里找到。</p></li>
-<li><p><a href="https://www.manning.com/books/r-in-action-second-edition?a_bid=5c2b1e1d&amp;a_aid=RiA2ed">R in Action, Second Edition</a>（190221）《R语言实战》英文第二版的在线版，可以免费看。</p></li>
+<li><p><a href="https://r4ds.had.co.nz/">R for Data Science</a> (181107)<br />
+这本书应该是目前关于R语言数据分析的最好的一本书了，看过两遍，除了太偏向计算机专业和统计学专业的内容，都还好，虽然不建议从这本入门，但真正想学好R，肯定不能错过这本书。</p></li>
+<li><p><a href="https://style.tidyverse.org/">The tidyverse style guide</a> (181107)<br />
+跟上面的书配套的书，介绍了<code>tidyverse</code>的代码风格，是在<a href="https://google.github.io/styleguide/Rguide.xml">Google’s R Style Guide</a>的基础之上逐渐演变出来了，可以使代码看起来更美观，更有可读性。</p></li>
+<li><p><a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The Definitive Guide</a> (181107)<br />
+系统介绍<code>Rmarkdown</code>的书，主要是作为参考书，有选择性的阅读某些章节即可（然而我还是完整看了一遍）</p></li>
+<li><p><a href="http://www.gastonsanchez.com/r4strings/">Handling Strings with R</a> (181108)<br />
+介绍字符串处理的书，内容不多，也比较简单。</p></li>
+<li><p><a href="https://www.tidytextmining.com/">Text Mining with R</a> (181108)<br />
+介绍了几种文本分析的技术以及几个案例，我个人比较喜欢的一本书，喜欢文本挖掘的可以看看。</p></li>
+<li><p><a href="https://bookdown.org/yihui/blogdown/">blogdown: Creating Websites with R Markdown</a> (181108)<br />
+介绍如何用<code>blogdown</code>包搭建博客的书，然而我并没有通过这本书真正学会怎么搭博客，只是了解到了自己的知识有多么匮乏。</p></li>
+<li><p><a href="https://moderndive.com/index.html">An Introduction to Statistical and Data Sciences via R</a> (181108)<br />
+介绍了一些统计和<code>tidyverse</code>包的基本知识，非常简单，适合入门，但目前这本书还没有完成。</p></li>
+<li><p><a href="https://rkabacoff.github.io/datavis/">Data Visualization with R</a> (181108)<br />
+介绍了很多种图形的绘制方法，非常实用，如果早看到这本书，很多地方都不用我自己去研究了，强烈推荐。</p></li>
+<li><p><a href="http://socviz.co/">Data Visualization: A practical introduction</a> (181108)<br />
+挺久以前看的了，当时还没有完成，而且以前似乎不是叫现在这个名字。感觉没有上面那本书好，但有一章介绍了一些绘图的理论，值得一看。</p></li>
+<li><p><a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a> (181112)<br />
+两年前的书，部分内容已经过时了，但帮我补充了很多诸如<strong>Vectorized Operations</strong>，<strong>Lazy Evaluation</strong>，<strong>Scoping Rules</strong>的知识，另外也让我找到了之前想了很久都没想起来的<code>dput</code>函数。</p></li>
+<li><p><a href="https://bookdown.org/rdpeng/exdata/">Exploratory Data Analysis with R</a> (181130)<br />
+跟上面那本书是同一个作者，部分内容有重叠，虽然主要以<code>Base</code>绘图为主，但也介绍了<code>ggplot2</code>的一些内容，值得一看；另外，还有几章介绍了层次聚类、K均值聚类以及降维，基本上是没看懂。</p></li>
+<li><p><a href="https://bookdown.org/yihui/bookdown/">bookdown: Authoring Books and Technical Documents with R Markdown</a> (190128)<br />
+<code>bookdown</code>的文档，我应该是用不上，随便看看。</p></li>
+<li><p><a href="https://bookdown.org/">bookdown: Authoring Books and Technical Documents with R Markdown</a> (190128)<br />
+用<code>bookdown</code>写的书都会发布在这里，这一模块的大部分书都能在这里找到。</p></li>
+<li><p><a href="https://www.manning.com/books/r-in-action-second-edition?a_bid=5c2b1e1d&amp;a_aid=RiA2ed">R in Action, Second Edition</a> (190221)<br />
+《R语言实战》英文第二版的在线版，可以免费看。</p></li>
 <li><p><a href="https://bookdown.org/rdpeng/RProgDA/">Mastering Software Development in R</a> (190313)<br />
 介绍如何使用R进行开发的书，前两章主要讲了使用R编程的相关知识，后面两章分别介绍了如何使用R开发包和制图工具。很有启发性的一本书，之前不知道该如何实现的一些内容，现在有点思路了，但书中的内容很多都是点到即止，深入学习需要看更专门的书。</p></li>
-<li><p><a href="http://adv-r.had.co.nz/">Advanced R</a> (190403)<br />
-鼓起勇气看了一遍，难度相当大，但也开阔了视角。</p></li>
 <li><p><a href="https://serialmentor.com/dataviz/">Fundamentals of Data Visualization</a> (190413)<br />
 人家手里的Aesthetic，才能称得上是Aesthetic啊！</p></li>
 <li><p><a href="https://jennybc.github.io/purrr-tutorial/index.html">Purrr tutorial</a> (190418)<br />
 <code>purrr</code>包的教程，主要事实际的例子，所以有些重复的地方。</p></li>
 </ul>
 </div>
-<div id="tidyverse" class="section level3">
-<h3>Tidyverse</h3>
+<div id="program" class="section level1">
+<h1>Program</h1>
 <ul>
-<li><p><a href="https://www.datacamp.com/community/tutorials/tidyverse-tutorial-r">Getting Started with the Tidyverse: Tutorial</a>（181108）简单介绍了一下<code>tidyverse</code>包中的几个主要函数，没啥难度，部分内容需要翻墙才能看到。</p></li>
-<li><p><a href="https://www.datacamp.com/community/tutorials/pipe-r-tutorial#notuse">Pipes in R Tutorial For Beginners</a>（181108）介绍了几种常见的管道函数（其实一种就够了），像我一样喜欢把代码都串起来的应该好好学学这个。</p></li>
-<li><p><a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Data Wrangling Part 1: Basic to Advanced Ways to Select Columns</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-2/">Data Wrangling Part 2: Transforming your columns into the right shape</a>；<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-3/">Data Wrangling Part 3: Basic and more advanced ways to filter rows</a>；<a href="https://suzan.rbind.io/2018/04/dplyr-tutorial-4/">Data Wrangling Part 4: Summarizing and slicing your data</a>（181108）系统介绍<code>dplyr</code>包的系列文章，非常值得一看。</p></li>
-<li><p><a href="https://statbandit.wordpress.com/2018/05/08/tidying-messy-excel-data-tidyxl/">TIDYING MESSY EXCEL DATA (TIDYXL)</a>（190128）介绍了几种清洗excel数据表格的包。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r">A Tutorial on Loops in R - Usage and Alternatives</a> (190128)<br />
+介绍了<code>R</code>中的几种循环，包括<code>for</code>循环、<code>while</code>循环以及<code>repeat</code>循环，这也是头一次知道<code>R</code>里还有个<code>repeat</code>循环。</p></li>
+<li><p><a href="https://ibecav.github.io/betterfunctions/">Writing better R functions part one</a> (190221);<br />
+<a href="https://ibecav.github.io/betterfunctions2/">Writing better R functions part two</a> (190221)；<br />
+<a href="https://ibecav.github.io/betterfunctions3/">Writing better R functions part three</a> (190221)；<br />
+<a href="https://ibecav.github.io/betterfunctions4/">Writing better R functions part four</a> (190221) 通过一个实例，介绍了创建函数和完善函数的完整过程。看到第二部分就有点跟不上了，还是要通过自己的实际操作来掌握这些内容。</p></li>
+<li><p><a href="https://jcarroll.com.au/2018/10/06/adding-strings-in-r/">Adding strings in R</a> (190303)<br />
+通过编写一个用于连接字符的<code>+</code>函数，引出了很多有意思（而且看不太懂）的话题。</p></li>
 </ul>
 </div>
-<div id="website" class="section level3">
-<h3>Website</h3>
+<div id="tidyverse" class="section level1">
+<h1>Tidyverse</h1>
 <ul>
-<li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a>（181108）看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
-<li><p><a href="http://stat545.com/topics.html">stat545</a>（181108）一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
-<li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a>（181208）很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
-<li><p><a href="https://datacarpentry.org/R-ecology-lesson/index.html">Data Analysis and Visualization in R for Ecologists</a>（190114）一个简单但实用的R教程网站，跟生态学好像也没啥太多的关系，有一部分数据库的内容还挺适合我的。</p></li>
-<li><p><a href="https://www.listendata.com/p/r-programming-tutorials.html">100 FREE TUTORIALS FOR LEARNING R</a> (190313)<br />
-罗列的80来篇教程，全看了一遍，内容上有重复，前面44篇介绍了R的基本操作，偶有收获，但大部分比较过时，后面介绍了很多模型的实例，挺详细的，但缺点是排版不好，往往是先讲一大堆理论，再列一大堆代码，没有实际去跑，真跑的话，体验肯定不好。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/tidyverse-tutorial-r">Getting Started with the Tidyverse: Tutorial</a> (181108)<br />
+简单介绍了一下<code>tidyverse</code>包中的几个主要函数，没啥难度，部分内容需要翻墙才能看到。</p></li>
+<li><p><a href="https://www.datacamp.com/community/tutorials/pipe-r-tutorial#notuse">Pipes in R Tutorial For Beginners</a> (181108)<br />
+介绍了几种常见的管道函数（其实一种就够了），像我一样喜欢把代码都串起来的应该好好学学这个。</p></li>
+<li><p><a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/?utm_campaign=News&amp;utm_medium=Community&amp;utm_source=DataCamp.com">Data Wrangling Part 1: Basic to Advanced Ways to Select Columns</a>；<br />
+<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-2/">Data Wrangling Part 2: Transforming your columns into the right shape</a>；<br />
+<a href="https://suzan.rbind.io/2018/02/dplyr-tutorial-3/">Data Wrangling Part 3: Basic and more advanced ways to filter rows</a>；<br />
+<a href="https://suzan.rbind.io/2018/04/dplyr-tutorial-4/">Data Wrangling Part 4: Summarizing and slicing your data</a> (181108)<br />
+系统介绍<code>dplyr</code>包的系列文章，非常值得一看。</p></li>
+<li><p><a href="https://statbandit.wordpress.com/2018/05/08/tidying-messy-excel-data-tidyxl/">TIDYING MESSY EXCEL DATA (TIDYXL)</a> (190128)<br />
+介绍了几种清洗excel数据表格的包。</p></li>
 </ul>
 </div>
+<div id="website" class="section level1">
+<h1>Website</h1>
+<ul>
+<li><p><a href="http://www.sthda.com/english/">Statistical tools for high-throughput data analysis</a> (181108)<br />
+看过可视化那部分，介绍<code>ggplot2</code>包的内容规范而细致，适合入门。</p></li>
+<li><p><a href="http://stat545.com/topics.html">stat545</a> (181108)<br />
+一系列文章的汇总，体系有点乱，但内容还不错，记得正则表达式就是在这里学会的，对我帮助挺大。</p></li>
+<li><p><a href="http://www.cookbook-r.com/">Cookbook for R</a> (181208)<br />
+很早就知道的一个网站，但最近才完整看了一遍，除了<code>ggplot2</code>部分，都比较旧了，但有一些自编函数的例子，需要时可以参考一下。</p></li>
+<li><p><a href="https://datacarpentry.org/R-ecology-lesson/index.html">Data Analysis and Visualization in R for Ecologists</a> (190114)<br />
+一个简单但实用的R教程网站，跟生态学好像也没啥太多的关系，有一部分数据库的内容还挺适合我的。</p></li>
+</ul>
 </div>
 <div id="visualization" class="section level1">
 <h1>Visualization</h1>
-<p>与可视化相关的内容，以与<code>ggplot2</code>相关内容为主。</p>
-<div id="adjustment" class="section level3">
-<h3>Adjustment</h3>
-<ul>
-<li><p><a href="https://drsimonj.svbtle.com/ordering-categories-within-ggplot2-facets">Ordering categories within ggplot2 facets</a>（181110）解决了分面后的柱形图的排序问题。</p></li>
-<li><p><a href="https://www.statworx.com/de/blog/customizing-time-and-date-scales-in-ggplot2/">Customizing time and date scales in ggplot2</a>（181110）涉及到时间和日期的标度调整，其实也可以迁移到其他类型。</p></li>
-<li><p><a href="https://shirinsplayground.netlify.com/2017/11/combine_point_boxplot_ggplot/">How to combine point and boxplots in timeline charts with ggplot2 facets</a> (181113; 190306)<br />
-利用分面把折线图+散点图与箱型图同时呈现在一起。</p></li>
-<li><p><a href="https://www.statworx.com/de/blog/using-themes-in-ggplot2/">Using themes in ggplot2</a>（181115）简单介绍了下<code>ggplot2</code>的主题设置。</p></li>
-<li><p><a href="https://www.statworx.com/de/blog/custom-themes-in-ggplot2/">Custom themes in ggplot2</a>（190228）接着上篇，介绍了一个定制<code>theme</code>的例子。</p></li>
-</ul>
-</div>
 <div id="basic" class="section level3">
 <h3>Basic</h3>
 <ul>
-<li><p><a href="https://www.r-graph-gallery.com/">the R Graph Gallery</a>（181114）汇总了很多可以用基础绘图工具和<code>ggplot2</code>绘制的图，附有相应的代码，可以说是非常棒的一个网站了。</p></li>
-<li><p><a href="https://ggplot2.tidyverse.org/index.html">Create Elegant Data Visualisations Using the Grammar of Graphics • ggplot2</a>（181113）<code>ggplot2</code>的官网。</p></li>
-<li><p><a href="https://academy.vertabelo.com/blog/introduction-to-ggplot2/">Introduction to ggplot2</a>（181110）<code>ggplot2</code>的简单介绍，用了<strong>Game of Thrones</strong>的数据。</p></li>
-<li><p><a href="http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/">Beautiful plotting in R: A ggplot2 cheatsheet</a>（181110）非常不错的一个<code>ggplot2</code>基础教程，如果有不知道该如何实现的地方，可以来这篇文章查一查。</p></li>
-<li><p><a href="http://zevross.com/blog/2014/11/20/under-the-hood-of-ggplot2-graphics-in-r/">Under the hood of ggplot2 graphics in R</a>（181110）上面那篇文章的作者的另一篇文章，没怎能看懂，先放着吧。</p></li>
-<li><p><a href="https://methodmatters.blogspot.com/2018/01/anscombes-quartet-1980s-edition.html">Anscombe’s Quartet: 1980’s Edition</a>（181113）复古风格的Anscombe’s quartet。</p></li>
+<li><p><a href="http://zevross.com/blog/2014/08/04/beautiful-plotting-in-r-a-ggplot2-cheatsheet-3/">Beautiful plotting in R: A ggplot2 cheatsheet</a> (181110)<br />
+非常不错的一个<code>ggplot2</code>基础教程，如果有不知道该如何实现的地方，可以来这篇文章查一查。</p></li>
+<li><p><a href="http://zevross.com/blog/2014/11/20/under-the-hood-of-ggplot2-graphics-in-r/">Under the hood of ggplot2 graphics in R</a> (181110)<br />
+上面那篇文章的作者的另一篇文章，没怎能看懂，先放着吧。</p></li>
+<li><p><a href="http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html">The Complete ggplot2 Tutorial - Part1 | Introduction To ggplot2</a> (190619)<br />
+介绍了<code>ggplot2</code>绘图的一些基本知识，比较有用的地方在于给出了取消科学记数法的方法以及对比了两种不同的坐标值数值limit。</p></li>
+<li><p><a href="http://r-statistics.co/Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html">The Complete ggplot2 Tutorial - Part 2 | How To Customize ggplot2</a> (190619)<br />
+上面那篇文章的第二部分，较为系统的介绍了如何定制<code>ggplot2</code>统计图。</p></li>
+</ul>
+</div>
+<div id="collection" class="section level3">
+<h3>Collection</h3>
+<ul>
+<li><p><a href="https://www.r-graph-gallery.com/">the R Graph Gallery</a> (181114)<br />
+汇总了很多可以用基础绘图工具和<code>ggplot2</code>绘制的图，附有相应的代码，可以说是非常棒的一个网站了。</p></li>
+<li><p>[How to Pick the Perfect Color Combination for Your Data Visualization] (<a href="https://blog.hubspot.com/marketing/color-combination-data-visualization" class="uri">https://blog.hubspot.com/marketing/color-combination-data-visualization</a>) (190629)<br />
+介绍了几个给统计图配色的网站。</p></li>
 </ul>
 </div>
 <div id="common-plots" class="section level3">
 <h3>Common Plots</h3>
-<p>这一部分收集了介绍常见统计图绘制方法的教程。</p>
 <ul>
 <li><p><a href="https://drsimonj.svbtle.com/pretty-histograms-with-ggplot2">Pretty histograms with ggplot2</a> (181113; 190306)<br />
 使用<code>ggplot2</code>绘制直方图的一个简单例子，同时介绍了针对连续性变量的颜色使用方法。</p></li>
+<li><p><a href="https://drsimonj.svbtle.com/pretty-scatter-plots-with-ggplot2">Pretty scatter plots with ggplot2</a> (181113; 190516)<br />
+介绍了散点图的绘制方法，值得学习的地方是提供了一种透明图的映射方法。</p></li>
 <li><p><a href="https://owi.usgs.gov/blog/boxplots/">Exploring ggplot2 boxplots - Defining limits and adjusting style</a> (190306)<br />
 非常详尽的箱线图绘制教程，不仅介绍了如何使用<code>ggplot2</code>绘制箱线图，还提供了很多针对图形进行调整的技术细节，值得仔细钻研一番。</p></li>
-</ul>
-</div>
-<div id="color" class="section level3">
-<h3>Color</h3>
-<ul>
-<li><p><a href="https://rtask.thinkr.fr/blog/ggplot2-welcome-viridis/">Welcome viridis !</a>（181110）<code>ggplot2</code>更新到3.0.0时把viridis系列的Palette加了进去，这篇文章详细介绍了一下。</p></li>
-<li><p><a href="https://drsimonj.svbtle.com/creating-corporate-colour-palettes-for-ggplot2">Creating corporate colour palettes for ggplot2</a>（181110）自建palette。</p></li>
-<li><p><a href="https://ropensci.org/blog/2017/11/21/ochre/">ochRe - Australia themed colour palettes</a>（181114）介绍了<code>ochRe</code>包，这个包包括用澳大利亚的景色和艺术品等为基础设计的16个<code>palette</code>。</p></li>
-<li><p><a href="http://colorbrewer2.org/#type=sequential&amp;scheme=BuGn&amp;n=3">COLORBREWER 2.0</a>（181114）提供了一些可用于绘制地图的颜色。</p></li>
+<li><p><a href="https://dominikkoch.github.io/Bump-Chart/">Bump Chart</a> (181110; 190516)<br />
+介绍了一种叫<strong>Bump Chart</strong>的折线图画法，顺便提到了如何把国旗映射到图中。</p></li>
+<li><p><a href="https://drsimonj.svbtle.com/label-line-ends-in-time-series-with-ggplot2">Label line ends in time series with ggplot2</a> (181110; 190516)<br />
+利用<code>sec.axis</code>参数给折线图的终点处贴标签，这个方法应该还有其他的用处。</p></li>
 </ul>
 </div>
 <div id="extension" class="section level3">
 <h3>Extension</h3>
 <ul>
-<li><p><a href="http://www.ggplot2-exts.org/">ggplot2 extensions</a>（181113）介绍了基于<code>ggplot2</code>的一些扩展包。</p></li>
-<li><p><a href="http://gallery.htmlwidgets.org/">htmlwidgets for R</a>（181113）R的一些可视化方面（也不全是）的扩展包。</p></li>
-<li><p><a href="https://cran.r-project.org/web/packages/googleVis/vignettes/googleVis_examples.html">googleVis examples</a>（181114）<code>gppgleVis</code>包的例子介绍，这些图都好漂亮了，有时间一定要研究一下这个包。</p></li>
-<li><p><a href="https://guangchuangyu.github.io/2018/04/setting-ggplot2-background-with-ggbackground/">setting ggplot2 background with ggbackground</a>（181110）给<code>ggplot2</code>作的图加个背景。不过我用这个技术来干其他事情了。</p></li>
-<li><p><a href="https://www.mango-solutions.com/blog/putting-the-cat-in-scatterplot">PUTTING THE CAT IN SCATTERPLOT</a>（181113）把猫的图片放进了散点图里，挺有意思。</p></li>
-<li><p><a href="https://www.data-imaginist.com/2017/i-made-a-3d-movie/">I made a 3D movie with ggplot2 once - here’s how I did it</a>（181113）没有标题说的那么夸张，只是做了个3D动图（然而也很厉害了）。</p></li>
-<li><p><a href="http://www.questionflow.org/2018/03/06/tao-of-tidygraph/">Tao of Tidygraph</a>（181114）使用<code>tidygraph</code>包对一本名为<strong>Tao Te Programming</strong>的书进行了<strong>network analysis</strong>，可惜这本书并不能免费获得。</p></li>
-</ul>
-</div>
-<div id="line-chart" class="section level3">
-<h3>Line Chart</h3>
-<ul>
-<li><p><a href="https://dominikkoch.github.io/Bump-Chart/">Bump Chart</a>（181110）介绍了如何画<strong>Bump Chart</strong>，我不知道中文名叫什么，但这肯定是一种折线图。</p></li>
-<li><p><a href="https://drsimonj.svbtle.com/label-line-ends-in-time-series-with-ggplot2">Label line ends in time series with ggplot2</a>（181110）给折线图的终点处贴标签，不用他的方法也可以实现。</p></li>
+<li><p><a href="http://www.ggplot2-exts.org/">ggplot2 extensions</a> (181113)<br />
+介绍了基于<code>ggplot2</code>的一些扩展包。</p></li>
+<li><p><a href="http://gallery.htmlwidgets.org/">htmlwidgets for R</a> (181113)<br />
+R的一些可视化方面（也不全是）的扩展包。</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/googleVis/vignettes/googleVis_examples.html">googleVis examples</a> (181114)<br />
+<code>gppgleVis</code>包的例子介绍，这些图都很漂亮，有时间一定要研究一下这个包。</p></li>
+<li><p><a href="https://guangchuangyu.github.io/2018/04/setting-ggplot2-background-with-ggbackground/">setting ggplot2 background with ggbackground</a> (181110)<br />
+给<code>ggplot2</code>作的图加个背景。</p></li>
+<li><p><a href="https://www.mango-solutions.com/blog/putting-the-cat-in-scatterplot">PUTTING THE CAT IN SCATTERPLOT</a> (181113)<br />
+把猫的图片放进了散点图里，挺有意思。</p></li>
+<li><p><a href="https://www.data-imaginist.com/2017/i-made-a-3d-movie/">I made a 3D movie with ggplot2 once - here’s how I did it</a> (181113)<br />
+没有标题说的那么夸张，只是做了个3D动图（然而也很厉害了）。</p></li>
+<li><p><a href="http://www.questionflow.org/2018/03/06/tao-of-tidygraph/">Tao of Tidygraph</a> (181114)<br />
+使用<code>tidygraph</code>包对一本名为<strong>Tao Te Programming</strong>的书进行了<strong>network analysis</strong>，可惜这本书并不能免费获得。</p></li>
+<li><p>[Infographic-style charts using the R waffle package] (<a href="https://nsaunders.wordpress.com/2017/09/08/infographic-style-charts-using-the-r-waffle-package/" class="uri">https://nsaunders.wordpress.com/2017/09/08/infographic-style-charts-using-the-r-waffle-package/</a>) (190629)<br />
+用<code>waffle</code>包绘制信息图。</p></li>
 </ul>
 </div>
 <div id="map" class="section level3">
@@ -378,12 +265,27 @@ output:
 一张关于比特币网络的非常漂亮的地图。</p></li>
 <li><p><a href="https://datascience.blog.wzb.eu/2018/05/31/three-ways-of-visualizing-a-graph-on-a-map/">Three ways of visualizing a graph on a map</a> (190509)<br />
 介绍了几种在R中绘制地图的方法，主要是利用<code>ggraph</code>解决了分别设定曲线和点的大小的问题。</p></li>
+<li><p><a href="https://www.r-spatial.org//r/2018/10/25/ggplot2-sf.html#fnref:1">Drawing beautiful maps programmatically with R, sf and ggplot2 — Part 1: Basics</a> (190714)<br />
+<a href="https://www.r-spatial.org//r/2018/10/25/ggplot2-sf-2.html">Drawing beautiful maps programmatically with R, sf and ggplot2 — Part 2: Layers</a> (190714)<br />
+<a href="https://www.r-spatial.org//r/2018/10/25/ggplot2-sf-3.html">Drawing beautiful maps programmatically with R, sf and ggplot2 — Part 3: Layouts</a> (190714)<br />
+系列文章，介绍了如何使用<code>ggplot2</code>和<code>sf</code>包绘制地图。</p></li>
 </ul>
 </div>
-<div id="scatter-plot" class="section level3">
-<h3>Scatter Plot</h3>
+<div id="modification" class="section level3">
+<h3>Modification</h3>
 <ul>
-<li><a href="https://drsimonj.svbtle.com/pretty-scatter-plots-with-ggplot2">Pretty scatter plots with ggplot2</a>（181113）隐藏了两个比较高端的技巧。</li>
+<li><p><a href="https://drsimonj.svbtle.com/ordering-categories-within-ggplot2-facets">Ordering categories within ggplot2 facets</a> (181110; 190516)<br />
+解决了分面后的柱形图的排序问题。</p></li>
+<li><p><a href="https://www.statworx.com/de/blog/customizing-time-and-date-scales-in-ggplot2/">Customizing time and date scales in ggplot2</a> (181110; 190516)<br />
+较详细地讲解了坐标轴上时间标度的设置，也可以迁移到其他类型的标度。</p></li>
+<li><p><a href="https://shirinsplayground.netlify.com/2017/11/combine_point_boxplot_ggplot/">How to combine point and boxplots in timeline charts with ggplot2 facets</a> (181113; 190306)<br />
+利用分面把折线图+散点图与箱型图同时呈现在一起。</p></li>
+<li><p><a href="https://michaeltoth.me/you-need-to-start-branding-your-graphs-heres-how-with-ggplot.html">You Need to Start Branding Your Graphs. Here’s How, with ggplot!</a> (190516)<br />
+介绍了如何在数据分析图中添加图片，如公司logo。</p></li>
+<li><p><a href="https://www.statworx.com/blog/coordinate-systems-in-ggplot2-easily-overlooked-and-rather-underrated/">Coordinate systems in ggplot2: easily overlooked and rather underrated</a> (190516)<br />
+介绍了<code>ggplot2</code>中的坐标系统，最后有折线图转换成雷达图的方法。</p></li>
+<li><p><a href="https://buzzrbeeline.blog/2018/11/06/adding-different-annotation-to-each-facet-in-ggplot/">Adding different annotation to each facet in ggplot</a> (190714)<br />
+给分面后的图加注释。</p></li>
 </ul>
 </div>
 <div id="theory" class="section level3">

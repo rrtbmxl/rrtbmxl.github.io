@@ -766,6 +766,31 @@ s.setAttribute('data-timestamp', +new Date());
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="/2019/08/r-resources-collection/">
+                <h3 class="media-heading">R语言学习资源总结</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2019
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">CommunicationConcept &amp; HistoryData AcquisitionMachine LearningOnlinebookProgramTidyverseWebsiteVisualizationBasicCollectionCommon PlotsExtensionMapModificationTheoryCommunicationStarting a Rmarkdown Blog with Blogdown + Hugo + Github (181110)
+看了好几篇介绍用blogdown搭建博客的文章，只有这一篇文章介绍的方法让我成功了。
+Adding GIF animations (190228; 190311)
+介绍了在blogdown中添加动图和生成动图的方法。
+Create Multiple Reports with RMarkdown (181129; 190311)
+使用Rmarkdown批量生成报告的教程，测试有效，非常实用。
+MANY REPORTS FROM 1 RMARKDOWN FILE (190311)
+另一篇使用Rmarkdown批量生成报告的教程，没有实际测试，但应该没问题。
+Happy collaboration with Rmd to docx (181110)</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="/2019/05/anime-recommend-with-ml/">
                 <h3 class="media-heading">使用机器学习给自己推荐番剧：first try</h3>
               </a>
@@ -822,28 +847,6 @@ sms &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;
 library(tidyverse) # 清洗数据library(here) # 设置数据文件路径library(knitr) # 呈现更好看的表格library(kableExtra) # 同上library(class) # 使用包中的knn()函数library(gmodels) # 使用包中的CrossTable()函数然后导入数据并清洗：
 wbcd &lt;- read_csv(here(&#39;content&#39;, &#39;post&#39;, &#39;data&#39;, &#39;01-wisc_bc_data.csv&#39;)) %&gt;% select(-id) %&gt;% mutate(diagnosis = factor(diagnosis, levels = c(&#39;B&#39;, &#39;M&#39;),labels = c(&#39;Benign&#39;, &#39;Malignant&#39;))) %&gt;% mutate_if(is.numeric, ~ (.x - min(.x)) / (max(.x) - min(.x)))首先使用here函数找到数据文件的路径，然后使用read_csv函数将其读入R中；随后通过select函数将id变量去掉；然后利用mutate函数将diagnosis变量改为因子型；最后利用mutate_if函数，将所有数值型的变量进行min-max标准化，这里用到了公式化的匿名函数，可以使代码更为简练。此时的数据是这样的：
 wbcd %&gt;% head() %&gt;% kable() %&gt;% kable_styling(bootstrap_options = &quot;striped&quot;, font_size = 12) %&gt;%scroll_box(width = &quot;100%&quot;) diagnosisradius_meantexture_meanperimeter_meanarea_meansmoothness_meancompactness_meanconcavity_meanconcave points_meansymmetry_meanfractal_dimension_meanradius_setexture_seperimeter_searea_sesmoothness_secompactness_seconcavity_seconcave points_sesymmetry_sefractal_dimension_seradius_worsttexture_worstperimeter_worstarea_worstsmoothness_worstcompactness_worstconcavity_worstconcave points_worstsymmetry_worstfractal_dimension_worstMalignant0.</div>
-            </div>
-            <div style="clear:both;"></div>
-            <hr>
-          </div>
-        
-          <div class="media">
-            
-            <div class="media-body">
-              <a class="link-unstyled" href="/2019/04/r-resources-collection/">
-                <h3 class="media-heading">R语言学习资源总结</h3>
-              </a>
-              <span class="media-meta">
-                <span class="media-date text-small">
-                  Apr 4, 2019
-                </span>
-              </span>
-              <div class="media-content hide-xs font-merryweather">ArticleConceptHistoryCommunicationBlogdownReportShinyWordMachine LearningBasicsClassificationClusteringDeep LearningDimensionality ReductionPredictionProgramEvaluationFunctionLoopPipeTutorialData AcquisitionOnlinebookTidyverseWebsiteVisualizationAdjustmentBasicCommon PlotsColorExtensionLine ChartMapScatter PlotTheory总结一下我自己看过的R语言学习资源，目前的分类还比较随意，因为很多内容都是交叉的，难以形成明确的体系。没啥特殊情况的话，每个周末都会补充新的内容。另外要强调一点，看教程虽然有助于学习，但真正能提升水平的，还是实践。如果工作中没有太多实践的机会的话，那也要自己想办法找些实践的机会。
-还要吐槽一下，不论是tidyverse还是Rmarkdown，对中文的支持都不是很好，用中文标题生成的TOC无法跳转，所以我只好暂时把各部分的标题都写成英文了，以后有时间再琢磨这个问题。不过话说回来，确实是写成英文更方便点，因为我收藏夹里的文件夹名都是英文命名的，而这篇博客其实就是对我的收藏夹内容的总结。
-Article收集了一些关于R的概念和历史的文章。
-ConceptExplain R environments like I’m five (181110; 190307)
-介绍什么是R语言的环境，非常简单易懂。
-Environments in R (190128; 190408)</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
